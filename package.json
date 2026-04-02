@@ -1,0 +1,29 @@
+{
+  "name": "gnoom",
+  "version": "0.0.1",
+  "description": "A Type safe aggregate builder for MongoDB",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JakobStaudinger/gnoom.git"
+  },
+  "keywords": [
+    "mongodb",
+    "mongo",
+    "aggregate",
+    "builder"
+  ],
+  "author": "Jakob Staudinger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JakobStaudinger/gnoom/issues"
+  },
+  "homepage": "https://github.com/JakobStaudinger/gnoom#readme",
+  "packageManager": "pnpm@10.33.0",
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  }
+}

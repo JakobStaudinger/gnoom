@@ -1,1 +1,1 @@
-export * from './aggregate-builder';
+export * from './aggregate';

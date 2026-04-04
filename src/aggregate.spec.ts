@@ -6,7 +6,7 @@ describe('AggregateBuilder', () => {
   });
 
   it('should add stages for each function call', () => {
-    const output = aggregate().$match({}).$match({}).$match({}).finalize();
+    const output = aggregate().$match!({}).$match!({}).$match!({}).finalize();
     expect(output).toEqual([{ $match: {} }, { $match: {} }, { $match: {} }]);
   });
 

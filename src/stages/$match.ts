@@ -67,11 +67,35 @@ type NarrowHelper<T, S> = NarrowLiteral<T, S> &
   NarrowType<T, S> &
   NarrowNot<T, S>;
 
+type NarrowOrHelper<T extends object, E> = E extends [
+  infer Head extends MatchSpecification<T>,
+  ...infer Tail
+]
+  ? MatchOutput<T, Head> | NarrowOrHelper<T, Tail>
+  : never;
+type NarrowOr<T extends object, S> = S extends { $or: infer Spec }
+  ? NarrowOrHelper<T, Spec> extends never
+    ? unknown
+    : NarrowOrHelper<T, Spec>
+  : unknown;
+
+type NarrowAndHelper<T extends object, E> = E extends [
+  infer Head extends MatchSpecification<T>,
+  ...infer Tail
+]
+  ? MatchOutput<T, Head> & NarrowAndHelper<T, Tail>
+  : unknown;
+
+type NarrowAnd<T extends object, S> = S extends { $and: infer Spec }
+  ? NarrowAndHelper<T, Spec>
+  : unknown;
+
 type Narrow<T, S> = unknown extends NarrowHelper<T, S> ? T : NarrowHelper<T, S>;
 
 type MatchOutput<T extends object, S extends MatchSpecification<T>> = {
   [K in keyof T]: Narrow<T[K], S[K]>;
-};
+} & NarrowOr<T, S> &
+  NarrowAnd<T, S>;
 
 // Disallows "extending" `MatchSpecification` by adding keys that don't exist in the original type.
 type EnforceSpecification<S, T extends object> = {

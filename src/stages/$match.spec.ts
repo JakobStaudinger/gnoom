@@ -92,5 +92,23 @@ describe('$match', () => {
 
       expectTypeOf<Result>().toEqualTypeOf<number>();
     });
+
+    it('should work with $or', () => {
+      const _result = aggregate<Test>().$match({
+        $or: [{ mixed: { $type: 'number' } }, { mixed: { $type: 'string' } }]
+      });
+      type Result = ExtractDocumentType<typeof _result>['mixed'];
+
+      expectTypeOf<Result>().toEqualTypeOf<number | string>();
+    });
+
+    it('should work with $and', () => {
+      const _result = aggregate<{ mixed: string | 12 | 14 }>().$match({
+        $and: [{ mixed: { $type: 'number' } }, { mixed: { $ne: 12 } }]
+      });
+      type Result = ExtractDocumentType<typeof _result>['mixed'];
+
+      expectTypeOf<Result>().toEqualTypeOf<14>();
+    });
   });
 });

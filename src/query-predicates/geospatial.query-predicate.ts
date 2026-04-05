@@ -1,4 +1,4 @@
-export type GeospatialQueryPredicate<T> = {
+export type GeospatialQueryPredicate<_T> = {
   $geoIntersects?: unknown;
   $geoWithin?: unknown;
   $near?: unknown;

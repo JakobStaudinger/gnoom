@@ -11,5 +11,5 @@ export type MiscellaneousQueryPredicate<T> = {
           $regex: RegExp | string;
           $options?: RegExpOption | string;
         }
-      | {}
-  : never);
+      | unknown
+  : unknown);

@@ -36,7 +36,7 @@ describe('AggregateBuilder', () => {
 
     const output = aggregate<Test>()
       .$match({ foo: '42' })
-      // @ts-expect-error
+      // @ts-expect-error bar does not exist in `Test` so it should disallow filtering for it
       .$match({ bar: 42 })
       .toArray();
 

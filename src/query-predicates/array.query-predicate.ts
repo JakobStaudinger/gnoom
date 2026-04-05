@@ -1,9 +1,9 @@
 import { QueryPredicate } from './index';
 
-export type ArrayQueryPredicate<T> = T extends (infer T)[]
+export type ArrayQueryPredicate<T> = T extends (infer E)[]
   ? {
-      $elemMatch?: QueryPredicate<T>;
-      $all?: T[] | T[][];
+      $elemMatch?: QueryPredicate<E>;
+      $all?: E[] | E[][];
       $size?: number;
     }
   : never;

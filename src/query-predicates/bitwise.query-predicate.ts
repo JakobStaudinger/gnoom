@@ -3,7 +3,7 @@ type Bitmask =
   | { $binary: { base64: string; subType: string } }
   | number[];
 
-export type BitwiseQueryPredicate<T> = {
+export type BitwiseQueryPredicate<_T> = {
   $bitsAllClear?: Bitmask;
   $bitsAllSet?: Bitmask;
   $bitsAnyClear?: Bitmask;

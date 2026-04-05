@@ -57,5 +57,14 @@ describe('$match', () => {
 
       expectTypeOf<Result>().toEqualTypeOf<number | string>();
     });
+
+    it('should work with $not', () => {
+      const result = aggregate<Test>().$match({
+        mixed: { $not: { $nin: [true, false, null] } }
+      });
+      type Result = ExtractDocumentType<typeof result>['mixed'];
+
+      expectTypeOf<Result>().toEqualTypeOf<boolean | null>();
+    });
   });
 });

@@ -11,16 +11,34 @@ export type MatchSpecification<T extends object> = {
   $nor?: MatchSpecification<T>[];
 };
 
+type NegateMap = {
+  $in: '$nin';
+  $nin: '$in';
+  $eq: '$ne';
+  $ne: '$eq';
+  $lt: '$gte';
+  $gt: '$lte';
+  $lte: '$gt';
+  $gte: '$lt';
+};
+
+type Negate<T> = {
+  [K in keyof T as NegateMap[K & keyof NegateMap]]: T[K];
+};
 type NarrowEq<T, S> = S extends { $eq: infer V } ? V : never;
 type NarrowNe<T, S> = S extends { $ne: infer V } ? Exclude<T, V> : never;
 type NarrowIn<T, S> = S extends { $in: (infer V)[] } ? V : never;
 type NarrowNin<T, S> = S extends { $nin: (infer V)[] } ? Exclude<T, V> : never;
+type NarrowNot<T, S> = S extends { $not: infer S }
+  ? NarrowHelper<T, Negate<S>>
+  : never;
 
 type NarrowHelper<T, S> =
   | NarrowEq<T, S>
   | NarrowNe<T, S>
   | NarrowIn<T, S>
-  | NarrowNin<T, S>;
+  | NarrowNin<T, S>
+  | NarrowNot<T, S>;
 
 type Narrow<T, S> = NarrowHelper<T, S> extends never ? T : NarrowHelper<T, S>;
 

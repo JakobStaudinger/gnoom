@@ -25,27 +25,29 @@ type NegateMap = {
 type Negate<T> = {
   [K in keyof T as NegateMap[K & keyof NegateMap]]: T[K];
 };
-type NarrowEq<T, S> = S extends { $eq: infer V } ? V : never;
-type NarrowNe<T, S> = S extends { $ne: infer V } ? Exclude<T, V> : never;
-type NarrowIn<T, S> = S extends { $in: (infer V)[] } ? V : never;
-type NarrowNin<T, S> = S extends { $nin: (infer V)[] } ? Exclude<T, V> : never;
+type NarrowEq<T, S> = S extends { $eq: infer V } ? V : unknown;
+type NarrowNe<T, S> = S extends { $ne: infer V } ? Exclude<T, V> : unknown;
+type NarrowIn<T, S> = S extends { $in: (infer V)[] } ? V : unknown;
+type NarrowNin<T, S> = S extends { $nin: (infer V)[] }
+  ? Exclude<T, V>
+  : unknown;
 type NarrowNot<T, S> = S extends { $not: infer S }
   ? NarrowHelper<T, Negate<S>>
-  : never;
+  : unknown;
 
-type NarrowHelper<T, S> =
-  | NarrowEq<T, S>
-  | NarrowNe<T, S>
-  | NarrowIn<T, S>
-  | NarrowNin<T, S>
-  | NarrowNot<T, S>;
+type NarrowHelper<T, S> = NarrowEq<T, S> &
+  NarrowNe<T, S> &
+  NarrowIn<T, S> &
+  NarrowNin<T, S> &
+  NarrowNot<T, S>;
 
-type Narrow<T, S> = NarrowHelper<T, S> extends never ? T : NarrowHelper<T, S>;
+type Narrow<T, S> = unknown extends NarrowHelper<T, S> ? T : NarrowHelper<T, S>;
 
 type MatchOutput<T extends object, S extends MatchSpecification<T>> = {
   [K in keyof T]: Narrow<T[K], S[K]>;
 };
 
+// Disallows "extending" `MatchSpecification` by adding keys that don't exist in the original type.
 type EnforceSpecification<S, T extends object> = {
   [K in keyof S]: K extends keyof MatchSpecification<T> ? S[K] : never;
 };

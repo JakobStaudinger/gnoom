@@ -22,6 +22,14 @@ describe('$match', () => {
       expectTypeOf<Result>().toEqualTypeOf<Test['mixed']>;
     });
 
+    it('should work with multiple predicates', () => {
+      const result = aggregate<Test>().$match({
+        mixed: { $ne: null, $nin: [true, false] }
+      });
+      type Result = ExtractDocumentType<typeof result>['mixed'];
+      expectTypeOf<Result>().toEqualTypeOf<string | number>();
+    });
+
     it('should work with $eq', () => {
       const result = aggregate<Test>().$match({
         text: { $eq: 'test-string' }

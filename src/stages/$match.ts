@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import { QueryPredicate } from '../query-predicates';
 
@@ -26,12 +27,33 @@ type Negate<T> = {
   [K in keyof T as NegateMap[K & keyof NegateMap]]: T[K];
 };
 
+type TypeMap = {
+  number: number;
+  string: string;
+  symbol: symbol;
+  undefined: undefined;
+  object: object;
+  double: number;
+  array: unknown[];
+  objectId: ObjectId;
+  bool: boolean;
+  date: Date;
+  null: null;
+  regex: RegExp;
+  int: number;
+  long: number;
+  decimal: number;
+};
+
 type NarrowLiteral<T, S> = S extends T ? S : unknown;
 type NarrowEq<_T, S> = S extends { $eq: infer V } ? V : unknown;
 type NarrowNe<T, S> = S extends { $ne: infer V } ? Exclude<T, V> : unknown;
 type NarrowIn<_T, S> = S extends { $in: (infer V)[] } ? V : unknown;
 type NarrowNin<T, S> = S extends { $nin: (infer V)[] }
   ? Exclude<T, V>
+  : unknown;
+type NarrowType<_T, S> = S extends { $type: infer Type }
+  ? TypeMap[Type & keyof TypeMap]
   : unknown;
 type NarrowNot<T, S> = S extends { $not: infer Predicate }
   ? NarrowHelper<T, Negate<Predicate>>
@@ -42,6 +64,7 @@ type NarrowHelper<T, S> = NarrowLiteral<T, S> &
   NarrowNe<T, S> &
   NarrowIn<T, S> &
   NarrowNin<T, S> &
+  NarrowType<T, S> &
   NarrowNot<T, S>;
 
 type Narrow<T, S> = unknown extends NarrowHelper<T, S> ? T : NarrowHelper<T, S>;

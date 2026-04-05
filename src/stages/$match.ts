@@ -11,20 +11,18 @@ export type MatchSpecification<T extends object> = {
   $nor?: MatchSpecification<T>[];
 };
 
-type Narrow<T, S> =
-  S extends QueryPredicate<T>
-    ? S extends { $eq: infer V }
-      ? V
-      : S extends { $ne: infer V }
-        ? Exclude<T, V>
-        : S extends { $in: (infer V)[] }
-          ? V
-          : S extends { $nin: (infer V)[] }
-            ? Exclude<T, V>
-            : T
-    : S extends T
-      ? S
-      : T;
+type NarrowEq<T, S> = S extends { $eq: infer V } ? V : never;
+type NarrowNe<T, S> = S extends { $ne: infer V } ? Exclude<T, V> : never;
+type NarrowIn<T, S> = S extends { $in: (infer V)[] } ? V : never;
+type NarrowNin<T, S> = S extends { $nin: (infer V)[] } ? Exclude<T, V> : never;
+
+type NarrowHelper<T, S> =
+  | NarrowEq<T, S>
+  | NarrowNe<T, S>
+  | NarrowIn<T, S>
+  | NarrowNin<T, S>;
+
+type Narrow<T, S> = NarrowHelper<T, S> extends never ? T : NarrowHelper<T, S>;
 
 type MatchOutput<T extends object, S extends MatchSpecification<T>> = {
   [K in keyof T]: Narrow<T[K], S[K]>;

@@ -8,6 +8,7 @@ import { MiscellaneousQueryPredicate } from './miscellaneous.query-predicate';
 
 export type QueryPredicate<T> =
   | T
+  | (T extends (infer E)[] ? QueryPredicate<E> : never)
   | ArrayQueryPredicate<T>
   | BitwiseQueryPredicate<T>
   | ComparisonQueryPredicate<T>

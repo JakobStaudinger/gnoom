@@ -25,6 +25,8 @@ type NegateMap = {
 type Negate<T> = {
   [K in keyof T as NegateMap[K & keyof NegateMap]]: T[K];
 };
+
+type NarrowLiteral<T, S> = S extends T ? S : unknown;
 type NarrowEq<_T, S> = S extends { $eq: infer V } ? V : unknown;
 type NarrowNe<T, S> = S extends { $ne: infer V } ? Exclude<T, V> : unknown;
 type NarrowIn<_T, S> = S extends { $in: (infer V)[] } ? V : unknown;
@@ -35,7 +37,8 @@ type NarrowNot<T, S> = S extends { $not: infer Predicate }
   ? NarrowHelper<T, Negate<Predicate>>
   : unknown;
 
-type NarrowHelper<T, S> = NarrowEq<T, S> &
+type NarrowHelper<T, S> = NarrowLiteral<T, S> &
+  NarrowEq<T, S> &
   NarrowNe<T, S> &
   NarrowIn<T, S> &
   NarrowNin<T, S> &

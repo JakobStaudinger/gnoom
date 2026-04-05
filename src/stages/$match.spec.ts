@@ -30,6 +30,15 @@ describe('$match', () => {
       expectTypeOf<Result>().toEqualTypeOf<string | number>();
     });
 
+    it('should work with literals', () => {
+      const _result = aggregate<Test>().$match({
+        text: 'test-string'
+      });
+      type Result = ExtractDocumentType<typeof _result>['text'];
+
+      expectTypeOf<Result>().toEqualTypeOf<'test-string'>();
+    });
+
     it('should work with $eq', () => {
       const _result = aggregate<Test>().$match({
         text: { $eq: 'test-string' }

@@ -2,16 +2,47 @@ import { aggregate } from './aggregate';
 
 describe('AggregateBuilder', () => {
   it('should produce an array as output', () => {
-    expect(aggregate().finalize()).toEqual([]);
+    expect(aggregate().toArray()).toEqual([]);
   });
 
   it('should add stages for each function call', () => {
-    const output = aggregate().$match!({}).$match!({}).$match!({}).finalize();
-    expect(output).toEqual([{ $match: {} }, { $match: {} }, { $match: {} }]);
+    type Test = {
+      foo: string;
+      bar: number;
+    };
+
+    const output = aggregate<Test>()
+      .$match({ foo: '42', bar: 42 })
+      .$match({ bar: 42 })
+      .$match({ foo: '42' })
+      .toArray();
+
+    expect(output).toEqual([
+      { $match: { foo: '42', bar: 42 } },
+      { $match: { bar: 42 } },
+      { $match: { foo: '42' } }
+    ]);
   });
 
   it('should work with pipeline stages that have not been typed (yet)', () => {
-    const output = aggregate().$foo!({ mySpec: 42 }).finalize();
+    const output = aggregate().$foo!({ mySpec: 42 }).toArray();
     expect(output).toEqual([{ $foo: { mySpec: 42 } }]);
+  });
+
+  it('should prefer the specific types over the fallback', () => {
+    type Test = {
+      foo: string;
+    };
+
+    const output = aggregate<Test>()
+      .$match({ foo: '42' })
+      // @ts-expect-error
+      .$match({ bar: 42 })
+      .toArray();
+
+    expect(output).toEqual([
+      { $match: { foo: '42' } },
+      { $match: { bar: 42 } }
+    ]);
   });
 });

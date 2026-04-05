@@ -1,21 +1,14 @@
 import { AllStages } from './stages';
 
-type Specification<T> = T extends { specification: infer S } ? S : never;
-type Output<T> = T extends { output: infer O extends object } ? O : never;
-
-type Stages<T extends object> = {
-  [K in keyof AllStages<T>]: (
-    spec: Specification<AllStages<T>[K]>
-  ) => Aggregate<Output<AllStages<T>[K]>>;
-} & UntypedStage;
-
-type PipelineStage = `$${string}`;
+type PipelineStageName = `$${string}`;
 type UntypedStage = {
-  [K in PipelineStage]-?: (spec: unknown) => Aggregate<object>;
+  [K in PipelineStageName]: (spec: unknown) => Aggregate<object>;
 };
 
+type Stages<T extends object> = AllStages<T> & UntypedStage;
+
 export type AggregateBase = {
-  finalize(): unknown[];
+  toArray(): unknown[];
 };
 
 export type Aggregate<T extends object> = AggregateBase & Stages<T>;
@@ -23,7 +16,7 @@ export type Aggregate<T extends object> = AggregateBase & Stages<T>;
 function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
   return new Proxy(
     {
-      finalize() {
+      toArray() {
         return stages;
       }
     },
@@ -31,9 +24,8 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       get(target, property, receiver) {
         if (typeof property === 'string' && property.startsWith('$')) {
           const stageName = property as keyof AllStages<T>;
-          return (spec: unknown) => {
-            return constructAggregate([...stages, { [stageName]: spec }]);
-          };
+          return (spec: unknown) =>
+            constructAggregate([...stages, { [stageName]: spec }]);
         }
 
         return Reflect.get(target, property, receiver);

@@ -103,12 +103,29 @@ describe('$match', () => {
     });
 
     it('should work with $and', () => {
-      const _result = aggregate<{ mixed: string | 12 | 14 }>().$match({
-        $and: [{ mixed: { $type: 'number' } }, { mixed: { $ne: 12 } }]
+      const _result = aggregate<{ mixed: string | 1 | 2 | 3 | 4 }>().$match({
+        $and: [{ mixed: { $type: 'number' } }, { mixed: { $ne: 1 } }]
       });
       type Result = ExtractDocumentType<typeof _result>['mixed'];
 
-      expectTypeOf<Result>().toEqualTypeOf<14>();
+      expectTypeOf<Result>().toEqualTypeOf<2 | 3 | 4>();
+    });
+
+    it('should work with a combination of $and and $or', () => {
+      const _result = aggregate<{
+        mixed: string | 1 | 2 | 3 | 4 | boolean;
+      }>().$match({
+        $and: [
+          {
+            $or: [{ mixed: { $type: 'number' } }, { mixed: { $type: 'bool' } }]
+          },
+          { mixed: { $ne: 1 } }
+        ],
+        $or: [{ mixed: { $in: [2, 3] } }, { mixed: { $eq: true } }]
+      });
+      type Result = ExtractDocumentType<typeof _result>['mixed'];
+
+      expectTypeOf<Result>().toEqualTypeOf<2 | 3 | true>();
     });
   });
 });

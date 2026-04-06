@@ -27,8 +27,20 @@ type IndexOf<T extends unknown[]> = Exclude<keyof T, keyof unknown[]>;
 type MapToExpressionInput<
   T extends object,
   Args extends [...unknown[]]
-> = Args extends [infer R]
-  ? AggregateExpression<T, R>
-  : {
-      [Index in IndexOf<Args>]: AggregateExpression<T, Args[Index]>;
-    } & { length: Args['length'] };
+> = Args extends [StaticInput<infer R>]
+  ? R extends object
+    ? {
+        [K in keyof R]: AggregateExpression<T, R[K]>;
+      }
+    : R
+  : Args extends [infer R]
+    ? AggregateExpression<T, R>
+    : {
+        [Index in IndexOf<Args>]: AggregateExpression<T, Args[Index]>;
+      } & { length: Args['length'] };
+
+const STATIC_INPUT_MARKER = Symbol('StaticInput');
+
+export type StaticInput<T> = T & {
+  [STATIC_INPUT_MARKER]: never;
+};

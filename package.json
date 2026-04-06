@@ -1,5 +1,5 @@
 {
-  "name": "gnoom",
+  "name": "@gnoom/gnoom",
   "version": "0.0.1",
   "description": "A Type safe aggregate builder for MongoDB",
   "type": "module",

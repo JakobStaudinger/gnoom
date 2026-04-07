@@ -5,6 +5,7 @@ import { BooleanExpression } from './boolean.expression';
 import { ComparisonExpression } from './comparison.expression';
 import { ConditionalExpression } from './conditional.expression';
 import { CustomAggregationExpression } from './custom-aggregation.expression';
+import { DataSizeExpression } from './data-size.expression';
 import { FieldPathExpression } from './field-path.expression';
 import { LiteralExpression } from './literal.expression';
 
@@ -16,6 +17,7 @@ export type AggregateExpression<T extends object, EvaluateTo> =
   | AggregateExpressionHelper<T, EvaluateTo, ComparisonExpression>
   | AggregateExpressionHelper<T, EvaluateTo, ConditionalExpression>
   | AggregateExpressionHelper<T, EvaluateTo, CustomAggregationExpression>
+  | AggregateExpressionHelper<T, EvaluateTo, DataSizeExpression>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 

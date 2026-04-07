@@ -1,9 +1,11 @@
 import { ArithmetricExpression } from './arithmetic.expression';
+import { ArrayExpression } from './array.expression';
 import { FieldPathExpression } from './field-path.expression';
 import { LiteralExpression } from './literal.expression';
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | AggregateExpressionHelper<T, EvaluateTo, ArithmetricExpression>
+  | AggregateExpressionHelper<T, EvaluateTo, ArrayExpression>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 
@@ -22,11 +24,9 @@ type MapToExpression<T extends object, E> = E extends (
   ? MapToExpressionInput<T, Args>
   : E;
 
-type IndexOf<T extends unknown[]> = Exclude<keyof T, keyof unknown[]>;
-
 type MapToExpressionInput<
   T extends object,
-  Args extends [...unknown[]]
+  Args extends unknown[]
 > = Args extends [StaticInput<infer R>]
   ? R extends object
     ? {
@@ -35,12 +35,20 @@ type MapToExpressionInput<
     : R
   : Args extends [infer R]
     ? AggregateExpression<T, R>
-    : {
-        [Index in IndexOf<Args>]: AggregateExpression<T, Args[Index]>;
-      } & { length: Args['length'] };
+    : IsTuple<Args> extends true
+      ? {
+          [Index in IndexOf<Args>]: AggregateExpression<T, Args[Index]>;
+        } & { length: Args['length'] }
+      : {
+          [Index in number]: AggregateExpression<T, Args[Index]>;
+        };
+
+type IndexOf<T extends unknown[]> = Exclude<keyof T, keyof unknown[]>;
 
 const STATIC_INPUT_MARKER = Symbol('StaticInput');
 
 export type StaticInput<T> = T & {
   [STATIC_INPUT_MARKER]: never;
 };
+
+type IsTuple<T extends unknown[]> = number extends T['length'] ? false : true;

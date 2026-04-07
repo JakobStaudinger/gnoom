@@ -65,4 +65,27 @@ describe('Expressions', () => {
       >();
     });
   });
+
+  describe('Rest parameters', () => {
+    type Input = {
+      number1: number;
+      number2: number;
+      number3: number;
+      string: string;
+    };
+
+    it('should accept arbitrarily many parameters', () => {
+      const result = {
+        $add: ['$number1', '$number2', '$number3', 42, 69, '$number1']
+      } as const;
+      expectTypeOf(result).toExtend<AggregateExpression<Input, number>>();
+    });
+
+    it('should be type-safe', () => {
+      const result = {
+        $add: ['$number1', '$number2', '$string']
+      } as const;
+      expectTypeOf(result).not.toExtend<AggregateExpression<Input, number>>();
+    });
+  });
 });

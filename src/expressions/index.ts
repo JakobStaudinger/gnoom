@@ -1,11 +1,13 @@
 import { ArithmetricExpression } from './arithmetic.expression';
 import { ArrayExpression } from './array.expression';
+import { BitwiseExpression } from './bitwise.expression';
 import { FieldPathExpression } from './field-path.expression';
 import { LiteralExpression } from './literal.expression';
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | AggregateExpressionHelper<T, EvaluateTo, ArithmetricExpression>
   | AggregateExpressionHelper<T, EvaluateTo, ArrayExpression>
+  | AggregateExpressionHelper<T, EvaluateTo, BitwiseExpression>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 

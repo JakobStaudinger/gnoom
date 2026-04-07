@@ -30,7 +30,9 @@ type MapToExpressionInput<
 > = Args extends [StaticInput<infer R>]
   ? R extends object
     ? {
-        [K in keyof R]: AggregateExpression<T, R[K]>;
+        [K in keyof R]: NonNullable<R[K]> extends StaticInput<infer I>
+          ? LiteralExpression<I>
+          : AggregateExpression<T, R[K]>;
       }
     : R
   : Args extends [infer R]

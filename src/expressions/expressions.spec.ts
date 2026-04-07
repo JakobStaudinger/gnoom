@@ -45,7 +45,9 @@ describe('Expressions', () => {
 
   describe('Static Input', () => {
     type Input = {
-      foo: number;
+      number: number;
+      array: number[];
+      string: string;
     };
 
     it('should allow literals', () => {
@@ -64,6 +66,35 @@ describe('Expressions', () => {
         AggregateExpression<SpecializedInput, number>
       >();
     });
+
+    it('should allow expressions for sub-fields', () => {
+      const result = {
+        $filter: {
+          input: '$array',
+          cond: true
+        }
+      } as const;
+
+      expectTypeOf(result).toExtend<AggregateExpression<Input, unknown[]>>();
+    });
+
+    /*
+      TODO: TS cannot represent a type that is "any string that doesn't start with '$'"
+      so strings that are actually field paths are interpreted as literal strings
+    */
+    // it.skip('should disallow expressions for sub-fields also marked static', () => {
+    //   const result = {
+    //     $filter: {
+    //       input: '$array',
+    //       as: '$string',
+    //       cond: true
+    //     }
+    //   } as const;
+
+    //   expectTypeOf(result).not.toExtend<
+    //     AggregateExpression<Input, unknown[]>
+    //   >();
+    // });
   });
 
   describe('Rest parameters', () => {

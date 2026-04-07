@@ -2,6 +2,7 @@ import { ArithmetricExpression } from './arithmetic.expression';
 import { ArrayExpression } from './array.expression';
 import { BitwiseExpression } from './bitwise.expression';
 import { BooleanExpression } from './boolean.expression';
+import { ComparisonExpression } from './comparison.expression';
 import { FieldPathExpression } from './field-path.expression';
 import { LiteralExpression } from './literal.expression';
 
@@ -10,6 +11,7 @@ export type AggregateExpression<T extends object, EvaluateTo> =
   | AggregateExpressionHelper<T, EvaluateTo, ArrayExpression>
   | AggregateExpressionHelper<T, EvaluateTo, BitwiseExpression>
   | AggregateExpressionHelper<T, EvaluateTo, BooleanExpression>
+  | AggregateExpressionHelper<T, EvaluateTo, ComparisonExpression>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 

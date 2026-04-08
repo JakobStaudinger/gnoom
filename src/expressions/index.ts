@@ -11,6 +11,7 @@ import { GroupOperator } from './group.operator';
 import { LiteralExpressionOperator } from './literal-expression.operator';
 import { LiteralExpression } from './literal.expression';
 import { MiscellaneousOperator } from './miscellaneous.operator';
+import { ObjectOperator } from './object.operator';
 
 type Operators =
   | ArithmetricOperator
@@ -23,7 +24,8 @@ type Operators =
   | DateOperator
   | GroupOperator
   | LiteralExpressionOperator
-  | MiscellaneousOperator;
+  | MiscellaneousOperator
+  | ObjectOperator;
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | AggregateExpressionHelper<T, EvaluateTo, Operators>

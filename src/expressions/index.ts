@@ -8,18 +8,23 @@ import { DataSizeOperator } from './data-size.operator';
 import { DateOperator } from './date.operator';
 import { FieldPathExpression } from './field-path.expression';
 import { GroupOperator } from './group.operator';
+import { LiteralExpressionOperator } from './literal-expression.operator';
 import { LiteralExpression } from './literal.expression';
 
+type Operators =
+  | ArithmetricOperator
+  | ArrayOperator
+  | BitwiseOperator
+  | BooleanOperator
+  | ComparisonOperator
+  | ConditionalOperator
+  | DataSizeOperator
+  | DateOperator
+  | GroupOperator
+  | LiteralExpressionOperator;
+
 export type AggregateExpression<T extends object, EvaluateTo> =
-  | AggregateExpressionHelper<T, EvaluateTo, ArithmetricOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, ArrayOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, BitwiseOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, BooleanOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, ComparisonOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, ConditionalOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, DataSizeOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, DateOperator>
-  | AggregateExpressionHelper<T, EvaluateTo, GroupOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, Operators>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 

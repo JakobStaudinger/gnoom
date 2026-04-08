@@ -7,6 +7,7 @@ import { ConditionalOperator } from './conditional.operator';
 import { DataSizeOperator } from './data-size.operator';
 import { DateOperator } from './date.operator';
 import { FieldPathExpression } from './field-path.expression';
+import { GroupOperator } from './group.operator';
 import { LiteralExpression } from './literal.expression';
 
 export type AggregateExpression<T extends object, EvaluateTo> =
@@ -18,6 +19,7 @@ export type AggregateExpression<T extends object, EvaluateTo> =
   | AggregateExpressionHelper<T, EvaluateTo, ConditionalOperator>
   | AggregateExpressionHelper<T, EvaluateTo, DataSizeOperator>
   | AggregateExpressionHelper<T, EvaluateTo, DateOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, GroupOperator>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 

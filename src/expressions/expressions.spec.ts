@@ -13,33 +13,37 @@ describe('Expressions', () => {
     };
 
     it('should accept a literal', () => {
-      const result = { $abs: 42 } as const;
-      expectTypeOf(result).toExtend<AggregateExpression<Input, number>>();
+      const expression = { $abs: 42 } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
 
     it('should not accept a literal of a wrong type', () => {
-      const result = { $abs: true } as const;
-      expectTypeOf(result).not.toExtend<AggregateExpression<Input, number>>();
+      const expression = { $abs: true } as const;
+      expectTypeOf(expression).not.toExtend<
+        AggregateExpression<Input, number>
+      >();
     });
 
     it('should accept a path that resolves to a number', () => {
-      const result = { $abs: '$n' } as const;
-      expectTypeOf(result).toExtend<AggregateExpression<Input, number>>();
+      const expression = { $abs: '$n' } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
 
     it('should not accept a path that resolves to a wrong type', () => {
-      const result = { $abs: '$s' } as const;
-      expectTypeOf(result).not.toExtend<AggregateExpression<Input, number>>();
+      const expression = { $abs: '$s' } as const;
+      expectTypeOf(expression).not.toExtend<
+        AggregateExpression<Input, number>
+      >();
     });
 
     it('should accept a nested path that resolves to a number', () => {
-      const result = { $abs: '$nested.n' } as const;
-      expectTypeOf(result).toExtend<AggregateExpression<Input, number>>();
+      const expression = { $abs: '$nested.n' } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
 
     it('should accept nested expressions', () => {
-      const result = { $abs: { $add: [2, 3] } } as const;
-      expectTypeOf(result).toExtend<AggregateExpression<Input, number>>();
+      const expression = { $abs: { $add: [2, 3] } } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
   });
 
@@ -51,31 +55,33 @@ describe('Expressions', () => {
     };
 
     it('should allow literals', () => {
-      const result = {
+      const expression = {
         $sigmoid: { input: 12 }
       } as const;
-      expectTypeOf(result).toExtend<AggregateExpression<Input, number>>();
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
 
     it('should not allow expressions', () => {
       type SpecializedInput = {
         input: { input: number };
       };
-      const result = { $sigmoid: '$input' } as const;
-      expectTypeOf(result).not.toExtend<
+      const expression = { $sigmoid: '$input' } as const;
+      expectTypeOf(expression).not.toExtend<
         AggregateExpression<SpecializedInput, number>
       >();
     });
 
     it('should allow expressions for sub-fields', () => {
-      const result = {
+      const expression = {
         $filter: {
           input: '$array',
           cond: true
         }
       } as const;
 
-      expectTypeOf(result).toExtend<AggregateExpression<Input, unknown[]>>();
+      expectTypeOf(expression).toExtend<
+        AggregateExpression<Input, unknown[]>
+      >();
     });
 
     /*
@@ -83,7 +89,7 @@ describe('Expressions', () => {
       so strings that are actually field paths are interpreted as literal strings
     */
     // it.skip('should disallow expressions for sub-fields also marked static', () => {
-    //   const result = {
+    //   const expression = {
     //     $filter: {
     //       input: '$array',
     //       as: '$string',
@@ -91,7 +97,7 @@ describe('Expressions', () => {
     //     }
     //   } as const;
 
-    //   expectTypeOf(result).not.toExtend<
+    //   expectTypeOf(expression).not.toExtend<
     //     AggregateExpression<Input, unknown[]>
     //   >();
     // });
@@ -106,17 +112,56 @@ describe('Expressions', () => {
     };
 
     it('should accept arbitrarily many parameters', () => {
-      const result = {
+      const expression = {
         $add: ['$number1', '$number2', '$number3', 42, 69, '$number1']
       } as const;
-      expectTypeOf(result).toExtend<AggregateExpression<Input, number>>();
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
 
     it('should be type-safe', () => {
-      const result = {
+      const expression = {
         $add: ['$number1', '$number2', '$string']
       } as const;
-      expectTypeOf(result).not.toExtend<AggregateExpression<Input, number>>();
+      expectTypeOf(expression).not.toExtend<
+        AggregateExpression<Input, number>
+      >();
+    });
+  });
+
+  describe('Overloading', () => {
+    type Input = {
+      date1: Date;
+      date2: Date;
+      number1: number;
+      number2: number;
+    };
+
+    it('should add two numbers and result in a number', () => {
+      const expression = {
+        $add: ['$number1', '$number2']
+      } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
+    });
+
+    it('should add a Date and a number and result in a Date', () => {
+      const expression = {
+        $add: ['$date1', '$number2']
+      } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, Date>>();
+    });
+
+    it('should subtract a number from a Date and return a Date', () => {
+      const expression = {
+        $subtract: ['$date1', '$number1']
+      } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, Date>>();
+    });
+
+    it('should subtract a Date from another Date and return a number', () => {
+      const expression = {
+        $subtract: ['$date1', '$date2']
+      } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
   });
 });

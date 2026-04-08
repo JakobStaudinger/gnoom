@@ -3,6 +3,7 @@ import { StaticInput } from './index';
 export type ArithmetricExpression =
   | { $abs: (x: number) => number }
   | { $add: (x: number, y: number, ...others: number[]) => number }
+  | { $add: (x: Date, y: number, ...others: number[]) => Date }
   | { $ceil: (x: number) => number }
   | { $divide: (dividend: number, divisor: number) => number }
   | { $exp: (x: number) => number }
@@ -21,4 +22,6 @@ export type ArithmetricExpression =
     }
   | { $sqrt: (x: number) => number }
   | { $subtract: (x: number, y: number) => number }
+  | { $subtract: (x: Date, y: number) => Date }
+  | { $subtract: (x: Date, y: Date) => number }
   | { $trunc: (x: number, digits: number) => number };

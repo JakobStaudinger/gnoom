@@ -128,6 +128,24 @@ describe('Expressions', () => {
     });
   });
 
+  describe('operators with no parameters', () => {
+    it('should take an empty object as its value', () => {
+      const expression = { $rand: {} } as const;
+      expectTypeOf(expression).toExtend<AggregateExpression<object, number>>();
+    });
+
+    it('should not accept paths to an empty object', () => {
+      type Input = {
+        empty: Record<string, never>;
+      };
+
+      const expression = { $rand: '$empty' } as const;
+      expectTypeOf(expression).not.toExtend<
+        AggregateExpression<Input, number>
+      >();
+    });
+  });
+
   describe('Overloading', () => {
     type Input = {
       date1: Date;

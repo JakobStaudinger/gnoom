@@ -10,6 +10,7 @@ import { FieldPathExpression } from './field-path.expression';
 import { GroupOperator } from './group.operator';
 import { LiteralExpressionOperator } from './literal-expression.operator';
 import { LiteralExpression } from './literal.expression';
+import { MiscellaneousOperator } from './miscellaneous.operator';
 
 type Operators =
   | ArithmetricOperator
@@ -21,7 +22,8 @@ type Operators =
   | DataSizeOperator
   | DateOperator
   | GroupOperator
-  | LiteralExpressionOperator;
+  | LiteralExpressionOperator
+  | MiscellaneousOperator;
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | AggregateExpressionHelper<T, EvaluateTo, Operators>
@@ -46,23 +48,27 @@ type MapToExpression<T extends object, E> = E extends (
 type MapToExpressionInput<
   T extends object,
   Args extends unknown[]
-> = Args extends [StaticInput<infer R> | infer NonStaticInput]
-  ?
-      | AggregateExpression<T, NonStaticInput>
-      | (R extends object
-          ? {
-              [K in keyof R]: NonNullable<R[K]> extends StaticInput<infer I>
-                ? LiteralExpression<I>
-                : AggregateExpression<T, R[K]>;
-            }
-          : LiteralExpression<R>)
-  : IsTuple<Args> extends true
-    ? {
-        [Index in IndexOf<Args>]: AggregateExpression<T, Args[Index]>;
-      } & { length: Args['length'] }
-    : {
-        [Index in number]: AggregateExpression<T, Args[Index]>;
-      };
+> = Args extends []
+  ? EmptyObject
+  : Args extends [StaticInput<infer R> | infer NonStaticInput]
+    ?
+        | AggregateExpression<T, NonStaticInput>
+        | (R extends object
+            ? {
+                [K in keyof R]: NonNullable<R[K]> extends StaticInput<infer I>
+                  ? LiteralExpression<I>
+                  : AggregateExpression<T, R[K]>;
+              }
+            : LiteralExpression<R>)
+    : IsTuple<Args> extends true
+      ? {
+          [Index in IndexOf<Args>]: AggregateExpression<T, Args[Index]>;
+        } & { length: Args['length'] }
+      : {
+          [Index in number]: AggregateExpression<T, Args[Index]>;
+        };
+
+type EmptyObject = Record<string, never>;
 
 type IndexOf<T extends unknown[]> = Exclude<keyof T, keyof unknown[]>;
 
@@ -73,5 +79,3 @@ export type StaticInput<T> = T & {
 };
 
 type IsTuple<T extends unknown[]> = number extends T['length'] ? false : true;
-
-type A = [unknown] extends [StaticInput<infer R>] ? true : false;

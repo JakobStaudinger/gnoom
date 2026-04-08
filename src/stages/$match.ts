@@ -13,6 +13,7 @@ export type MatchSpecification<T extends object> = {
   [K in keyof T]?: QueryPredicate<T[K]>;
 } & {
   $expr?: AggregateExpression<T, number | boolean | null>;
+  $sampleRate?: number;
   $jsonSchema?: unknown;
   $and?: MatchSpecification<T>[];
   $or?: MatchSpecification<T>[];

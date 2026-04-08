@@ -1,6 +1,6 @@
 import { StaticInput } from './index';
 
-export type ConditionalExpression =
+export type ConditionalOperator =
   | {
       $cond: <T, F>(
         input: StaticInput<{ if: boolean; then: T; else: F }>

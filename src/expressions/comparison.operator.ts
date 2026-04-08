@@ -1,4 +1,4 @@
-export type ComparisonExpression =
+export type ComparisonOperator =
   | { $cmp: <T>(a: T, b: T) => -1 | 0 | 1 }
   | { $eq: <T>(a: T, b: T) => boolean }
   | { $gt: <T>(a: T, b: T) => boolean }

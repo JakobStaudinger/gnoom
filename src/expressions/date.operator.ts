@@ -33,7 +33,7 @@ export type Weekday =
   | 'sunday'
   | 'sun';
 
-export type DateExpression =
+export type DateOperator =
   | {
       $dateAdd: (
         input: StaticInput<{

@@ -1,4 +1,4 @@
-export type BitwiseExpression =
+export type BitwiseOperator =
   | { $bitAnd: (...numbers: number[]) => number }
   | { $bitNot: (x: number) => number }
   | { $bitOr: (...numbers: number[]) => number }

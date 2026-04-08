@@ -1,6 +1,6 @@
-import { StaticInput } from '.';
+import { StaticInput } from './index';
 
-export type ArrayExpression =
+export type ArrayOperator =
   | { $arrayElemAt: <T>(arr: T[], index: number) => T }
   | { $arrayToObject: <K, V>(arr: [K, V][]) => object }
   | {

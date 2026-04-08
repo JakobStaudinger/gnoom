@@ -1,25 +1,23 @@
-import { ArithmetricExpression } from './arithmetic.expression';
-import { ArrayExpression } from './array.expression';
-import { BitwiseExpression } from './bitwise.expression';
-import { BooleanExpression } from './boolean.expression';
-import { ComparisonExpression } from './comparison.expression';
-import { ConditionalExpression } from './conditional.expression';
-import { CustomAggregationExpression } from './custom-aggregation.expression';
-import { DataSizeExpression } from './data-size.expression';
-import { DateExpression } from './date.expression';
+import { ArithmetricOperator } from './arithmetic.operator';
+import { ArrayOperator } from './array.operator';
+import { BitwiseOperator } from './bitwise.operator';
+import { BooleanOperator } from './boolean.operator';
+import { ComparisonOperator } from './comparison.operator';
+import { ConditionalOperator } from './conditional.operator';
+import { DataSizeOperator } from './data-size.operator';
+import { DateOperator } from './date.operator';
 import { FieldPathExpression } from './field-path.expression';
 import { LiteralExpression } from './literal.expression';
 
 export type AggregateExpression<T extends object, EvaluateTo> =
-  | AggregateExpressionHelper<T, EvaluateTo, ArithmetricExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, ArrayExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, BitwiseExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, BooleanExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, ComparisonExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, ConditionalExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, CustomAggregationExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, DataSizeExpression>
-  | AggregateExpressionHelper<T, EvaluateTo, DateExpression>
+  | AggregateExpressionHelper<T, EvaluateTo, ArithmetricOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, ArrayOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, BitwiseOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, BooleanOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, ComparisonOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, ConditionalOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, DataSizeOperator>
+  | AggregateExpressionHelper<T, EvaluateTo, DateOperator>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 

@@ -1,6 +1,6 @@
 import { StaticInput } from './index';
 
-export type ArithmetricExpression =
+export type ArithmetricOperator =
   | { $abs: (x: number) => number }
   | { $add: (x: number, y: number, ...others: number[]) => number }
   | { $add: (x: Date, y: number, ...others: number[]) => Date }

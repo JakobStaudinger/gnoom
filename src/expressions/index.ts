@@ -14,6 +14,7 @@ import { LiteralExpressionOperator } from './operators/literal-expression.operat
 import { MiscellaneousOperator } from './operators/miscellaneous.operator';
 import { ObjectOperator } from './operators/object.operator';
 import { SetOperator } from './operators/set.operator';
+import { StringOperator } from './operators/string.operator';
 
 type Operators =
   | ArithmetricOperator
@@ -28,7 +29,8 @@ type Operators =
   | LiteralExpressionOperator
   | MiscellaneousOperator
   | ObjectOperator
-  | SetOperator;
+  | SetOperator
+  | StringOperator;
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | MapToOperatorSyntax<T, EvaluateTo, Operators>

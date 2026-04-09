@@ -1,10 +1,7 @@
-type Divisor = number;
-type Remainder = number;
-
-type RegExpOption = 'i' | 'm' | 'x' | 's' | 'u';
+import { RegExpOption } from '../types/regexp';
 
 export type MiscellaneousQueryPredicate<T> = {
-  $mod?: T extends number ? [Divisor, Remainder] : never;
+  $mod?: T extends number ? [divisor: number, remainder: number] : never;
 } & (T extends string
   ?
       | {

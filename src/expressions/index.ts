@@ -50,31 +50,24 @@ type MapToExpression<T extends object, E> = E extends (
   ? MapToExpressionInput<T, Args>
   : E;
 
-type MapToExpressionInput<
-  T extends object,
-  Args extends unknown[]
-> = Args extends []
+type MapToExpressionInput<T extends object, Args> = Args extends readonly []
   ? EmptyObject
-  : Args extends [StaticInput<infer R> | infer NonStaticInput]
+  : Args extends readonly [StaticInput<infer R> | infer NonStaticInput]
     ?
         | AggregateExpression<T, NonStaticInput>
         | (R extends object
             ? {
-                [K in keyof R]: NonNullable<R[K]> extends StaticInput<infer I>
+                readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
+                  infer I
+                >
                   ? LiteralExpression<I>
                   : AggregateExpression<T, R[K]>;
               }
             : LiteralExpression<R>)
-    : IsTuple<Args> extends true
-      ? {
-          [Index in IndexOf<Args>]: AggregateExpression<T, Args[Index]>;
-        } & { length: Args['length'] }
-      : {
-          [Index in number]: AggregateExpression<T, Args[Index]>;
-        };
+    : {
+        readonly [K in keyof Args]: K extends number | `${number}`
+          ? AggregateExpression<T, Args[K]>
+          : Args[K];
+      };
 
 type EmptyObject = Record<string, never>;
-
-type IndexOf<T extends unknown[]> = Exclude<keyof T, keyof unknown[]>;
-
-type IsTuple<T extends unknown[]> = number extends T['length'] ? false : true;

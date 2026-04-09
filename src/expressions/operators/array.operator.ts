@@ -1,4 +1,4 @@
-import { StaticInput } from './index';
+import { StaticInput } from '../static-input';
 
 export type ArrayOperator =
   | { $arrayElemAt: <T>(arr: T[], index: number) => T }

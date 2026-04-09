@@ -1,18 +1,19 @@
-import { ArithmetricOperator } from './arithmetic.operator';
-import { ArrayOperator } from './array.operator';
-import { BitwiseOperator } from './bitwise.operator';
-import { BooleanOperator } from './boolean.operator';
-import { ComparisonOperator } from './comparison.operator';
-import { ConditionalOperator } from './conditional.operator';
-import { DataSizeOperator } from './data-size.operator';
-import { DateOperator } from './date.operator';
 import { FieldPathExpression } from './field-path.expression';
-import { GroupOperator } from './group.operator';
-import { LiteralExpressionOperator } from './literal-expression.operator';
 import { LiteralExpression } from './literal.expression';
-import { MiscellaneousOperator } from './miscellaneous.operator';
-import { ObjectOperator } from './object.operator';
-import { SetOperator } from './set.operator';
+import { ArithmetricOperator } from './operators/arithmetic.operator';
+import { ArrayOperator } from './operators/array.operator';
+import { BitwiseOperator } from './operators/bitwise.operator';
+import { BooleanOperator } from './operators/boolean.operator';
+import { ComparisonOperator } from './operators/comparison.operator';
+import { ConditionalOperator } from './operators/conditional.operator';
+import { DataSizeOperator } from './operators/data-size.operator';
+import { DateOperator } from './operators/date.operator';
+import { GroupOperator } from './operators/group.operator';
+import { LiteralExpressionOperator } from './operators/literal-expression.operator';
+import { MiscellaneousOperator } from './operators/miscellaneous.operator';
+import { ObjectOperator } from './operators/object.operator';
+import { SetOperator } from './operators/set.operator';
+import { StaticInput } from './static-input';
 
 type Operators =
   | ArithmetricOperator
@@ -75,11 +76,5 @@ type MapToExpressionInput<
 type EmptyObject = Record<string, never>;
 
 type IndexOf<T extends unknown[]> = Exclude<keyof T, keyof unknown[]>;
-
-const STATIC_INPUT_MARKER = Symbol('StaticInput');
-
-export type StaticInput<T> = T & {
-  [STATIC_INPUT_MARKER]: never;
-};
 
 type IsTuple<T extends unknown[]> = number extends T['length'] ? false : true;

@@ -1,4 +1,4 @@
-import { StaticInput } from './index';
+import { StaticInput } from '../static-input';
 
 export type ObjectOperator =
   | { $mergeObjects: <T>(x: T, y: T, ...values: T[]) => object }

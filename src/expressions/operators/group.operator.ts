@@ -1,4 +1,4 @@
-import { StaticInput } from './index';
+import { StaticInput } from '../static-input';
 
 export type GroupOperator =
   | { $avg: <T>(values: T[]) => T }

@@ -9,12 +9,14 @@ import { ComparisonOperator } from './operators/comparison.operator';
 import { ConditionalOperator } from './operators/conditional.operator';
 import { DataSizeOperator } from './operators/data-size.operator';
 import { DateOperator } from './operators/date.operator';
+import { EncryptedStringOperator } from './operators/encrypted-string.operator';
 import { GroupOperator } from './operators/group.operator';
 import { LiteralExpressionOperator } from './operators/literal-expression.operator';
 import { MiscellaneousOperator } from './operators/miscellaneous.operator';
 import { ObjectOperator } from './operators/object.operator';
 import { SetOperator } from './operators/set.operator';
 import { StringOperator } from './operators/string.operator';
+import { TextOperator } from './operators/text.operator';
 
 type Operators =
   | ArithmetricOperator
@@ -30,7 +32,9 @@ type Operators =
   | MiscellaneousOperator
   | ObjectOperator
   | SetOperator
-  | StringOperator;
+  | StringOperator
+  | EncryptedStringOperator
+  | TextOperator;
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | MapToOperatorSyntax<T, EvaluateTo, Operators>

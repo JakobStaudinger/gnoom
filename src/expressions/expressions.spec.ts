@@ -118,6 +118,15 @@ describe('Expressions', () => {
       expectTypeOf(expression).toExtend<AggregateExpression<Input, number>>();
     });
 
+    it('should require that all non-rest parameters are given', () => {
+      const expression = {
+        $add: [1]
+      } as const;
+      expectTypeOf(expression).not.toExtend<
+        AggregateExpression<Input, number>
+      >();
+    });
+
     it('should be type-safe', () => {
       const expression = {
         $add: ['$number1', '$number2', '$string']

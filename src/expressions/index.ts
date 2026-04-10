@@ -18,6 +18,7 @@ import { SetOperator } from './operators/set.operator';
 import { StringOperator } from './operators/string.operator';
 import { TextOperator } from './operators/text.operator';
 import { TimestampOperator } from './operators/timestamp.operator';
+import { TrigonometryOperator } from './operators/trigonometry.operator';
 
 type Operators =
   | ArithmetricOperator
@@ -36,7 +37,8 @@ type Operators =
   | StringOperator
   | EncryptedStringOperator
   | TextOperator
-  | TimestampOperator;
+  | TimestampOperator
+  | TrigonometryOperator;
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | MapToOperatorSyntax<T, EvaluateTo, Operators>

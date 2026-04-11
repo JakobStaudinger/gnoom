@@ -1,5 +1,4 @@
 import { Aggregate } from '../aggregate';
-import { PreventExtensions } from '../types/prevent-extensions';
 import { Primitive } from '../types/primitive';
 import {
   AggregateExpression,
@@ -8,18 +7,21 @@ import {
 
 export interface ProjectStage<T extends object> {
   $project: <const S extends ProjectSpecification<T>>(
-    specification: PreventExtensions<S, ProjectSpecification<T>>
+    specification: S
   ) => Aggregate<ProjectOutput<T, S>>;
 }
 
-export type ProjectSpecification<T extends object> = Record<
-  string,
-  | 1
-  | true
-  | 0
-  | false
-  | Exclude<AggregateExpression<T, Primitive | Primitive[]>, number | boolean>
->;
+export type ProjectSpecification<T extends object> = {
+  [K in keyof T]?:
+    | 1
+    | true
+    | 0
+    | false
+    | Exclude<
+        AggregateExpression<T, Primitive | Primitive[]>,
+        number | boolean
+      >;
+};
 
 export type ProjectOutput<T extends object, S extends ProjectSpecification<T>> =
   IsPureExclusion<S> extends true

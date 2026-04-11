@@ -3,7 +3,7 @@ import { StaticInput } from '../static-input';
 export interface ArrayOperatorMap {
   $arrayElemAt: <T>(arr: T[], index: number) => T;
   $arrayToObject: <K, V>(arr: [K, V][]) => object;
-  $concatArrays: <T>(array1: T[], array2: T[], ...arrays: T[][]) => unknown[];
+  $concatArrays: <T>(array1: T[], array2: T[], ...arrays: T[][]) => T[];
   $filter: <T>(
     input: StaticInput<{
       input: T[];

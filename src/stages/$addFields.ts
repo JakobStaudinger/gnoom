@@ -3,7 +3,6 @@ import {
   AggregateExpression,
   EvaluateAggregateExpression
 } from '../expressions';
-import { PreventExtensions } from '../types/prevent-extensions';
 import { Primitive } from '../types/primitive';
 
 export interface AddFieldsStage<T extends object> {
@@ -14,7 +13,7 @@ export interface AddFieldsStage<T extends object> {
 type AddFieldsStageDefinition<T extends object> = <
   const S extends AddFieldsSpecification<T>
 >(
-  specification: PreventExtensions<S, AddFieldsSpecification<T>>
+  specification: S
 ) => Aggregate<AddFieldsOutput<T, S>>;
 
 export type AddFieldsSpecification<T extends object> = {

@@ -1,10 +1,10 @@
-import { ObjectId, Timestamp } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import {
   AggregateExpression,
   EvaluateAggregateExpression
 } from '../expressions';
 import { EnforceSpecification } from './enforce-specification';
+import { Primitive } from './primitive';
 
 export type AddFieldsStage<T extends object> = {
   $addFields: AddFieldsStageDefinition<T>;
@@ -16,8 +16,6 @@ type AddFieldsStageDefinition<T extends object> = <
 >(
   specification: EnforceSpecification<S, AddFieldsSpecification<T>>
 ) => Aggregate<AddFieldsOutput<T, S>>;
-
-type Primitive = string | boolean | number | Date | Timestamp | ObjectId;
 
 export type AddFieldsSpecification<T extends object> = {
   [K in string]: AggregateExpression<T, Primitive | Primitive[]>;

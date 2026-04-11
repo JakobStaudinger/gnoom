@@ -1,3 +1,4 @@
-export type DataSizeOperator =
-  | { $binarySize: (value: unknown) => number }
-  | { $bsonSize: (value: unknown) => number };
+export interface DataSizeOperatorMap {
+  $binarySize: (value: unknown) => number;
+  $bsonSize: (value: unknown) => number;
+}

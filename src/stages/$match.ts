@@ -4,11 +4,11 @@ import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
 import { EnforceSpecification } from './enforce-specification';
 
-export type MatchStage<T extends object> = {
+export interface MatchStage<T extends object> {
   $match: <const S extends MatchSpecification<T>>(
     specification: EnforceSpecification<S, MatchSpecification<T>>
   ) => Aggregate<MatchOutput<T, S>>;
-};
+}
 
 export type MatchSpecification<T extends object> = {
   [K in keyof T]?: QueryPredicate<T[K]>;

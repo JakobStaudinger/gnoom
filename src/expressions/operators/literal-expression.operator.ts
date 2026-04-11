@@ -1,1 +1,3 @@
-export type LiteralExpressionOperator = { $literal: <T>(value: T) => T };
+export interface LiteralExpressionOperatorMap {
+  $literal: <T>(value: T) => T;
+}

@@ -6,10 +6,10 @@ import {
 import { EnforceSpecification } from './enforce-specification';
 import { Primitive } from './primitive';
 
-export type AddFieldsStage<T extends object> = {
+export interface AddFieldsStage<T extends object> {
   $addFields: AddFieldsStageDefinition<T>;
   $set: AddFieldsStageDefinition<T>;
-};
+}
 
 type AddFieldsStageDefinition<T extends object> = <
   const S extends AddFieldsSpecification<T>

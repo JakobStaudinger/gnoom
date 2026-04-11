@@ -1,5 +1,7 @@
 import { StaticInput } from '../static-input';
 
-export type TextOperator =
-  | { $meta: (keyword: StaticInput<'textScore'>) => number }
-  | { $meta: (keyword: StaticInput<'indexKey'>) => object | undefined };
+export interface TextOperatorMap {
+  $meta:
+    | ((keyword: StaticInput<'textScore'>) => number)
+    | ((keyword: StaticInput<'indexKey'>) => object | undefined);
+}

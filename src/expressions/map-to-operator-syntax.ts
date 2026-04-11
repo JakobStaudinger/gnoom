@@ -2,20 +2,15 @@ import { AggregateExpression } from './index';
 import { LiteralExpression } from './literal.expression';
 import { StaticInput } from './static-input';
 
-export type MapToOperatorSyntax<T extends object, EvaluateTo, Operators> =
-  Operators extends Record<string, (...args: infer _Args) => infer _R>
-    ? {
-        [K in keyof Operators]: ReturnType<Operators[K]> extends EvaluateTo
-          ? MapToExpression<T, Operators[K]>
-          : never;
-      }
+export type MapToOperatorSyntax<T extends object, EvaluateTo, Operators> = {
+  [K in keyof Operators]: Operators[K] extends (...args: infer Args) => infer R
+    ? R extends EvaluateTo
+      ? MapToExpression<T, Args>
+      : never
     : never;
+};
 
-type MapToExpression<T extends object, E> = E extends (
-  ...args: infer Args
-) => infer _R
-  ? MapOperatorParameters<T, Args>
-  : E;
+type MapToExpression<T extends object, Args> = MapOperatorParameters<T, Args>;
 
 export type MapOperatorParameters<
   T extends object,

@@ -6,11 +6,11 @@ import {
   EvaluateAggregateExpression
 } from '../expressions';
 
-export type ProjectStage<T extends object> = {
+export interface ProjectStage<T extends object> {
   $project: <const S extends ProjectSpecification<T>>(
     specification: EnforceSpecification<S, ProjectSpecification<T>>
   ) => Aggregate<ProjectOutput<T, S>>;
-};
+}
 
 export type ProjectSpecification<T extends object> = Record<
   string,

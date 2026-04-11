@@ -1,6 +1,12 @@
-import { FieldPathExpression } from './field-path.expression';
+import {
+  EvaluateFieldPathExpression,
+  FieldPathExpression
+} from './field-path.expression';
 import { LiteralExpression } from './literal.expression';
-import { MapToOperatorSyntax } from './map-to-operator-syntax';
+import {
+  MapOperatorParameters,
+  MapToOperatorSyntax
+} from './map-to-operator-syntax';
 import { ArithmetricOperator } from './operators/arithmetic.operator';
 import { ArrayOperator } from './operators/array.operator';
 import { BitwiseOperator } from './operators/bitwise.operator';
@@ -42,7 +48,35 @@ type Operators =
   | TrigonometryOperator
   | TypeOperator;
 
+type OperatorExpressions<T extends object, EvaluateTo> = MapToOperatorSyntax<
+  T,
+  EvaluateTo,
+  Operators
+>;
+
 export type AggregateExpression<T extends object, EvaluateTo> =
-  | MapToOperatorSyntax<T, EvaluateTo, Operators>
+  | OperatorExpressions<T, EvaluateTo>
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
+
+export type EvaluateAggregateExpression<T extends object, S> =
+  S extends OperatorExpressions<T, unknown>
+    ? EvaluateOperator<T, S, Operators>
+    : S extends FieldPathExpression<T, unknown>
+      ? S extends `$${infer Path}`
+        ? EvaluateFieldPathExpression<T, Path>
+        : never
+      : S;
+
+type EvaluateOperator<T extends object, S, Operators> =
+  Operators extends Record<string, (...args: infer _Args) => infer _R>
+    ? {
+        [K in keyof Operators]: K extends keyof S
+          ? Operators[K] extends (...args: infer Args) => infer R
+            ? S[K] extends MapOperatorParameters<T, Args>
+              ? R
+              : never
+            : never
+          : never;
+      }[keyof Operators]
+    : never;

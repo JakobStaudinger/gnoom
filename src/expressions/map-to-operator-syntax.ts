@@ -14,10 +14,13 @@ export type MapToOperatorSyntax<T extends object, EvaluateTo, Operators> =
 type MapToExpression<T extends object, E> = E extends (
   ...args: infer Args
 ) => infer _R
-  ? MapToExpressionInput<T, Args>
+  ? MapOperatorParameters<T, Args>
   : E;
 
-type MapToExpressionInput<T extends object, Args> = Args extends readonly []
+export type MapOperatorParameters<
+  T extends object,
+  Args
+> = Args extends readonly []
   ? EmptyObject
   : Args extends readonly [StaticInput<infer R> | infer NonStaticInput]
     ?

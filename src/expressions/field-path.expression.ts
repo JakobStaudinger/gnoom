@@ -4,7 +4,7 @@ type FieldPathExpressionHelper<T extends object> = {
     : K;
 }[keyof T & string];
 
-type EvaluateFieldPathExpression<
+export type EvaluateFieldPathExpression<
   T extends object,
   Path
 > = Path extends `${infer Head extends keyof T & string}.${infer Tail}`

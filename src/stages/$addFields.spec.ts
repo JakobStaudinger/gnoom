@@ -1,0 +1,52 @@
+import { Aggregate, aggregate } from '../aggregate';
+import { expectTypeOf } from 'expect-type';
+
+describe('$addFields', () => {
+  describe('Output', () => {
+    type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
+
+    type InputDocument = {
+      n: number;
+    };
+
+    it('should add fields to the output type', () => {
+      const _result = aggregate<InputDocument>().$addFields({
+        s: 'something' as string
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      type N = Result['n'];
+      type S = Result['s'];
+      expectTypeOf<N>().toBeNumber();
+      expectTypeOf<S>().toBeString();
+    });
+
+    it('should work with operators', () => {
+      const _result = aggregate<InputDocument>().$addFields({
+        random: { $add: ['$n', { $rand: {} }] }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      type NewField = Result['random'];
+      expectTypeOf<NewField>().toBeNumber();
+    });
+
+    it('should work with field paths', () => {
+      const _result = aggregate<InputDocument>().$addFields({
+        alias: '$n'
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      type NewField = Result['alias'];
+
+      expectTypeOf<NewField>().toBeNumber();
+    });
+
+    it('should overwrite fields in the input document type', () => {
+      const _result = aggregate<InputDocument>().$addFields({
+        n: 'new-value' as string
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      type NewField = Result['n'];
+
+      expectTypeOf<NewField>().toBeString();
+    });
+  });
+});

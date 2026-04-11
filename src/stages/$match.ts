@@ -1,13 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { Aggregate } from '../aggregate';
-import { QueryPredicate } from '../query-predicates';
 import { AggregateExpression } from '../expressions';
+import { QueryPredicate } from '../query-predicates';
+import { EnforceSpecification } from './enforce-specification';
 
-export type MatchStage<T extends object> = <
-  const S extends MatchSpecification<T>
->(
-  specification: EnforceSpecification<S, T>
-) => Aggregate<MatchOutput<T, S>>;
+export type MatchStage<T extends object> = {
+  $match: <const S extends MatchSpecification<T>>(
+    specification: EnforceSpecification<S, MatchSpecification<T>>
+  ) => Aggregate<MatchOutput<T, S>>;
+};
 
 export type MatchSpecification<T extends object> = {
   [K in keyof T]?: QueryPredicate<T[K]>;
@@ -18,11 +19,6 @@ export type MatchSpecification<T extends object> = {
   $and?: MatchSpecification<T>[];
   $or?: MatchSpecification<T>[];
   $nor?: MatchSpecification<T>[];
-};
-
-// Disallows "extending" `MatchSpecification` by adding keys that don't exist in the original type.
-type EnforceSpecification<S, T extends object> = {
-  [K in keyof S]: K extends keyof MatchSpecification<T> ? S[K] : never;
 };
 
 type MatchOutput<T extends object, S extends MatchSpecification<T>> = {

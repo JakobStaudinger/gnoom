@@ -1,23 +1,18 @@
 import { AllStages } from './stages';
 
-type PipelineStageName = `$${string}`;
-type UntypedStage = {
-  [K in PipelineStageName]: (spec: unknown) => Aggregate<object>;
-};
-
-type Stages<T extends object> = AllStages<T> & UntypedStage;
-
-export type AggregateBase = {
+export interface Aggregate<T extends object> extends AllStages<T> {
   toArray(): unknown[];
-};
-
-export type Aggregate<T extends object> = AggregateBase & Stages<T>;
+  custom<C extends object>(stage: unknown): Aggregate<C>;
+}
 
 function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
   return new Proxy(
     {
       toArray() {
         return stages;
+      },
+      custom(stage: unknown): Aggregate<T> {
+        return constructAggregate([...stages, stage]);
       }
     },
     {
@@ -31,7 +26,7 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
         return Reflect.get(target, property, receiver);
       }
     }
-  ) satisfies AggregateBase as Aggregate<T>;
+  ) as Aggregate<T>;
 }
 
 export function aggregate<T extends object>(): Aggregate<T> {

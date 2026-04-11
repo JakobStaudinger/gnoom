@@ -24,8 +24,10 @@ describe('AggregateBuilder', () => {
     ]);
   });
 
-  it('should work with pipeline stages that have not been typed (yet)', () => {
-    const output = aggregate().$foo!({ mySpec: 42 }).toArray();
+  it('should allow "custom" pipeline stages that are untyped', () => {
+    const output = aggregate()
+      .custom({ $foo: { mySpec: 42 } })
+      .toArray();
     expect(output).toEqual([{ $foo: { mySpec: 42 } }]);
   });
 

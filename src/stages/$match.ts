@@ -2,11 +2,11 @@ import { ObjectId } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
-import { EnforceSpecification } from './enforce-specification';
+import { PreventExtensions } from '../types/prevent-extensions';
 
 export interface MatchStage<T extends object> {
   $match: <const S extends MatchSpecification<T>>(
-    specification: EnforceSpecification<S, MatchSpecification<T>>
+    specification: PreventExtensions<S, MatchSpecification<T>>
   ) => Aggregate<MatchOutput<T, S>>;
 }
 

@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
-import { EnforceSpecification } from './enforce-specification';
-import { Primitive } from './primitive';
+import { PreventExtensions } from '../types/prevent-extensions';
+import { Primitive } from '../types/primitive';
 import {
   AggregateExpression,
   EvaluateAggregateExpression
@@ -8,7 +8,7 @@ import {
 
 export interface ProjectStage<T extends object> {
   $project: <const S extends ProjectSpecification<T>>(
-    specification: EnforceSpecification<S, ProjectSpecification<T>>
+    specification: PreventExtensions<S, ProjectSpecification<T>>
   ) => Aggregate<ProjectOutput<T, S>>;
 }
 

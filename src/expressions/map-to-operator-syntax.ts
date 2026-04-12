@@ -6,12 +6,10 @@ import { StaticInput } from './static-input';
 export type MapToOperatorSyntax<T extends object, EvaluateTo, Operators> = {
   [K in keyof Operators]: Operators[K] extends (...args: infer Args) => infer R
     ? R extends EvaluateTo
-      ? MapToExpression<T, Args>
+      ? MapOperatorParameters<T, Args>
       : never
     : never;
 };
-
-type MapToExpression<T extends object, Args> = MapOperatorParameters<T, Args>;
 
 export type MapOperatorParameters<
   T extends object,

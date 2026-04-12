@@ -8,6 +8,7 @@ import { LimitStage } from './$limit';
 import { LookupStage } from './$lookup';
 import { MatchStage } from './$match';
 import { ProjectStage } from './$project';
+import { SetWindowFieldsStage } from './$setWindowFields';
 import { SkipStage } from './$skip';
 import { SortStage } from './$sort';
 import { SortByCountStage } from './$sortByCount';
@@ -26,6 +27,7 @@ export interface AllStages<T extends object>
     LookupStage<T>,
     MatchStage<T>,
     ProjectStage<T>,
+    SetWindowFieldsStage<T>,
     SkipStage<T>,
     SortStage<T>,
     SortByCountStage<T>,

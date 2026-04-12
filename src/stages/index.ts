@@ -1,5 +1,6 @@
 import { AddFieldsStage } from './$addFields';
 import { BucketStage } from './$bucket';
+import { BucketAutoStage } from './$bucketAuto';
 import { CountStage } from './$count';
 import { DocumentsStage } from './$documents';
 import { GroupStage } from './$group';
@@ -16,6 +17,7 @@ export interface AllStages<T extends object>
   extends
     AddFieldsStage<T>,
     BucketStage<T>,
+    BucketAutoStage<T>,
     CountStage,
     DocumentsStage,
     GroupStage<T>,

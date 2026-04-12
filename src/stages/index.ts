@@ -1,8 +1,10 @@
 import { AddFieldsStage } from './$addFields';
 import { CountStage } from './$count';
 import { DocumentsStage } from './$documents';
+import { LimitStage } from './$limit';
 import { MatchStage } from './$match';
 import { ProjectStage } from './$project';
+import { SkipStage } from './$skip';
 import { UnsetStage } from './$unset';
 
 export interface AllStages<T extends object>
@@ -12,4 +14,6 @@ export interface AllStages<T extends object>
     ProjectStage<T>,
     UnsetStage<T>,
     CountStage,
-    DocumentsStage {}
+    DocumentsStage,
+    LimitStage<T>,
+    SkipStage<T> {}

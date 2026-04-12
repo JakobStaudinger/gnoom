@@ -1,7 +1,13 @@
 import { AllStages } from './stages';
 
+export const OUTPUT_TYPE = Symbol('OutputType');
+
+export interface AggregatePipeline<T> extends Array<unknown> {
+  [OUTPUT_TYPE]: T;
+}
+
 export interface Aggregate<T extends object> extends AllStages<T> {
-  toArray(): unknown[];
+  toArray(): AggregatePipeline<T>;
   custom<C extends object>(stage: unknown): Aggregate<C>;
 }
 

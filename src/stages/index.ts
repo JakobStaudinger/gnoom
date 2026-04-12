@@ -5,6 +5,7 @@ import { CountStage } from './$count';
 import { DocumentsStage } from './$documents';
 import { GroupStage } from './$group';
 import { LimitStage } from './$limit';
+import { LookupStage } from './$lookup';
 import { MatchStage } from './$match';
 import { ProjectStage } from './$project';
 import { SkipStage } from './$skip';
@@ -22,6 +23,7 @@ export interface AllStages<T extends object>
     DocumentsStage,
     GroupStage<T>,
     LimitStage<T>,
+    LookupStage<T>,
     MatchStage<T>,
     ProjectStage<T>,
     SkipStage<T>,

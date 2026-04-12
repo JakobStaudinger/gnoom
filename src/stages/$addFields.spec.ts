@@ -11,7 +11,7 @@ describe('$addFields', () => {
 
     it('should add fields to the output type', () => {
       const _result = aggregate<InputDocument>().$addFields({
-        s: 'something' as string
+        s: 'something'
       });
       type Result = ExtractDocumentType<typeof _result>;
       type N = Result['n'];
@@ -41,7 +41,7 @@ describe('$addFields', () => {
 
     it('should overwrite fields in the input document type', () => {
       const _result = aggregate<InputDocument>().$addFields({
-        n: 'new-value' as string
+        n: 'new-value'
       });
       type Result = ExtractDocumentType<typeof _result>;
       type NewField = Result['n'];

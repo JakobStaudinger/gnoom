@@ -1,5 +1,4 @@
 import { Aggregate } from '../aggregate';
-import { Primitive } from '../types/primitive';
 import {
   AggregateExpression,
   EvaluateAggregateExpression
@@ -17,10 +16,7 @@ export type ProjectSpecification<T extends object> = {
     | true
     | 0
     | false
-    | Exclude<
-        AggregateExpression<T, Primitive | Primitive[]>,
-        number | boolean
-      >;
+    | Exclude<AggregateExpression<T, unknown>, number | boolean>;
 };
 
 export type ProjectOutput<T extends object, S extends ProjectSpecification<T>> =

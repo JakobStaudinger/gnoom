@@ -6,6 +6,7 @@ import { MatchStage } from './$match';
 import { ProjectStage } from './$project';
 import { SkipStage } from './$skip';
 import { SortStage } from './$sort';
+import { SortByCountStage } from './$sortByCount';
 import { UnsetStage } from './$unset';
 
 export interface AllStages<T extends object>
@@ -18,4 +19,5 @@ export interface AllStages<T extends object>
     DocumentsStage,
     LimitStage<T>,
     SkipStage<T>,
-    SortStage<T> {}
+    SortStage<T>,
+    SortByCountStage<T> {}

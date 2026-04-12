@@ -75,7 +75,9 @@ export type EvaluateAggregateExpression<T extends object, S> =
       ? S extends `$${infer Path}`
         ? EvaluateFieldPathExpression<T, Path>
         : never
-      : S;
+      : S extends Record<string, unknown>
+        ? { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
+        : S;
 
 type EvaluateOperator<T extends object, S, Operators> = {
   [K in keyof Operators]: K extends keyof S

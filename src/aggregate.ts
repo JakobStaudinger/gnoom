@@ -11,7 +11,7 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       toArray() {
         return stages;
       },
-      custom(stage: unknown): Aggregate<T> {
+      custom<C extends object>(stage: unknown): Aggregate<C> {
         return constructAggregate([...stages, stage]);
       }
     },

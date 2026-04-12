@@ -3,6 +3,7 @@ import {
   AggregateExpression,
   EvaluateAggregateExpression
 } from '../expressions';
+import { EmptyObject } from '../types/object';
 
 export interface DocumentsStage {
   $documents: <const S extends DocumentsSpecification>(
@@ -16,5 +17,3 @@ type DocumentsOutput<S extends DocumentsSpecification> =
   EvaluateAggregateExpression<EmptyObject, S> extends (infer T extends object)[]
     ? T
     : never;
-
-type EmptyObject = Record<string, never>;

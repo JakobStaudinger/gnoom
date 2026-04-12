@@ -1,3 +1,4 @@
+import { EmptyObject } from '../types/object';
 import { AggregateExpression } from './index';
 import { LiteralExpression } from './literal.expression';
 import { StaticInput } from './static-input';
@@ -34,5 +35,3 @@ export type MapOperatorParameters<
           ? AggregateExpression<T, Args[K]>
           : Args[K];
       };
-
-type EmptyObject = Record<string, never>;

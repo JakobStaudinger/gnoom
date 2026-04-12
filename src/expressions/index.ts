@@ -1,3 +1,4 @@
+import { AnyObject } from '../types/object';
 import {
   EvaluateFieldPathExpression,
   FieldPathExpression
@@ -75,7 +76,7 @@ export type EvaluateAggregateExpression<T extends object, S> =
       ? S extends `$${infer Path}`
         ? EvaluateFieldPathExpression<T, Path>
         : never
-      : S extends Record<string, unknown>
+      : S extends AnyObject
         ? { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
         : S;
 

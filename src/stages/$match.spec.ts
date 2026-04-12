@@ -8,6 +8,22 @@ describe('$match', () => {
       digit: number | null;
       mixed: string | number | boolean | null;
       array: (number | null)[] | null;
+      nested: {
+        number: number | null;
+        string: string | null;
+        rabbit: {
+          hole: {
+            without: {
+              end?: string;
+              rabbits: {
+                name: string;
+                age: number | undefined;
+                furColor: string;
+              }[];
+            };
+          };
+        };
+      };
     };
 
     type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
@@ -126,6 +142,24 @@ describe('$match', () => {
       type Result = ExtractDocumentType<typeof _result>['mixed'];
 
       expectTypeOf<Result>().toEqualTypeOf<2 | 3 | true>();
+    });
+
+    it.skip('should do type narrowing on deep keys', () => {
+      const _result = aggregate<InputDocumentType>().$match({
+        nested: { number: { $type: 'number' } },
+        'nested.string': { $type: 'string' },
+        'nested.rabbit.hole.without.rabbits.age': { $type: 'number' }
+      });
+      type _ResultN = ExtractDocumentType<typeof _result>['nested']['number'];
+      type _ResultS = ExtractDocumentType<typeof _result>['nested']['string'];
+      type _ResultSuperNested = ExtractDocumentType<
+        typeof _result
+      >['nested']['rabbit']['hole']['without']['rabbits'][number]['age'];
+
+      // TODO:
+      // expectTypeOf<ResultN>().toBeNumber();
+      // expectTypeOf<ResultS>().toBeString();
+      // expectTypeOf<ResultSuperNested>().toBeNumber();
     });
   });
 });

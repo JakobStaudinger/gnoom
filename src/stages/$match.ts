@@ -2,6 +2,8 @@ import { ObjectId } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
+import { DeepKeyof, DeepType } from '../types/deep-keyof';
+import { AnyObject } from '../types/object';
 
 export interface MatchStage<T extends object> {
   $match: <const S extends MatchSpecification<T>>(
@@ -9,9 +11,19 @@ export interface MatchStage<T extends object> {
   ) => Aggregate<MatchOutput<T, S>>;
 }
 
-export type MatchSpecification<T extends object> = {
-  [K in keyof T]?: QueryPredicate<T[K]>;
-} & {
+type QueryPredicates<T extends object> = {
+  [K in DeepKeyof<T>]?: DeepType<T, K> extends AnyObject
+    ? {
+        [P in keyof DeepType<T, K>]?:
+          | QueryPredicate<DeepType<T, K>[P]>
+          | (DeepType<T, K>[P] extends object
+              ? QueryPredicates<DeepType<T, K>[P]>
+              : never);
+      }
+    : QueryPredicate<DeepType<T, K>>;
+};
+
+export type MatchSpecification<T extends object> = QueryPredicates<T> & {
   $expr?: AggregateExpression<T, number | boolean | null>;
   $sampleRate?: number;
   $jsonSchema?: unknown;
@@ -21,7 +33,7 @@ export type MatchSpecification<T extends object> = {
 };
 
 type MatchOutput<T extends object, S extends MatchSpecification<T>> = {
-  [K in keyof T]: Narrow<T[K], S[K]>;
+  [K in keyof T]: K extends keyof S ? Narrow<T[K], S[K]> : T[K];
 } & NarrowOr<T, S> &
   NarrowAnd<T, S>;
 

@@ -1,6 +1,7 @@
 import { AddFieldsStage } from './$addFields';
 import { CountStage } from './$count';
 import { DocumentsStage } from './$documents';
+import { GroupStage } from './$group';
 import { LimitStage } from './$limit';
 import { MatchStage } from './$match';
 import { ProjectStage } from './$project';
@@ -22,4 +23,5 @@ export interface AllStages<T extends object>
     SkipStage<T>,
     SortStage<T>,
     SortByCountStage<T>,
-    UnwindStage<T> {}
+    UnwindStage<T>,
+    GroupStage<T> {}

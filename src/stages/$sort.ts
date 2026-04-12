@@ -6,6 +6,6 @@ export interface SortStage<T extends object> {
   ) => Aggregate<T>;
 }
 
-type SortSpecification<T extends object> = {
+export type SortSpecification<T extends object> = {
   [K in keyof T]?: 1 | -1 | { $meta: 'textScore' };
 };

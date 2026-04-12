@@ -3,7 +3,7 @@ import { AllStages } from './stages';
 export const OUTPUT_TYPE = Symbol('OutputType');
 
 export interface AggregatePipeline<T> extends Array<unknown> {
-  [OUTPUT_TYPE]: T;
+  [OUTPUT_TYPE]?: T;
 }
 
 export interface Aggregate<T extends object> extends AllStages<T> {
@@ -25,8 +25,15 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       get(target, property, receiver) {
         if (typeof property === 'string' && property.startsWith('$')) {
           const stageName = property as keyof AllStages<T>;
-          return (spec: unknown) =>
+          const fn = (spec: unknown) =>
             constructAggregate([...stages, { [stageName]: spec }]);
+
+          // extra function call needed to be able to pass the type of the joined collection
+          if (property === '$lookup') {
+            return () => fn;
+          }
+
+          return fn;
         }
 
         return Reflect.get(target, property, receiver);

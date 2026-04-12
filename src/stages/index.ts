@@ -8,6 +8,7 @@ import { SkipStage } from './$skip';
 import { SortStage } from './$sort';
 import { SortByCountStage } from './$sortByCount';
 import { UnsetStage } from './$unset';
+import { UnwindStage } from './$unwind';
 
 export interface AllStages<T extends object>
   extends
@@ -20,4 +21,5 @@ export interface AllStages<T extends object>
     LimitStage<T>,
     SkipStage<T>,
     SortStage<T>,
-    SortByCountStage<T> {}
+    SortByCountStage<T>,
+    UnwindStage<T> {}

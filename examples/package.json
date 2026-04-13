@@ -1,0 +1,65 @@
+{
+  "name": "@gnoom/examples",
+  "version": "0.0.1",
+  "description": "Gnoom examples",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JakobStaudinger/gnoom.git"
+  },
+  "keywords": [
+    "mongodb",
+    "mongo",
+    "aggregate",
+    "builder"
+  ],
+  "author": "Jakob Staudinger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JakobStaudinger/gnoom/issues"
+  },
+  "homepage": "https://github.com/JakobStaudinger/gnoom#readme",
+  "packageManager": "pnpm@10.33.0",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.0",
+    "@typescript-eslint/parser": "^8.58.0",
+    "@typescript/analyze-trace": "^0.10.1",
+    "eslint": "^10.1.0",
+    "expect-type": "^1.3.0",
+    "jest": "^30.3.0",
+    "prettier": "^3.8.1",
+    "ts-jest": "^29.4.9",
+    "tsdown": "^0.21.7",
+    "typescript": "^6.0.2"
+  },
+  "peerDependencies": {
+    "mongodb": ">=6"
+  },
+  "dependencies": {
+    "@gnoom/gnoom": "../"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -69,16 +69,16 @@ export type AggregateExpression<T extends object, EvaluateTo> =
   | LiteralExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 
-export type EvaluateAggregateExpression<T extends object, S> =
-  S extends OperatorExpressions<T, unknown>
+export type EvaluateAggregateExpression<
+  T extends object,
+  S
+> = S extends `$${infer Path}`
+  ? EvaluateFieldPathExpression<T, Path>
+  : S extends OperatorExpressions<T, unknown>
     ? EvaluateOperator<T, S, OperatorMap>
-    : S extends FieldPathExpression<T, unknown>
-      ? S extends `$${infer Path}`
-        ? EvaluateFieldPathExpression<T, Path>
-        : never
-      : S extends AnyObject
-        ? { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
-        : S;
+    : S extends AnyObject
+      ? { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
+      : S;
 
 type EvaluateOperator<T extends object, S, Operators> = {
   [K in keyof Operators]: K extends keyof S

@@ -28,7 +28,7 @@ describe('$group', () => {
       type Result = ExtractDocumentType<typeof _result>;
       expectTypeOf<Result>().toExtend<{
         _id: boolean;
-        // TOOD: should be `string[]` but generics from the signature get lost
+        // TODO: should be `string[]` but generics from the signature get lost
         strings: unknown[];
         lowest: number;
       }>();

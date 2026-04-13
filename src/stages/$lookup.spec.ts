@@ -34,7 +34,7 @@ describe('$lookup', () => {
         from: 'authors',
         localField: 'authorName',
         foreignField: 'name',
-        pipeline: aggregate<Author>().$project({ age: 0 }).toArray(),
+        pipeline: (p) => p.$project({ age: 0 }).toArray(),
         as: 'author'
       });
 

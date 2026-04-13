@@ -3,10 +3,7 @@ import { DeepKeyof } from '../types/deep-keyof';
 
 export interface LookupStage<T extends object> {
   $lookup: <Other extends object>() => <
-    const S extends LookupSpecification<T, Other> = LookupSpecification<
-      T,
-      Other
-    >
+    const S extends LookupSpecification<T, Other>
   >(
     specification: S
   ) => Aggregate<LookupOutput<T, Other, S>>;
@@ -25,10 +22,14 @@ export type LookupSpecification<
     | {
         localField: DeepKeyof<T>;
         foreignField: DeepKeyof<Other>;
-        pipeline?: AggregatePipeline<unknown>;
+        pipeline?: (
+          aggregate: Aggregate<Other>
+        ) => AggregatePipeline<unknown> | Aggregate<object>;
       }
     | {
-        pipeline: AggregatePipeline<unknown>;
+        pipeline: (
+          aggregate: Aggregate<Other>
+        ) => AggregatePipeline<unknown> | Aggregate<object>;
       }
   );
 
@@ -38,7 +39,9 @@ export type LookupOutput<
   S extends LookupSpecification<T, Other>
 > = T & {
   [K in S['as']]: 'pipeline' extends keyof S
-    ? S['pipeline'] extends AggregatePipeline<infer Output>
+    ? S['pipeline'] extends (
+        ...args: infer _Args
+      ) => AggregatePipeline<infer Output> | Aggregate<infer Output>
       ? Output[]
       : never
     : Other[];

@@ -1,4 +1,5 @@
 import { AllStages } from './stages';
+import { LookupSpecification } from './stages/$lookup';
 
 export const OUTPUT_TYPE = Symbol('OutputType');
 
@@ -20,28 +21,48 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       custom<C extends object>(stage: unknown): Aggregate<C> {
         return constructAggregate([...stages, stage]);
       }
-    },
+    } satisfies Pick<Aggregate<T>, 'toArray' | 'custom'> as Aggregate<T>,
     {
       get(target, property, receiver) {
         if (typeof property === 'string' && property.startsWith('$')) {
           const stageName = property as keyof AllStages<T>;
-          const fn = (spec: unknown) =>
-            constructAggregate([...stages, { [stageName]: spec }]);
-
           // extra function call needed to be able to pass the type of the joined collection
-          if (property === '$lookup') {
-            return () => fn;
+          if (stageName === '$lookup') {
+            return () => handleLookup(stages);
           }
 
-          return fn;
+          return (spec: unknown) =>
+            constructAggregate([...stages, { [stageName]: spec }]);
         }
 
         return Reflect.get(target, property, receiver);
       }
     }
-  ) as Aggregate<T>;
+  );
 }
 
 export function aggregate<T extends object>(): Aggregate<T> {
   return constructAggregate([]);
+}
+
+function handleLookup<T extends object>(stages: unknown[]) {
+  return ({
+    pipeline: createPipeline,
+    ...spec
+  }: LookupSpecification<T, object>) => {
+    const pipeline = (() => {
+      if (!createPipeline) {
+        return undefined;
+      }
+
+      const result = createPipeline(aggregate());
+      return Array.isArray(result) ? result : result.toArray();
+    })();
+
+    const newStageSpecification = pipeline ? { ...spec, pipeline } : spec;
+    return constructAggregate([
+      ...stages,
+      [{ $lookup: newStageSpecification }]
+    ]);
+  };
 }

@@ -1,6 +1,7 @@
+import { Refiner } from './refiner';
 import { AllStages } from './stages';
 
-export const OUTPUT_TYPE = Symbol('OutputType');
+const OUTPUT_TYPE = Symbol('OutputType');
 
 export interface AggregatePipeline<T> extends Array<unknown> {
   [OUTPUT_TYPE]?: T;
@@ -8,7 +9,10 @@ export interface AggregatePipeline<T> extends Array<unknown> {
 
 export interface Aggregate<T extends object> extends AllStages<T> {
   toArray(): AggregatePipeline<T>;
-  custom<C extends object>(stage: unknown): Aggregate<C>;
+  custom(stage: unknown): Aggregate<T>;
+  refine<R extends object>(
+    callback: (refiner: Refiner<T>) => Refiner<R>
+  ): Aggregate<R>;
 }
 
 type PipelineCallback = <T extends object>(
@@ -21,10 +25,18 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       toArray() {
         return stages;
       },
-      custom<C extends object>(stage: unknown): Aggregate<C> {
+      custom(stage: unknown): Aggregate<T> {
         return constructAggregate([...stages, stage]);
+      },
+      refine<R extends object>(
+        _callback: (refiner: Refiner<T>) => Refiner<R>
+      ): Aggregate<R> {
+        return this as unknown as Aggregate<R>;
       }
-    } satisfies Pick<Aggregate<T>, 'toArray' | 'custom'> as Aggregate<T>,
+    } satisfies Pick<
+      Aggregate<T>,
+      'toArray' | 'custom' | 'refine'
+    > as Aggregate<T>,
     {
       get(target, property, receiver) {
         if (typeof property === 'string' && property.startsWith('$')) {

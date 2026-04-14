@@ -4,6 +4,7 @@ import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
 import { DeepKeyof, DeepType } from '../types/deep-keyof';
 import { AnyObject } from '../types/object';
+import { Primitive } from '../types/primitive';
 
 export interface MatchStage<T extends object> {
   $match: <const S extends MatchSpecification<T>>(
@@ -12,15 +13,17 @@ export interface MatchStage<T extends object> {
 }
 
 type QueryPredicates<T extends object> = {
-  [K in DeepKeyof<T>]?: DeepType<T, K> extends AnyObject
-    ? {
-        [P in keyof DeepType<T, K>]?:
-          | QueryPredicate<DeepType<T, K>[P]>
-          | (DeepType<T, K>[P] extends object
-              ? QueryPredicates<DeepType<T, K>[P]>
-              : never);
-      }
-    : QueryPredicate<DeepType<T, K>>;
+  [K in DeepKeyof<T>]?: DeepType<T, K> extends Primitive
+    ? QueryPredicate<DeepType<T, K>>
+    : DeepType<T, K> extends AnyObject
+      ? {
+          [P in keyof DeepType<T, K>]?:
+            | QueryPredicate<DeepType<T, K>[P]>
+            | (DeepType<T, K>[P] extends object
+                ? QueryPredicates<DeepType<T, K>[P]>
+                : never);
+        }
+      : QueryPredicate<DeepType<T, K>>;
 };
 
 export type MatchSpecification<T extends object> = QueryPredicates<T> & {

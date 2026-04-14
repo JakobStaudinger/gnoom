@@ -1,4 +1,3 @@
-import { Refiner } from './refiner';
 import { AllStages } from './stages';
 
 const OUTPUT_TYPE = Symbol('OutputType');
@@ -7,13 +6,19 @@ export interface AggregatePipeline<T> extends Array<unknown> {
   [OUTPUT_TYPE]?: T;
 }
 
-export interface Aggregate<T extends object> extends AllStages<T> {
+interface AggregateBase<T extends object> {
   toArray(): AggregatePipeline<T>;
   custom(stage: unknown): Aggregate<T>;
-  refine<R extends object>(
-    callback: (refiner: Refiner<T>) => Refiner<R>
-  ): Aggregate<R>;
+  addToType<A extends object>(value?: A): Aggregate<Omit<T, keyof A> & A>;
+  removeFromType<const K extends keyof T>(keys?: K): Aggregate<Omit<T, K>>;
+  replaceType<N extends object>(newValue?: N): Aggregate<N>;
+  modifyType<Fn extends (obj: T) => object>(
+    callback: Fn
+  ): Aggregate<ReturnType<Fn>>;
 }
+
+export interface Aggregate<T extends object>
+  extends AggregateBase<T>, AllStages<T> {}
 
 type PipelineCallback = <T extends object>(
   aggregate: Aggregate<T>
@@ -28,15 +33,21 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       custom(stage: unknown): Aggregate<T> {
         return constructAggregate([...stages, stage]);
       },
-      refine<R extends object>(
-        _callback: (refiner: Refiner<T>) => Refiner<R>
-      ): Aggregate<R> {
-        return this as unknown as Aggregate<R>;
+      addToType<A extends object>(this: Aggregate<Omit<T, keyof A> & A>) {
+        return this;
+      },
+      removeFromType<K extends PropertyKey>(this: Aggregate<Omit<T, K>>) {
+        return this;
+      },
+      replaceType<R extends object>(this: Aggregate<R>) {
+        return this;
+      },
+      modifyType<Fn extends (obj: T) => object>(
+        this: Aggregate<ReturnType<Fn>>
+      ) {
+        return this;
       }
-    } satisfies Pick<
-      Aggregate<T>,
-      'toArray' | 'custom' | 'refine'
-    > as Aggregate<T>,
+    } satisfies AggregateBase<T> as unknown as Aggregate<T>,
     {
       get(target, property, receiver) {
         if (typeof property === 'string' && property.startsWith('$')) {

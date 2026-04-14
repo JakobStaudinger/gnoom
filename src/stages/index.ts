@@ -9,6 +9,7 @@ import { LimitStage } from './$limit';
 import { LookupStage } from './$lookup';
 import { MatchStage } from './$match';
 import { ProjectStage } from './$project';
+import { ReplaceRootStage } from './$replaceRoot';
 import { SetWindowFieldsStage } from './$setWindowFields';
 import { SkipStage } from './$skip';
 import { SortStage } from './$sort';
@@ -29,6 +30,7 @@ export interface AllStages<T extends object>
     LookupStage<T>,
     MatchStage<T>,
     ProjectStage<T>,
+    ReplaceRootStage<T>,
     SetWindowFieldsStage<T>,
     SkipStage<T>,
     SortStage<T>,

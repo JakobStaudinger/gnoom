@@ -48,5 +48,14 @@ describe('$addFields', () => {
 
       expectTypeOf<NewField>().toBeString();
     });
+
+    it("should result in `never` when operator arguments don't match", () => {
+      const _result = aggregate<InputDocument>().$addFields({
+        random: { $add: ['my-string', { $rand: {} }] }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      type NewField = Result['random'];
+      expectTypeOf<NewField>().toBeNever();
+    });
   });
 });

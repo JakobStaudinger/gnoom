@@ -1,8 +1,4 @@
-type FieldPathExpressionHelper<T extends object> = {
-  [K in keyof T & string]: T[K] extends object
-    ? `${K}.${FieldPathExpressionHelper<T[K]>}` | K
-    : K;
-}[keyof T & string];
+import { Primitive } from '../types/primitive';
 
 export type EvaluateFieldPathExpression<
   T extends object,
@@ -26,3 +22,11 @@ export type FieldPathExpression<T extends object, EvaluateTo> =
 
 export type UnconstrainedFieldPathExpression<T extends object> =
   `$${FieldPathExpressionHelper<T>}`;
+
+type FieldPathExpressionHelper<T extends object> = {
+  [K in keyof T & string]: T[K] extends Primitive | null | undefined
+    ? K
+    : T[K] extends object
+      ? `${K}.${FieldPathExpressionHelper<T[K]>}`
+      : never;
+}[keyof T & string];

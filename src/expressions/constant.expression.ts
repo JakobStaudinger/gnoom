@@ -10,4 +10,4 @@ export type UnconstrainedConstantExpression =
   | Primitive
   | null
   | undefined
-  | UnconstrainedConstantExpression[];
+  | unknown[];

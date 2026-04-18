@@ -1,6 +1,6 @@
 import { EmptyObject } from '../types/object';
 import { AggregateExpression } from './index';
-import { LiteralExpression } from './literal.expression';
+import { ConstantExpression } from './constant.expression';
 import { StaticInput } from './static-input';
 
 export type MapToOperatorSyntax<T extends object, EvaluateTo, Operators> = {
@@ -24,10 +24,10 @@ export type MapOperatorParameters<
                 readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
                   infer I
                 >
-                  ? LiteralExpression<I>
+                  ? ConstantExpression<I>
                   : AggregateExpression<T, R[K]>;
               }
-            : LiteralExpression<R>)
+            : ConstantExpression<R>)
     : {
         readonly [K in keyof Args]: K extends number | `${number}`
           ? AggregateExpression<T, Args[K]>

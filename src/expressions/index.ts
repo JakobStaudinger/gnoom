@@ -3,7 +3,7 @@ import {
   EvaluateFieldPathExpression,
   FieldPathExpression
 } from './field-path.expression';
-import { LiteralExpression } from './literal.expression';
+import { ConstantExpression } from './constant.expression';
 import {
   MapOperatorParameters,
   MapToOperatorSyntax
@@ -66,7 +66,7 @@ type OperatorExpressions<T extends object, EvaluateTo> = MapToOperatorSyntax<
 
 export type AggregateExpression<T extends object, EvaluateTo> =
   | OperatorExpressions<T, EvaluateTo>
-  | LiteralExpression<EvaluateTo>
+  | ConstantExpression<EvaluateTo>
   | FieldPathExpression<T, EvaluateTo>;
 
 export type EvaluateAggregateExpression<

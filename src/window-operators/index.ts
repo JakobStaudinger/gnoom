@@ -1,6 +1,6 @@
 import {
   MapOperatorParameters,
-  MapToOperatorSyntax
+  UnconstrainedMapToOperatorSyntax
 } from '../expressions/map-to-operator-syntax';
 import { TimeUnit } from '../expressions/operators/date.operator';
 import { StaticInput } from '../expressions/static-input';
@@ -115,15 +115,12 @@ type WindowTimeUnit =
   | 'second'
   | 'millisecond';
 
-export type WindowOperatorExpression<T extends object> = MapToOperatorSyntax<
-  T,
-  unknown,
-  WindowOperators<T>
-> & {
-  window?:
-    | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
-    | { range: [lower: number, upper: number]; unit?: TimeUnit };
-};
+export type WindowOperatorExpression<T extends object> =
+  UnconstrainedMapToOperatorSyntax<T, WindowOperators<T>> & {
+    window?:
+      | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
+      | { range: [lower: number, upper: number]; unit?: TimeUnit };
+  };
 
 type DocumentBoundary = 'current' | 'unbounded' | number;
 

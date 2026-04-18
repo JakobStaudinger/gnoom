@@ -3,6 +3,12 @@ import { AggregateExpression } from './index';
 import { ConstantExpression } from './constant.expression';
 import { StaticInput } from './static-input';
 
+export type UnconstrainedMapToOperatorSyntax<T extends object, Operators> = {
+  [K in keyof Operators]: Operators[K] extends (...args: infer Args) => infer _R
+    ? MapOperatorParameters<T, Args>
+    : never;
+};
+
 export type MapToOperatorSyntax<T extends object, EvaluateTo, Operators> = {
   [K in keyof Operators]: Operators[K] extends (...args: infer Args) => infer R
     ? R extends EvaluateTo

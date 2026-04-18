@@ -1,6 +1,6 @@
 import {
   MapOperatorParameters,
-  MapToOperatorSyntax
+  UnconstrainedMapToOperatorSyntax
 } from '../expressions/map-to-operator-syntax';
 import { StaticInput } from '../expressions/static-input';
 import { SortSpecification } from '../stages/$sort';
@@ -65,11 +65,8 @@ type Accumulators<T extends object> = {
   [K in keyof AccumulatorMap<T>]: { [P in K]: AccumulatorMap<T>[K] };
 }[keyof AccumulatorMap<T>];
 
-export type AccumulatorExpression<T extends object> = MapToOperatorSyntax<
-  T,
-  unknown,
-  Accumulators<T>
->;
+export type AccumulatorExpression<T extends object> =
+  UnconstrainedMapToOperatorSyntax<T, Accumulators<T>>;
 
 export type EvaluateAccumulatorExpression<T extends object, E> = {
   [K in keyof AccumulatorMap<T>]: K extends keyof E

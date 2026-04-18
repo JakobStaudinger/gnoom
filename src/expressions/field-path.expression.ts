@@ -23,3 +23,6 @@ export type FieldPathExpression<T extends object, EvaluateTo> =
           : never;
       }[Path]
     : never;
+
+export type UnconstrainedFieldPathExpression<T extends object> =
+  `$${FieldPathExpressionHelper<T>}`;

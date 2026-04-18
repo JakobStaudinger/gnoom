@@ -1,6 +1,13 @@
-import { ConstantExpression } from './constant.expression';
-import { FieldPathExpression } from './field-path.expression';
-import { MapToOperatorSyntax } from './map-to-operator-syntax';
+import { AnyObject } from '../types/object';
+import {
+  EvaluateFieldPathExpression,
+  UnconstrainedFieldPathExpression
+} from './field-path.expression';
+import { UnconstrainedConstantExpression } from './constant.expression';
+import {
+  MapOperatorParameters,
+  UnconstrainedMapToOperatorSyntax
+} from './map-to-operator-syntax';
 import { ArithmetricOperatorMap } from './operators/arithmetic.operator';
 import { ArrayOperatorMap } from './operators/array.operator';
 import { BitwiseOperatorMap } from './operators/bitwise.operator';
@@ -51,15 +58,37 @@ type Operators = {
   [K in keyof OperatorMap]: DistributeOverloads<K, OperatorMap[K]>;
 }[keyof OperatorMap];
 
-type OperatorExpressions<T extends object, EvaluateTo> = MapToOperatorSyntax<
+type OperatorExpressions<T extends object> = UnconstrainedMapToOperatorSyntax<
   T,
-  EvaluateTo,
   Operators
 >;
 
-export type AggregateExpression<T extends object, EvaluateTo> =
-  | OperatorExpressions<T, EvaluateTo>
-  | ConstantExpression<EvaluateTo>
-  | FieldPathExpression<T, EvaluateTo>;
+export type UnconstrainedAggregateExpression<T extends object> =
+  | OperatorExpressions<T>
+  | UnconstrainedConstantExpression
+  | UnconstrainedFieldPathExpression<T>;
 
-export * from './expressions';
+export type EvaluateAggregateExpression<
+  T extends object,
+  S
+> = S extends `$${infer Path}`
+  ? EvaluateFieldPathExpression<T, Path>
+  : S extends OperatorExpressions<T>
+    ? EvaluateOperator<T, S, OperatorMap>
+    : keyof S & `$${string}` extends never
+      ? S extends AnyObject
+        ? { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
+        : S
+      : never;
+
+type EvaluateOperator<T extends object, S, Operators> = {
+  [K in keyof Operators]: K extends keyof S
+    ? Operators[K] extends infer Op
+      ? Op extends (...args: infer Args) => infer R
+        ? S[K] extends MapOperatorParameters<T, Args>
+          ? R
+          : never
+        : never
+      : never
+    : never;
+}[keyof Operators];

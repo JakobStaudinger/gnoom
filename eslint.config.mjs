@@ -12,7 +12,7 @@ const compat = new FlatCompat({
 
 export default defineConfig([
   {
-    ignores: ['dist']
+    ignores: ['**/dist']
   },
   js.configs.recommended,
   ...compat.config({

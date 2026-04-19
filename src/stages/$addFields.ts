@@ -22,8 +22,6 @@ export type AddFieldsSpecification<T extends object> = {
 export type AddFieldsOutput<
   T extends object,
   S extends AddFieldsSpecification<T>
-> = string extends keyof S
-  ? never
-  : Omit<T, keyof S> & {
-      -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]>;
-    };
+> = Omit<T, keyof S> & {
+  -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]>;
+};

@@ -44,29 +44,30 @@ export interface OperatorMap
     TrigonometryOperatorMap,
     TypeOperatorMap {}
 
-type DistributeOverloads<K extends string, V> = V extends unknown
-  ? { [P in K]: V }
-  : never;
+export type OperatorExpressions<
+  T extends object,
+  MaxDepth extends unknown[]
+> = Partial<TypeScriptToMongoSyntax<T, OperatorMap, MaxDepth>>;
 
-type Operators = {
-  [K in keyof OperatorMap]: DistributeOverloads<K, OperatorMap[K]>;
-}[keyof OperatorMap];
-
-export type OperatorExpressions<T extends object> = TypeScriptToMongoSyntax<
-  T,
-  Operators
->;
-
-export type EvaluateOperator<T extends object, S, Operators> = {
-  [K in keyof Operators]: K extends keyof S
-    ? Operators[K] extends infer Op
+export type EvaluateOperator<T extends object, S> = {
+  [K in keyof S & string]: K extends keyof OperatorMap
+    ? OperatorMap[K] extends infer Op
       ? MongoParametersToTypeScriptSyntax<T, S[K]> extends infer Args
-        ? Args extends readonly unknown[]
+        ? Args extends unknown[]
           ? Op extends (...args: Args) => infer R
-            ? R
+            ? ((...args: ExtractRequired<Args>) => never) extends Op
+              ? R
+              : never
             : never
           : never
         : never
       : never
     : never;
-}[keyof Operators];
+}[keyof S & string];
+
+type ExtractRequired<
+  Arr extends readonly unknown[],
+  Acc extends unknown[] = []
+> = Arr extends readonly [infer _Head, ...infer Tail]
+  ? ExtractRequired<Tail, [...Acc, unknown]>
+  : Acc;

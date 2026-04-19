@@ -16,7 +16,7 @@ export interface BucketStage<T extends object> {
 
 interface BucketSpecification<T extends object> {
   groupBy: AggregateExpression<T>;
-  boundaries: unknown[];
+  boundaries: [unknown, unknown, ...unknown[]];
   default?: unknown;
   output?: {
     [K in string]: AccumulatorExpression<T>;

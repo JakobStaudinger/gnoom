@@ -125,7 +125,7 @@ export type WindowOperatorExpression<T extends object> =
 type DocumentBoundary = 'current' | 'unbounded' | number;
 
 export type EvaluateWindowOperatorExpression<T extends object, E> = {
-  [K in keyof WindowOperatorMap<T>]: K extends keyof E
+  [K in keyof E]: K extends keyof WindowOperatorMap<T>
     ? WindowOperatorMap<T>[K] extends infer Op
       ? MongoParametersToTypeScriptSyntax<T, E[K]> extends infer Args
         ? Args extends unknown[]
@@ -136,4 +136,4 @@ export type EvaluateWindowOperatorExpression<T extends object, E> = {
         : never
       : never
     : never;
-}[keyof WindowOperatorMap<T>];
+}[keyof E];

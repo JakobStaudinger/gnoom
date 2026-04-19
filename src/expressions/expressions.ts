@@ -27,6 +27,7 @@ import { TextOperatorMap } from './operators/text.operator';
 import { TimestampOperatorMap } from './operators/timestamp.operator';
 import { TrigonometryOperatorMap } from './operators/trigonometry.operator';
 import { TypeOperatorMap } from './operators/type.operator';
+import { StaticInput } from './static-input';
 
 interface OperatorMap
   extends
@@ -70,16 +71,27 @@ export type AggregateExpression<T extends object> =
 
 export type EvaluateAggregateExpression<
   T extends object,
-  S
+  S,
+  IncludeStatic = false
 > = S extends `$${infer Path}`
   ? EvaluateFieldPathExpression<T, Path>
   : S extends OperatorExpressions<T>
     ? EvaluateOperator<T, S, OperatorMap>
-    : keyof S & `$${string}` extends never
-      ? S extends AnyObject
-        ? { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
-        : S
-      : never;
+    : IncludeStatic extends true
+      ? StaticInput<EvaluateConstant<T, S, IncludeStatic>>
+      : EvaluateConstant<T, S, IncludeStatic>;
+
+type EvaluateConstant<T extends object, S, IncludeStatic> = S extends AnyObject
+  ? keyof S & `$${string}` extends never
+    ? {
+        -readonly [K in keyof S]: EvaluateAggregateExpression<
+          T,
+          S[K],
+          IncludeStatic
+        >;
+      }
+    : never
+  : S;
 
 type EvaluateOperator<T extends object, S, Operators> = {
   [K in keyof Operators]: K extends keyof S

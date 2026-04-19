@@ -1,5 +1,5 @@
 import { Aggregate } from '../aggregate';
-import { AggregateExpression } from '../expressions';
+import { UnconstrainedAggregateExpression } from '../expressions';
 import {
   EvaluateWindowOperatorExpression,
   WindowOperatorExpression
@@ -13,7 +13,7 @@ export interface SetWindowFieldsStage<T extends object> {
 }
 
 export interface SetWindowFieldsSpecification<T extends object> {
-  partitionBy?: AggregateExpression<T, unknown>;
+  partitionBy?: UnconstrainedAggregateExpression<T>;
   sortBy?: SortSpecification<T>;
   output: Record<string, WindowOperatorExpression<T>>;
 }

@@ -1,7 +1,7 @@
 import { Aggregate } from '../aggregate';
 import {
   EvaluateAggregateExpression,
-  UnconstrainedAggregateExpression
+  AggregateExpression
 } from '../expressions';
 
 export interface AddFieldsStage<T extends object> {
@@ -16,7 +16,7 @@ type AddFieldsStageDefinition<T extends object> = <
 ) => Aggregate<AddFieldsOutput<T, S>>;
 
 export type AddFieldsSpecification<T extends object> = {
-  [K in string]: UnconstrainedAggregateExpression<T>;
+  [K in string]: AggregateExpression<T>;
 };
 
 export type AddFieldsOutput<

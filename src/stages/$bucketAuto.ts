@@ -5,7 +5,7 @@ import {
 import { Aggregate } from '../aggregate';
 import {
   EvaluateAggregateExpression,
-  UnconstrainedAggregateExpression
+  AggregateExpression
 } from '../expressions';
 
 export interface BucketAutoStage<T extends object> {
@@ -15,7 +15,7 @@ export interface BucketAutoStage<T extends object> {
 }
 
 interface BucketAutoSpecification<T extends object> {
-  groupBy: UnconstrainedAggregateExpression<T>;
+  groupBy: AggregateExpression<T>;
   buckets: number;
   output?: {
     [K in string]: AccumulatorExpression<T>;

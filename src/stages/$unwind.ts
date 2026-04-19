@@ -1,5 +1,5 @@
 import { Aggregate } from '../aggregate';
-import { UnconstrainedFieldPathExpression } from '../expressions/field-path.expression';
+import { FieldPathExpression } from '../expressions/field-path.expression';
 
 export interface UnwindStage<T extends object> {
   $unwind: <const S extends UnwindSpecification<T>>(
@@ -8,16 +8,16 @@ export interface UnwindStage<T extends object> {
 }
 
 export type UnwindSpecification<T extends object> =
-  | UnconstrainedFieldPathExpression<T>
+  | FieldPathExpression<T>
   | {
-      path: UnconstrainedFieldPathExpression<T>;
+      path: FieldPathExpression<T>;
       preserveNullAndEmptyArrays?: boolean;
       includeArrayIndex?: string;
     };
 
 // TODO: fix unwind of nested properties
 export type UnwindOutput<T extends object, S extends UnwindSpecification<T>> =
-  S extends UnconstrainedFieldPathExpression<T>
+  S extends FieldPathExpression<T>
     ? UnwindOutput<T, { path: S }>
     : S extends {
           path: `$${infer Path extends keyof T & string}`;

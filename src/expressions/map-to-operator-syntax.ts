@@ -1,9 +1,6 @@
 import { AnyObject, EmptyObject } from '../types/object';
-import { UnconstrainedConstantExpression } from './constant.expression';
-import {
-  EvaluateAggregateExpression,
-  UnconstrainedAggregateExpression
-} from './index';
+import { ConstantExpression } from './constant.expression';
+import { EvaluateAggregateExpression, AggregateExpression } from './index';
 import { StaticInput } from './static-input';
 
 export type TypeScriptToMongoSyntax<T extends object, Operators> = {
@@ -21,19 +18,19 @@ export type TypeScriptParametersToMongoSyntax<
   ? EmptyObject
   : Params extends readonly [StaticInput<infer R> | infer NonStaticInput]
     ?
-        | UnconstrainedAggregateExpression<T>
+        | AggregateExpression<T>
         | (R extends object
             ? {
                 readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
                   infer I
                 >
-                  ? UnconstrainedConstantExpression
-                  : UnconstrainedAggregateExpression<T>;
+                  ? ConstantExpression
+                  : AggregateExpression<T>;
               }
-            : UnconstrainedConstantExpression)
+            : ConstantExpression)
     : {
         readonly [K in keyof Params]: K extends number | `${number}`
-          ? UnconstrainedAggregateExpression<T>
+          ? AggregateExpression<T>
           : Params[K];
       };
 

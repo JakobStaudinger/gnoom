@@ -1,7 +1,7 @@
 import { Aggregate } from '../aggregate';
 import {
   EvaluateAggregateExpression,
-  UnconstrainedAggregateExpression
+  AggregateExpression
 } from '../expressions';
 
 export interface ProjectStage<T extends object> {
@@ -16,7 +16,7 @@ export type ProjectSpecification<T extends object> = {
     | true
     | 0
     | false
-    | Exclude<UnconstrainedAggregateExpression<T>, number | boolean>;
+    | Exclude<AggregateExpression<T>, number | boolean>;
 };
 
 export type ProjectOutput<T extends object, S extends ProjectSpecification<T>> =

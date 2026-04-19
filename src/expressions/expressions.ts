@@ -1,8 +1,8 @@
 import { AnyObject } from '../types/object';
-import { UnconstrainedConstantExpression } from './constant.expression';
+import { ConstantExpression } from './constant.expression';
 import {
   EvaluateFieldPathExpression,
-  UnconstrainedFieldPathExpression
+  FieldPathExpression
 } from './field-path.expression';
 import {
   MongoParametersToTypeScriptSyntax,
@@ -63,10 +63,10 @@ type OperatorExpressions<T extends object> = TypeScriptToMongoSyntax<
   Operators
 >;
 
-export type UnconstrainedAggregateExpression<T extends object> =
+export type AggregateExpression<T extends object> =
   | OperatorExpressions<T>
-  | UnconstrainedConstantExpression
-  | UnconstrainedFieldPathExpression<T>;
+  | ConstantExpression
+  | FieldPathExpression<T>;
 
 export type EvaluateAggregateExpression<
   T extends object,

@@ -1,7 +1,7 @@
 import { Aggregate } from '../aggregate';
 import {
   EvaluateAggregateExpression,
-  UnconstrainedAggregateExpression
+  AggregateExpression
 } from '../expressions';
 
 export interface ReplaceRootStage<T extends object> {
@@ -14,7 +14,7 @@ export interface ReplaceRootStage<T extends object> {
 }
 
 export type ReplaceRootSpecification<T extends object> = {
-  [K in string]: UnconstrainedAggregateExpression<T>;
+  [K in string]: AggregateExpression<T>;
 };
 
 export type ReplaceRootOutput<

@@ -11,16 +11,7 @@ export type EvaluateFieldPathExpression<
     ? T[Path]
     : never;
 
-export type FieldPathExpression<T extends object, EvaluateTo> =
-  FieldPathExpressionHelper<T> extends infer Path extends string
-    ? {
-        [K in Path]: EvaluateFieldPathExpression<T, K> extends EvaluateTo
-          ? `$${K}`
-          : never;
-      }[Path]
-    : never;
-
-export type UnconstrainedFieldPathExpression<T extends object> =
+export type FieldPathExpression<T extends object> =
   `$${FieldPathExpressionHelper<T>}`;
 
 type FieldPathExpressionHelper<T extends object> = {

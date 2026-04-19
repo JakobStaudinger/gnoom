@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Aggregate } from '../aggregate';
-import { UnconstrainedAggregateExpression } from '../expressions';
+import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
 import { DeepKeyof, DeepType } from '../types/deep-keyof';
 import { AnyObject } from '../types/object';
@@ -27,7 +27,7 @@ type QueryPredicates<T extends object> = {
 };
 
 export type MatchSpecification<T extends object> = QueryPredicates<T> & {
-  $expr?: UnconstrainedAggregateExpression<T>;
+  $expr?: AggregateExpression<T>;
   $sampleRate?: number;
   $jsonSchema?: unknown;
   $and?: MatchSpecification<T>[];

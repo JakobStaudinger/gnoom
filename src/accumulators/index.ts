@@ -68,7 +68,7 @@ export type AccumulatorExpression<T extends object> = Partial<
 export type EvaluateAccumulatorExpression<T extends object, E> = {
   [K in keyof AccumulatorMap<T>]: K extends keyof E
     ? AccumulatorMap<T>[K] extends infer Acc
-      ? MongoParametersToTypeScriptSyntax<T, [K]> extends infer Args
+      ? MongoParametersToTypeScriptSyntax<T, E[K]> extends infer Args
         ? Args extends unknown[]
           ? Acc extends (...args: Args) => infer R
             ? R

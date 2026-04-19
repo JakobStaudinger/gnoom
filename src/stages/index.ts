@@ -14,6 +14,7 @@ import { SetWindowFieldsStage } from './$setWindowFields';
 import { SkipStage } from './$skip';
 import { SortStage } from './$sort';
 import { SortByCountStage } from './$sortByCount';
+import { UnionWithStage } from './$unionWith';
 import { UnsetStage } from './$unset';
 import { UnwindStage } from './$unwind';
 
@@ -35,5 +36,6 @@ export interface AllStages<T extends object>
     SkipStage<T>,
     SortStage<T>,
     SortByCountStage<T>,
+    UnionWithStage<T>,
     UnsetStage<T>,
     UnwindStage<T> {}

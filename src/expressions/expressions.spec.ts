@@ -12,7 +12,7 @@ describe('Expressions', () => {
       };
     };
 
-    it('should accept a literal', () => {
+    it('should accept a constant expression', () => {
       const _expression = { $abs: 42 } as const;
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
@@ -20,7 +20,7 @@ describe('Expressions', () => {
       expectTypeOf<Result>().toBeNumber();
     });
 
-    it('should not accept a literal of a wrong type', () => {
+    it('should not accept a constant expression of a wrong type', () => {
       const _expression = { $abs: true } as const;
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;

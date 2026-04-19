@@ -1,6 +1,6 @@
 import {
-  MapOperatorParameters,
-  UnconstrainedMapToOperatorSyntax
+  MongoParametersToTypeScriptSyntax,
+  TypeScriptToMongoSyntax
 } from '../expressions/map-to-operator-syntax';
 import { TimeUnit } from '../expressions/operators/date.operator';
 import { StaticInput } from '../expressions/static-input';
@@ -116,7 +116,7 @@ type WindowTimeUnit =
   | 'millisecond';
 
 export type WindowOperatorExpression<T extends object> =
-  UnconstrainedMapToOperatorSyntax<T, WindowOperators<T>> & {
+  TypeScriptToMongoSyntax<T, WindowOperators<T>> & {
     window?:
       | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
       | { range: [lower: number, upper: number]; unit?: TimeUnit };
@@ -126,11 +126,13 @@ type DocumentBoundary = 'current' | 'unbounded' | number;
 
 export type EvaluateWindowOperatorExpression<T extends object, E> = {
   [K in keyof WindowOperatorMap<T>]: K extends keyof E
-    ? WindowOperatorMap<T>[K] extends infer Acc
-      ? Acc extends (...args: infer Args) => infer R
-        ? E[K] extends MapOperatorParameters<T, Args>
-          ? R
-          : `Invalid params for WindowOperator ${K}`
+    ? WindowOperatorMap<T>[K] extends infer Op
+      ? MongoParametersToTypeScriptSyntax<T, E[K]> extends infer Args
+        ? Args extends unknown[]
+          ? Op extends (...args: Args) => infer R
+            ? R
+            : never
+          : never
         : never
       : never
     : never;

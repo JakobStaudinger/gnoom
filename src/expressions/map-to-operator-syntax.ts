@@ -1,54 +1,25 @@
-import { EmptyObject } from '../types/object';
-import { AggregateExpression, UnconstrainedAggregateExpression } from './index';
+import { AnyObject, EmptyObject } from '../types/object';
+import { UnconstrainedConstantExpression } from './constant.expression';
 import {
-  ConstantExpression,
-  UnconstrainedConstantExpression
-} from './constant.expression';
+  EvaluateAggregateExpression,
+  UnconstrainedAggregateExpression
+} from './index';
 import { StaticInput } from './static-input';
 
-export type UnconstrainedMapToOperatorSyntax<T extends object, Operators> = {
-  [K in keyof Operators]: Operators[K] extends (...args: infer Args) => infer _R
-    ? UnconstrainedMapOperatorParameters<T, Args>
+export type TypeScriptToMongoSyntax<T extends object, Operators> = {
+  [K in keyof Operators]: Operators[K] extends (
+    ...params: infer Params
+  ) => infer _R
+    ? TypeScriptParametersToMongoSyntax<T, Params>
     : never;
 };
 
-export type MapToOperatorSyntax<T extends object, EvaluateTo, Operators> = {
-  [K in keyof Operators]: Operators[K] extends (...args: infer Args) => infer R
-    ? R extends EvaluateTo
-      ? MapOperatorParameters<T, Args>
-      : never
-    : never;
-};
-
-export type MapOperatorParameters<
+export type TypeScriptParametersToMongoSyntax<
   T extends object,
-  Args
-> = Args extends readonly []
+  Params
+> = Params extends readonly []
   ? EmptyObject
-  : Args extends readonly [StaticInput<infer R> | infer NonStaticInput]
-    ?
-        | AggregateExpression<T, NonStaticInput>
-        | (R extends object
-            ? {
-                readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
-                  infer I
-                >
-                  ? ConstantExpression<I>
-                  : AggregateExpression<T, R[K]>;
-              }
-            : ConstantExpression<R>)
-    : {
-        readonly [K in keyof Args]: K extends number | `${number}`
-          ? AggregateExpression<T, Args[K]>
-          : Args[K];
-      };
-
-export type UnconstrainedMapOperatorParameters<
-  T extends object,
-  Args
-> = Args extends readonly []
-  ? EmptyObject
-  : Args extends readonly [StaticInput<infer R> | infer NonStaticInput]
+  : Params extends readonly [StaticInput<infer R> | infer NonStaticInput]
     ?
         | UnconstrainedAggregateExpression<T>
         | (R extends object
@@ -61,7 +32,31 @@ export type UnconstrainedMapOperatorParameters<
               }
             : UnconstrainedConstantExpression)
     : {
-        readonly [K in keyof Args]: K extends number | `${number}`
-          ? AggregateExpression<T, Args[K]>
-          : Args[K];
+        readonly [K in keyof Params]: K extends number | `${number}`
+          ? UnconstrainedAggregateExpression<T>
+          : Params[K];
       };
+
+export type MongoParametersToTypeScriptSyntax<
+  T extends object,
+  Params
+> = Params extends readonly unknown[]
+  ? {
+      [K in keyof Params]: K extends number | `${number}`
+        ? EvaluateAggregateExpression<T, Params[K]>
+        : Params[K];
+    }
+  : Params extends EmptyObject
+    ? []
+    : Params extends AnyObject
+      ?
+          | [EvaluateAggregateExpression<T, Params>]
+          | [
+              StaticInput<{
+                -readonly [K in keyof Params]: EvaluateAggregateExpression<
+                  T,
+                  Params[K]
+                >;
+              }>
+            ]
+      : [EvaluateAggregateExpression<T, Params>];

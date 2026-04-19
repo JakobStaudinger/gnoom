@@ -22,7 +22,7 @@ export interface ArrayOperatorMap {
   ) => number;
   $isArray: <T>(value: T) => boolean;
   $lastN: <T>(input: StaticInput<{ input: T[]; n: number }>) => T[];
-  $map: <T, R>(input: StaticInput<{ input: T[]; as?: string; in: R }>) => R;
+  $map: <T, R>(input: StaticInput<{ input: T[]; as?: string; in: R }>) => R[];
   $maxN: <T>(input: StaticInput<{ input: T[]; n: number }>) => T[];
   $minN: <T>(input: StaticInput<{ input: T[]; n: number }>) => T[];
   $range: (start: number, end: number, step?: number) => number[];

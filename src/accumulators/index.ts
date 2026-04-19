@@ -1,6 +1,6 @@
 import {
-  MapOperatorParameters,
-  UnconstrainedMapToOperatorSyntax
+  MongoParametersToTypeScriptSyntax,
+  TypeScriptToMongoSyntax
 } from '../expressions/map-to-operator-syntax';
 import { StaticInput } from '../expressions/static-input';
 import { SortSpecification } from '../stages/$sort';
@@ -62,16 +62,18 @@ interface AccumulatorMap<T extends object> {
 }
 
 export type AccumulatorExpression<T extends object> = Partial<
-  UnconstrainedMapToOperatorSyntax<T, AccumulatorMap<T>>
+  TypeScriptToMongoSyntax<T, AccumulatorMap<T>>
 >;
 
 export type EvaluateAccumulatorExpression<T extends object, E> = {
   [K in keyof AccumulatorMap<T>]: K extends keyof E
     ? AccumulatorMap<T>[K] extends infer Acc
-      ? Acc extends (...args: infer Args) => infer R
-        ? E[K] extends MapOperatorParameters<T, Args>
-          ? R
-          : `Invalid params for accumulator ${K}`
+      ? MongoParametersToTypeScriptSyntax<T, [K]> extends infer Args
+        ? Args extends unknown[]
+          ? Acc extends (...args: Args) => infer R
+            ? R
+            : never
+          : never
         : never
       : never
     : never;

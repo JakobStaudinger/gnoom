@@ -41,7 +41,7 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().not.toExtend<number>();
+      expectTypeOf<Result>().not.toBeNumber();
     });
 
     it('should accept a nested path that resolves to a number', () => {
@@ -49,7 +49,7 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toExtend<number>();
+      expectTypeOf<Result>().toBeNumber();
     });
 
     it('should accept nested expressions', () => {
@@ -57,7 +57,7 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toExtend<number>();
+      expectTypeOf<Result>().toBeNumber();
     });
   });
 
@@ -75,7 +75,7 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toExtend<number>();
+      expectTypeOf<Result>().toBeNumber();
     });
 
     it('should not allow expressions', () => {

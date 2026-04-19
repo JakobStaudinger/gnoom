@@ -1,12 +1,12 @@
 import { AnyObject } from '../types/object';
+import { UnconstrainedConstantExpression } from './constant.expression';
 import {
   EvaluateFieldPathExpression,
   UnconstrainedFieldPathExpression
 } from './field-path.expression';
-import { UnconstrainedConstantExpression } from './constant.expression';
 import {
-  MapOperatorParameters,
-  UnconstrainedMapToOperatorSyntax
+  MongoParametersToTypeScriptSyntax,
+  TypeScriptToMongoSyntax
 } from './map-to-operator-syntax';
 import { ArithmetricOperatorMap } from './operators/arithmetic.operator';
 import { ArrayOperatorMap } from './operators/array.operator';
@@ -58,7 +58,7 @@ type Operators = {
   [K in keyof OperatorMap]: DistributeOverloads<K, OperatorMap[K]>;
 }[keyof OperatorMap];
 
-type OperatorExpressions<T extends object> = UnconstrainedMapToOperatorSyntax<
+type OperatorExpressions<T extends object> = TypeScriptToMongoSyntax<
   T,
   Operators
 >;
@@ -84,9 +84,11 @@ export type EvaluateAggregateExpression<
 type EvaluateOperator<T extends object, S, Operators> = {
   [K in keyof Operators]: K extends keyof S
     ? Operators[K] extends infer Op
-      ? Op extends (...args: infer Args) => infer R
-        ? S[K] extends MapOperatorParameters<T, Args>
-          ? R
+      ? MongoParametersToTypeScriptSyntax<T, S[K]> extends infer Args
+        ? Args extends readonly unknown[]
+          ? Op extends (...args: Args) => infer R
+            ? R
+            : never
           : never
         : never
       : never

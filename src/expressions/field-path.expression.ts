@@ -1,4 +1,4 @@
-import { Primitive } from '../types/primitive';
+import { ObjectId, Timestamp } from 'mongodb';
 
 export type EvaluateFieldPathExpression<
   T extends object,
@@ -24,9 +24,9 @@ export type UnconstrainedFieldPathExpression<T extends object> =
   `$${FieldPathExpressionHelper<T>}`;
 
 type FieldPathExpressionHelper<T extends object> = {
-  [K in keyof T & string]: T[K] extends Primitive | null | undefined
+  [K in keyof T & string]: T[K] extends Date | ObjectId | Timestamp
     ? K
-    : T[K] extends object
-      ? `${K}.${FieldPathExpressionHelper<T[K]>}`
-      : never;
+    : T[K] extends (infer E extends object)[] | (infer E extends object)
+      ? K | `${K}.${FieldPathExpressionHelper<E>}`
+      : K;
 }[keyof T & string];

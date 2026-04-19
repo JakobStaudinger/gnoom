@@ -4,8 +4,8 @@ import {
 } from '../accumulators';
 import { Aggregate } from '../aggregate';
 import {
-  AggregateExpression,
-  EvaluateAggregateExpression
+  EvaluateAggregateExpression,
+  UnconstrainedAggregateExpression
 } from '../expressions';
 
 export interface BucketStage<T extends object> {
@@ -15,7 +15,7 @@ export interface BucketStage<T extends object> {
 }
 
 interface BucketSpecification<T extends object> {
-  groupBy: AggregateExpression<T, unknown>;
+  groupBy: UnconstrainedAggregateExpression<T>;
   boundaries: unknown[];
   default?: unknown;
   output?: {

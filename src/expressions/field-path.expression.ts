@@ -9,7 +9,7 @@ export type EvaluateFieldPathExpression<
     : T[Head]
   : Path extends keyof T & string
     ? T[Path]
-    : never;
+    : undefined;
 
 export type FieldPathExpression<T extends object> =
   `$${FieldPathExpressionHelper<T>}`;

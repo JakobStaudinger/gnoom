@@ -1,7 +1,7 @@
 import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
-} from '../map-to-operator-syntax';
+} from '../map-syntax';
 import { ArithmetricOperatorMap } from './arithmetic.operator';
 import { ArrayOperatorMap } from './array.operator';
 import { BitwiseOperatorMap } from './bitwise.operator';

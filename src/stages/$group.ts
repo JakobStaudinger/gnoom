@@ -4,8 +4,8 @@ import {
 } from '../accumulators';
 import { Aggregate } from '../aggregate';
 import {
-  AggregateExpression,
-  EvaluateAggregateExpression
+  EvaluateAggregateExpression,
+  UnconstrainedAggregateExpression
 } from '../expressions';
 
 export interface GroupStage<T extends object> {
@@ -15,8 +15,11 @@ export interface GroupStage<T extends object> {
 }
 
 export type GroupSpecification<T extends object> = {
-  _id: AggregateExpression<T, unknown>;
-} & Record<string, AggregateExpression<T, unknown> | AccumulatorExpression<T>>;
+  _id: UnconstrainedAggregateExpression<T>;
+} & Record<
+  string,
+  UnconstrainedAggregateExpression<T> | AccumulatorExpression<T>
+>;
 
 type GroupOutput<T extends object, S extends GroupSpecification<T>> = {
   _id: EvaluateAggregateExpression<T, S['_id']>;

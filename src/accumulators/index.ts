@@ -61,12 +61,9 @@ interface AccumulatorMap<T extends object> {
   ) => O[];
 }
 
-type Accumulators<T extends object> = {
-  [K in keyof AccumulatorMap<T>]: { [P in K]: AccumulatorMap<T>[K] };
-}[keyof AccumulatorMap<T>];
-
-export type AccumulatorExpression<T extends object> =
-  UnconstrainedMapToOperatorSyntax<T, Accumulators<T>>;
+export type AccumulatorExpression<T extends object> = Partial<
+  UnconstrainedMapToOperatorSyntax<T, AccumulatorMap<T>>
+>;
 
 export type EvaluateAccumulatorExpression<T extends object, E> = {
   [K in keyof AccumulatorMap<T>]: K extends keyof E

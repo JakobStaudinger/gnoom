@@ -1,7 +1,7 @@
 import { Aggregate } from '../aggregate';
 import {
-  AggregateExpression,
-  EvaluateAggregateExpression
+  EvaluateAggregateExpression,
+  UnconstrainedAggregateExpression
 } from '../expressions';
 
 export interface SortByCountStage<T extends object> {
@@ -10,10 +10,8 @@ export interface SortByCountStage<T extends object> {
   ) => Aggregate<SortByCountOutput<T, S>>;
 }
 
-type SortByCountSpecification<T extends object> = AggregateExpression<
-  T,
-  unknown
->;
+type SortByCountSpecification<T extends object> =
+  UnconstrainedAggregateExpression<T>;
 
 type SortByCountOutput<
   T extends object,

@@ -23,5 +23,14 @@ describe('$documents', () => {
       type Result = ExtractDocumentType<typeof _result>;
       expectTypeOf<Result>().toExtend<{ x: number }>();
     });
+
+    it('should result in `never` when the input is not an array', () => {
+      const _result = aggregate<InputDocument>().$documents({
+        hello: 'world'
+      });
+
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result>().toBeNever();
+    });
   });
 });

@@ -3,6 +3,7 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
+import { Merge } from '../types/merge';
 
 export interface AddFieldsStage<T extends object> {
   $addFields: AddFieldsStageDefinition<T>;
@@ -22,6 +23,7 @@ export type AddFieldsSpecification<T extends object> = {
 export type AddFieldsOutput<
   T extends object,
   S extends AddFieldsSpecification<T>
-> = Omit<T, keyof S> & {
-  -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]>;
-};
+> = Merge<
+  T,
+  { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
+>;

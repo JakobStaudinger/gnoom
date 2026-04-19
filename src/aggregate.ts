@@ -1,4 +1,5 @@
 import { AllStages } from './stages';
+import { Merge } from './types/merge';
 
 const OUTPUT_TYPE = Symbol('OutputType');
 
@@ -9,7 +10,7 @@ export interface AggregatePipeline<T> extends Array<unknown> {
 interface AggregateBase<T extends object> {
   toArray(): AggregatePipeline<T>;
   custom(stage: unknown): Aggregate<T>;
-  addToType<A extends object>(value?: A): Aggregate<Omit<T, keyof A> & A>;
+  addToType<A extends object>(value?: A): Aggregate<Merge<T, A>>;
   removeFromType<const K extends keyof T>(keys?: K): Aggregate<Omit<T, K>>;
   replaceType<N extends object>(newValue?: N): Aggregate<N>;
   modifyType<Fn extends (obj: T) => object>(

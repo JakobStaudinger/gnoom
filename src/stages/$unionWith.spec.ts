@@ -1,7 +1,7 @@
 import { expectTypeOf } from 'expect-type';
 import { Aggregate, aggregate } from '../aggregate';
 
-describe('$lookup', () => {
+describe('$unionWith', () => {
   describe('Output', () => {
     type Author = {
       name: string;

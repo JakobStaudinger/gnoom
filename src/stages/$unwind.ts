@@ -1,5 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { FieldPathExpression } from '../expressions/field-path.expression';
+import { Merge } from '../types/merge';
 
 export interface UnwindStage<T extends object> {
   $unwind: <const S extends UnwindSpecification<T>>(
@@ -24,11 +25,14 @@ export type UnwindOutput<T extends object, S extends UnwindSpecification<T>> =
           preserveNullAndEmptyArrays?: infer Preserve;
           includeArrayIndex?: infer I;
         }
-      ? Omit<T, Path> & {
-          [K in Path]: T[K] extends (infer E)[]
-            ? E | (Preserve extends true ? null : never)
-            : Preserve extends true
-              ? T[K]
-              : NonNullable<T[K]>;
-        } & (I extends string ? { [K in I]: number } : unknown)
+      ? Merge<
+          T,
+          {
+            [K in Path]: T[K] extends (infer E)[]
+              ? E | (Preserve extends true ? null : never)
+              : Preserve extends true
+                ? T[K]
+                : NonNullable<T[K]>;
+          } & (I extends string ? { [K in I]: number } : unknown)
+        >
       : never;

@@ -1,5 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
+import { Merge } from '../types/merge';
 import {
   EvaluateWindowOperatorExpression,
   WindowOperatorExpression
@@ -21,9 +22,12 @@ export interface SetWindowFieldsSpecification<T extends object> {
 type SetWindowFieldsOutput<
   T extends object,
   S extends SetWindowFieldsSpecification<T>
-> = Omit<T, keyof S['output']> & {
-  -readonly [K in keyof S['output']]: EvaluateWindowOperatorExpression<
-    T,
-    S['output'][K]
-  >;
-};
+> = Merge<
+  T,
+  {
+    -readonly [K in keyof S['output']]: EvaluateWindowOperatorExpression<
+      T,
+      S['output'][K]
+    >;
+  }
+>;

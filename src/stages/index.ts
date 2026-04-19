@@ -4,6 +4,7 @@ import { BucketAutoStage } from './$bucketAuto';
 import { CountStage } from './$count';
 import { DocumentsStage } from './$documents';
 import { FacetStage } from './$facet';
+import { GeoNearStage } from './$geoNear';
 import { GroupStage } from './$group';
 import { LimitStage } from './$limit';
 import { LookupStage } from './$lookup';
@@ -26,6 +27,7 @@ export interface AllStages<T extends object>
     CountStage,
     DocumentsStage,
     FacetStage<T>,
+    GeoNearStage<T>,
     GroupStage<T>,
     LimitStage<T>,
     LookupStage<T>,

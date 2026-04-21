@@ -1,3 +1,4 @@
+import { AggregationCursor } from 'mongodb';
 import { AllStages } from './stages';
 import { Merge } from './types/merge';
 
@@ -9,6 +10,9 @@ export interface AggregatePipeline<T> extends Array<unknown> {
 
 interface AggregateBase<T extends object> {
   toArray(): AggregatePipeline<T>;
+  execute(
+    fn: (pipeline: AggregatePipeline<T>) => Promise<T[]> | AggregationCursor<T>
+  ): Promise<T[]>;
   custom(stage: unknown): Aggregate<T>;
   addToType<A extends object>(value?: A): Aggregate<Merge<T, A>>;
   removeFromType<const K extends keyof T>(keys?: K): Aggregate<Omit<T, K>>;
@@ -30,6 +34,15 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
     {
       toArray() {
         return stages;
+      },
+      execute(fn) {
+        const result = fn(this.toArray());
+
+        if ('toArray' in result) {
+          return result.toArray();
+        }
+
+        return result;
       },
       custom(stage: unknown): Aggregate<T> {
         return constructAggregate([...stages, stage]);

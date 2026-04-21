@@ -49,10 +49,10 @@ export type OperatorExpressions<
   MaxDepth extends unknown[]
 > = Partial<TypeScriptToMongoSyntax<T, OperatorMap, MaxDepth>>;
 
-export type EvaluateOperator<T extends object, S> = {
-  [K in keyof S & string]: K extends keyof OperatorMap
+export type EvaluateOperator<T extends object, Input> = {
+  [K in keyof Input & string]: K extends keyof OperatorMap
     ? OperatorMap[K] extends infer Op
-      ? MongoParametersToTypeScriptSyntax<T, S[K]> extends infer Args
+      ? MongoParametersToTypeScriptSyntax<T, Input[K]> extends infer Args
         ? Args extends unknown[]
           ? Op extends (...args: Args) => infer R
             ? ((...args: ExtractRequired<Args>) => never) extends Op
@@ -63,7 +63,7 @@ export type EvaluateOperator<T extends object, S> = {
         : never
       : never
     : never;
-}[keyof S & string];
+}[keyof Input & string];
 
 type ExtractRequired<
   Arr extends readonly unknown[],

@@ -21,7 +21,7 @@ export type EvaluateAggregateExpression<
   IncludeStatic = false
 > = Expression extends `$${infer Path}`
   ? EvaluateFieldPathExpression<T, Path>
-  : true extends HasReservedKey<Expression>
+  : HasReservedKey<Expression> extends true
     ? EvaluateOperator<T, Expression>
     : IncludeStatic extends true
       ? StaticInput<EvaluateConstant<T, Expression, IncludeStatic>>

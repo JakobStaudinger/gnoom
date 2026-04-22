@@ -5,6 +5,7 @@ import { CountStage } from './$count';
 import { DocumentsStage } from './$documents';
 import { FacetStage } from './$facet';
 import { GeoNearStage } from './$geoNear';
+import { GraphLookupStage } from './$graphLookup';
 import { GroupStage } from './$group';
 import { LimitStage } from './$limit';
 import { LookupStage } from './$lookup';
@@ -28,6 +29,7 @@ export interface AllStages<T extends object>
     DocumentsStage,
     FacetStage<T>,
     GeoNearStage<T>,
+    GraphLookupStage<T>,
     GroupStage<T>,
     LimitStage<T>,
     LookupStage<T>,

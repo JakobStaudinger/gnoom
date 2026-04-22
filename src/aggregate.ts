@@ -70,7 +70,9 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
           const fn = (spec: unknown) =>
             constructAggregate([...stages, { [stageName]: processSpec(spec) }]);
           // extra function call needed to be able to pass the type of the joined collection
-          if (stageName === '$lookup' || stageName === '$unionWith') {
+          const specialStages = ['$lookup', '$graphLookup', '$unionWith'];
+
+          if (specialStages.includes(stageName)) {
             return () => fn;
           }
 

@@ -11,7 +11,7 @@ export type DeepKeyof<T> = T extends (infer E)[]
     }[keyof T & string];
 
 export type DeepType<T, K> = T extends (infer E)[]
-  ? DeepType<E, K>
+  ? DeepType<E, K>[]
   : K extends keyof T
     ? T[K]
     : K extends `${infer Head extends keyof T & string}.${infer Tail}`

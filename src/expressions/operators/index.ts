@@ -8,7 +8,7 @@ import { BitwiseOperatorMap } from './bitwise';
 import { BooleanOperatorMap } from './boolean';
 import { ComparisonOperatorMap } from './comparison';
 import { ConditionalOperatorMap } from './conditional';
-import { DataSizeOperatorMap } from './data-size.operator';
+import { DataSizeOperatorMap } from './data-size';
 import { DateOperatorMap } from './date.operator';
 import { EncryptedStringOperatorMap } from './encrypted-string.operator';
 import { GroupOperatorMap } from './group.operator';

@@ -8,11 +8,14 @@ export interface AggregatePipeline<T> extends Array<unknown> {
   [OUTPUT_TYPE]?: T;
 }
 
+interface ExecuteFunction<T extends object> {
+  (pipeline: AggregatePipeline<T>): Promise<T[]> | AggregationCursor<T>;
+}
+
 interface AggregateBase<T extends object> {
   toArray(): AggregatePipeline<T>;
-  execute(
-    fn: (pipeline: AggregatePipeline<T>) => Promise<T[]> | AggregationCursor<T>
-  ): Promise<T[]>;
+  execute(fn: ExecuteFunction<T>): Promise<T[]>;
+  execute(client: { aggregate: ExecuteFunction<T> }): Promise<T[]>;
   custom(stage: unknown): Aggregate<T>;
   addToType<A extends object>(value?: A): Aggregate<Merge<T, A>>;
   removeFromType<const K extends keyof T>(keys?: K): Aggregate<Omit<T, K>>;
@@ -35,7 +38,12 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       toArray() {
         return stages;
       },
-      execute(fn) {
+      execute(fnOrClient) {
+        const fn =
+          typeof fnOrClient === 'function'
+            ? fnOrClient
+            : fnOrClient.aggregate.bind(fnOrClient);
+
         const result = fn(this.toArray());
 
         if ('toArray' in result) {

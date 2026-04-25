@@ -1,4 +1,4 @@
-import { ArrayQueryPredicate } from './array.query-predicate';
+import { ArrayQueryPredicate } from './array';
 import { BitwiseQueryPredicate } from './bitwise.query-predicate';
 import { ComparisonQueryPredicate } from './comparison.query-predicate';
 import { DataTypeQueryPredicate } from './data-type.query-predicate';

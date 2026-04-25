@@ -1,6 +1,5 @@
 import { Timestamp } from 'mongodb';
 
-export interface TimestampOperatorMap {
+export interface $tsIncrement {
   $tsIncrement: (timestamp: Timestamp) => number;
-  $tsSecond: (timestamp: Timestamp) => number;
 }

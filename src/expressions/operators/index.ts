@@ -18,7 +18,7 @@ import { ObjectOperatorMap } from './object';
 import { SetOperatorMap } from './set';
 import { StringOperatorMap } from './string';
 import { TextOperatorMap } from './text';
-import { TimestampOperatorMap } from './timestamp.operator';
+import { TimestampOperatorMap } from './timestamp';
 import { TrigonometryOperatorMap } from './trigonometry.operator';
 import { TypeOperatorMap } from './type.operator';
 

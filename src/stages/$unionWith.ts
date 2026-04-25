@@ -1,4 +1,5 @@
-import { Aggregate, AggregatePipeline } from '../aggregate';
+import { Aggregate } from '../aggregate';
+import { AggregateLike } from '../types/aggregate-like';
 
 export interface UnionWithStage<T extends object> {
   $unionWith: <Other extends object>() => <
@@ -11,15 +12,9 @@ export interface UnionWithStage<T extends object> {
 export type UnionWithSpecification<Other extends object> =
   | {
       coll: string;
-      pipeline?: (
-        aggregate: Aggregate<Other>
-      ) => AggregatePipeline<unknown> | Aggregate<object>;
+      pipeline?: (aggregate: Aggregate<Other>) => AggregateLike<unknown>;
     }
-  | {
-      pipeline: (
-        aggregate: Aggregate<Other>
-      ) => AggregatePipeline<unknown> | Aggregate<object>;
-    };
+  | { pipeline: (aggregate: Aggregate<Other>) => AggregateLike<unknown> };
 
 export type UnionWithOutput<
   T extends object,
@@ -30,7 +25,7 @@ export type UnionWithOutput<
   | ('pipeline' extends keyof S
       ? S['pipeline'] extends (
           ...args: infer _Args
-        ) => AggregatePipeline<infer Output> | Aggregate<infer Output>
+        ) => AggregateLike<infer Output extends object>
         ? Output
         : never
       : Other);

@@ -1,4 +1,5 @@
-import { Aggregate, AggregatePipeline } from '../aggregate';
+import { Aggregate } from '../aggregate';
+import { AggregateLike } from '../types/aggregate-like';
 import { DeepKeyof } from '../types/deep-keyof';
 
 export interface LookupStage<T extends object> {
@@ -22,14 +23,10 @@ export type LookupSpecification<
     | {
         localField: DeepKeyof<T>;
         foreignField: DeepKeyof<Other>;
-        pipeline?: (
-          aggregate: Aggregate<Other>
-        ) => AggregatePipeline<unknown> | Aggregate<object>;
+        pipeline?: (aggregate: Aggregate<Other>) => AggregateLike<unknown>;
       }
     | {
-        pipeline: (
-          aggregate: Aggregate<Other>
-        ) => AggregatePipeline<unknown> | Aggregate<object>;
+        pipeline: (aggregate: Aggregate<Other>) => AggregateLike<unknown>;
       }
   );
 
@@ -41,7 +38,7 @@ export type LookupOutput<
   [K in S['as']]: 'pipeline' extends keyof S
     ? S['pipeline'] extends (
         ...args: infer _Args
-      ) => AggregatePipeline<infer Output> | Aggregate<infer Output>
+      ) => AggregateLike<infer Output>
       ? Output[]
       : never
     : Other[];

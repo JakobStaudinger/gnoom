@@ -1,6 +1,6 @@
 import { ArrayQueryPredicate } from './array';
 import { BitwiseQueryPredicate } from './bitwise';
-import { ComparisonQueryPredicate } from './comparison.query-predicate';
+import { ComparisonQueryPredicate } from './comparison';
 import { DataTypeQueryPredicate } from './data-type.query-predicate';
 import { GeospatialQueryPredicate } from './geospatial.query-predicate';
 import { LogicalQueryPredicate } from './logical.query-predicate';

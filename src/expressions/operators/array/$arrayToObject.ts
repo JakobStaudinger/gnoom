@@ -1,3 +1,3 @@
 export interface $arrayToObject {
-  $arrayToObject: <K, V>(arr: [K, V][]) => object;
+  $arrayToObject: <K extends PropertyKey, V>(arr: [K, V][]) => Record<K, V>;
 }

@@ -9,7 +9,7 @@ export interface $top<T extends object> {
 }
 
 interface Signature<T extends object> extends OverloadTransformation {
-  output: (input: Input<T, this['arg']>) => this['arg'];
+  output: (input: Input<T, this['T']>) => this['T'];
 }
 
 type Input<T extends object, O> = StaticInput<{

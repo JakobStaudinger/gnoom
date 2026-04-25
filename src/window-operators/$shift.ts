@@ -8,7 +8,7 @@ export interface $shift {
 }
 
 interface Signature extends OverloadTransformation {
-  output: (input: Input<this['arg']>) => this['arg'];
+  output: (input: Input<this['T']>) => this['T'];
 }
 
 type Input<V> = StaticInput<{

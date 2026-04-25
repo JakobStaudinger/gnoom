@@ -1,6 +1,6 @@
 export interface OverloadTransformation {
   output: unknown;
-  arg: unknown;
+  T: unknown;
 }
 
 export type Overload<T, Fn extends OverloadTransformation> =
@@ -18,5 +18,5 @@ type OverloadBoolean<T, Fn extends OverloadTransformation> = boolean extends T
   : never;
 
 type ApplyTransformation<T, Fn extends OverloadTransformation> = (Fn & {
-  arg: T;
+  T: T;
 })['output'];

@@ -7,5 +7,5 @@ export interface $setUnion {
 }
 
 interface Signature extends OverloadTransformation {
-  output: (value: this['arg'][]) => this['arg'][];
+  output: (value: this['T'][]) => this['T'][];
 }

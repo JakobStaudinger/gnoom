@@ -8,7 +8,7 @@ export interface $lastN {
 }
 
 interface Signature extends OverloadTransformation {
-  output: (value: Input<this['arg']>) => this['arg'][];
+  output: (value: Input<this['T']>) => this['T'][];
 }
 
 type Input<V> = StaticInput<{ input: V; n: number }>;

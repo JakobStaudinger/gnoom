@@ -1,18 +1,17 @@
-import { ObjectId, Timestamp } from 'mongodb';
+import { AnyObject } from '../../../types/object';
+import { Overload, OverloadTransformation } from '../../../types/overload';
+import { Primitive } from '../../../types/primitive';
 import { StaticInput } from '../../static-input';
 
 export interface $filter {
-  $filter:
-    | ((input: FilterInput<number>) => number[])
-    | ((input: FilterInput<string>) => string[])
-    | ((input: FilterInput<boolean>) => boolean[])
-    | ((input: FilterInput<Date>) => Date[])
-    | ((input: FilterInput<ObjectId>) => ObjectId[])
-    | ((input: FilterInput<Timestamp>) => Timestamp[])
-    | (<T extends object>(input: FilterInput<T>) => T[]);
+  $filter: Overload<Primitive | AnyObject | unknown[], Signature>;
 }
 
-type FilterInput<T> = StaticInput<{
+interface Signature extends OverloadTransformation {
+  output: (input: Input<this['T']>) => this['T'][];
+}
+
+type Input<T> = StaticInput<{
   input: T[];
   as?: StaticInput<string>;
   cond: boolean;

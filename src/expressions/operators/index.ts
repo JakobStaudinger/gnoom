@@ -20,7 +20,7 @@ import { StringOperatorMap } from './string';
 import { TextOperatorMap } from './text';
 import { TimestampOperatorMap } from './timestamp';
 import { TrigonometryOperatorMap } from './trigonometry';
-import { TypeOperatorMap } from './type.operator';
+import { TypeOperatorMap } from './type';
 
 export type OperatorExpressions<
   T extends object,

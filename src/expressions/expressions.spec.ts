@@ -102,8 +102,7 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      // TODO: should be `number[]` but generics get lost
-      expectTypeOf<Result>().toEqualTypeOf<unknown[]>();
+      expectTypeOf<Result>().toEqualTypeOf<number[]>();
     });
 
     it('should disallow expressions for sub-fields also marked static', () => {

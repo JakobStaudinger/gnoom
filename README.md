@@ -13,21 +13,27 @@ Simply import `aggregate`
 
 ```ts
 import { aggregate } from '@gnoom/gnoom';
+import { MongoClient } from 'mongodb';
 
 interface MyInputType {
   _id: ObjectId;
   score: number;
 }
 
-const pipeline = aggregate<MyInputType>()
+declare const client: MongoClient;
+
+const collection = client.db('myDb').collection('myCollection');
+
+const documents = await aggregate<MyInputType>()
   .$group({
     _id: null,
     totalScore: { $sum: '$score' }
   })
-  .toArray();
+  .execute(collection);
 
 // untyped way:
-const unsafePipeline = [
+
+const untypedDocuments = await collection.aggregate([
   {
     $group: {
       _id: null,
@@ -35,7 +41,7 @@ const unsafePipeline = [
       // Oops, made a typo
     }
   }
-];
+]);
 ```
 
 ### Sub-pipelines

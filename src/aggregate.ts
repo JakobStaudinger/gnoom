@@ -1,10 +1,11 @@
 import { AggregationCursor } from 'mongodb';
 import { AllStages } from './stages';
 import { Merge } from './types/merge';
+import { AggregateLike } from './types/aggregate-like';
 
 const OUTPUT_TYPE = Symbol('OutputType');
 
-export interface AggregatePipeline<T> extends Array<unknown> {
+export interface AggregatePipeline<T> extends Array<object> {
   [OUTPUT_TYPE]?: T;
 }
 
@@ -30,13 +31,13 @@ export interface Aggregate<T extends object>
 
 type PipelineCallback = <T extends object>(
   aggregate: Aggregate<T>
-) => Aggregate<object> | AggregatePipeline<unknown>;
+) => AggregateLike<object>;
 
 function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
   return new Proxy(
     {
       toArray() {
-        return stages;
+        return stages as AggregatePipeline<T>;
       },
       execute(fnOrClient) {
         const fn =

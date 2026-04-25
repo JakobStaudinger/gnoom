@@ -2,64 +2,53 @@ import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
 } from '../expressions/map-syntax';
-import { StaticInput } from '../expressions/static-input';
-import { SortSpecification } from '../stages/$sort';
-import { AnyObject } from '../types/object';
+import { $addToSet } from './$addToSet';
+import { $avg } from './$avg';
+import { $bottom } from './$bottom';
+import { $bottomN } from './$bottomN';
+import { $count } from './$count';
+import { $first } from './$first';
+import { $firstN } from './$firstN';
+import { $last } from './$last';
+import { $lastN } from './$lastN';
+import { $max } from './$max';
+import { $maxN } from './$maxN';
+import { $median } from './$median';
+import { $mergeObjects } from './$mergeObjects';
+import { $min } from './$min';
+import { $minN } from './$minN';
+import { $percentile } from './$percentile';
+import { $push } from './$push';
+import { $stdDevPop } from './$stdDevPop';
+import { $stdDevSamp } from './$stdDevSamp';
+import { $sum } from './$sum';
+import { $top } from './$top';
+import { $topN } from './$topN';
 
-interface AccumulatorMap<T extends object> {
-  $addToSet: <V>(value: V) => V[];
-  $avg: (value: number) => number;
-  $bottom: <O>(
-    input: StaticInput<{
-      sortBy: StaticInput<SortSpecification<T>>;
-      output: O;
-    }>
-  ) => O;
-  $bottomN: <O>(
-    input: StaticInput<{
-      n: number;
-      sortBy: StaticInput<SortSpecification<T>>;
-      output: O;
-    }>
-  ) => O[];
-  $count: () => number;
-  $first: <V>(value: V) => V;
-  $firstN: <V>(input: StaticInput<{ input: V; n: number }>) => V[];
-  $last: <V>(value: V) => V;
-  $lastN: <V>(input: StaticInput<{ input: V; n: number }>) => V[];
-  $max: <V extends number>(value: V) => V;
-  $maxN: <V extends number>(input: StaticInput<{ input: V; n: number }>) => V[];
-  $median: <V extends number>(
-    input: StaticInput<{ input: V; method: StaticInput<'approximate'> }>
-  ) => V;
-  $mergeObjects: <O extends AnyObject>(obj: O) => O;
-  $min: <V extends number>(value: V) => V;
-  $minN: <V extends number>(input: StaticInput<{ input: V; n: number }>) => V[];
-  $percentile: <V extends number>(
-    input: StaticInput<{
-      input: V;
-      p: number[];
-      method: StaticInput<'approximate'>;
-    }>
-  ) => V[];
-  $push: <V>(value: V) => V[];
-  $stdDevPop: <V extends number>(value: V) => V;
-  $stdDevSamp: <V extends number>(value: V) => V;
-  $sum: <V extends number>(value: V) => V;
-  $top: <O>(
-    input: StaticInput<{
-      sortBy: StaticInput<SortSpecification<T>>;
-      output: O;
-    }>
-  ) => O;
-  $topN: <O>(
-    input: StaticInput<{
-      n: number;
-      sortBy: StaticInput<SortSpecification<T>>;
-      output: O;
-    }>
-  ) => O[];
-}
+export interface AccumulatorMap<T extends object>
+  extends
+    $addToSet,
+    $avg,
+    $bottom<T>,
+    $bottomN<T>,
+    $count,
+    $first,
+    $firstN,
+    $last,
+    $lastN,
+    $max,
+    $maxN,
+    $median,
+    $mergeObjects,
+    $min,
+    $minN,
+    $percentile,
+    $push,
+    $stdDevPop,
+    $stdDevSamp,
+    $sum,
+    $top<T>,
+    $topN<T> {}
 
 export type AccumulatorExpression<T extends object> = Partial<
   TypeScriptToMongoSyntax<T, AccumulatorMap<T>>

@@ -73,16 +73,13 @@ interface WindowOperatorMap<T extends object>
     $top<T>,
     $topN<T> {}
 
-type WindowOperators<T extends object> = {
-  [K in keyof WindowOperatorMap<T>]: { [P in K]: WindowOperatorMap<T>[K] };
-}[keyof WindowOperatorMap<T>];
-
-export type WindowOperatorExpression<T extends object> =
-  TypeScriptToMongoSyntax<T, WindowOperators<T>> & {
-    window?:
-      | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
-      | { range: [lower: number, upper: number]; unit?: TimeUnit };
-  };
+export type WindowOperatorExpression<T extends object> = Partial<
+  TypeScriptToMongoSyntax<T, WindowOperatorMap<T>>
+> & {
+  window?:
+    | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
+    | { range: [lower: number, upper: number]; unit?: TimeUnit };
+};
 
 type DocumentBoundary = 'current' | 'unbounded' | number;
 

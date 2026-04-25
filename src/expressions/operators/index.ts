@@ -13,7 +13,7 @@ import { DateOperatorMap } from './date';
 import { EncryptedStringOperatorMap } from './encrypted-string';
 import { GroupOperatorMap } from './group';
 import { LiteralExpressionOperatorMap } from './literal-expression';
-import { MiscellaneousOperatorMap } from './miscellaneous.operator';
+import { MiscellaneousOperatorMap } from './miscellaneous';
 import { ObjectOperatorMap } from './object.operator';
 import { SetOperatorMap } from './set.operator';
 import { StringOperatorMap } from './string.operator';

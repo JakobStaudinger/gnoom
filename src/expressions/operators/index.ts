@@ -10,7 +10,7 @@ import { ComparisonOperatorMap } from './comparison';
 import { ConditionalOperatorMap } from './conditional';
 import { DataSizeOperatorMap } from './data-size';
 import { DateOperatorMap } from './date';
-import { EncryptedStringOperatorMap } from './encrypted-string.operator';
+import { EncryptedStringOperatorMap } from './encrypted-string';
 import { GroupOperatorMap } from './group.operator';
 import { LiteralExpressionOperatorMap } from './literal-expression.operator';
 import { MiscellaneousOperatorMap } from './miscellaneous.operator';

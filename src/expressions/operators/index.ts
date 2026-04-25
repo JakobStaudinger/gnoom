@@ -11,7 +11,7 @@ import { ConditionalOperatorMap } from './conditional';
 import { DataSizeOperatorMap } from './data-size';
 import { DateOperatorMap } from './date';
 import { EncryptedStringOperatorMap } from './encrypted-string';
-import { GroupOperatorMap } from './group.operator';
+import { GroupOperatorMap } from './group';
 import { LiteralExpressionOperatorMap } from './literal-expression.operator';
 import { MiscellaneousOperatorMap } from './miscellaneous.operator';
 import { ObjectOperatorMap } from './object.operator';

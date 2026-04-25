@@ -3,7 +3,7 @@ import {
   TypeScriptToMongoSyntax
 } from '../map-syntax';
 import { ArithmeticOperatorMap } from './arithmetic';
-import { ArrayOperatorMap } from './array.operator';
+import { ArrayOperatorMap } from './array';
 import { BitwiseOperatorMap } from './bitwise.operator';
 import { BooleanOperatorMap } from './boolean.operator';
 import { ComparisonOperatorMap } from './comparison.operator';

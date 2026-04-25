@@ -4,7 +4,7 @@ import {
 } from '../map-syntax';
 import { ArithmeticOperatorMap } from './arithmetic';
 import { ArrayOperatorMap } from './array';
-import { BitwiseOperatorMap } from './bitwise.operator';
+import { BitwiseOperatorMap } from './bitwise';
 import { BooleanOperatorMap } from './boolean.operator';
 import { ComparisonOperatorMap } from './comparison.operator';
 import { ConditionalOperatorMap } from './conditional.operator';

@@ -14,7 +14,7 @@ import { EncryptedStringOperatorMap } from './encrypted-string';
 import { GroupOperatorMap } from './group';
 import { LiteralExpressionOperatorMap } from './literal-expression';
 import { MiscellaneousOperatorMap } from './miscellaneous';
-import { ObjectOperatorMap } from './object.operator';
+import { ObjectOperatorMap } from './object';
 import { SetOperatorMap } from './set.operator';
 import { StringOperatorMap } from './string.operator';
 import { TextOperatorMap } from './text.operator';

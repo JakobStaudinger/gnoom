@@ -2,7 +2,7 @@ import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
 } from '../expressions/map-syntax';
-import { TimeUnit } from '../expressions/operators/date.operator';
+import { TimeUnit } from '../expressions/operators/date/types';
 import { StaticInput } from '../expressions/static-input';
 import { SortSpecification } from '../stages/$sort';
 

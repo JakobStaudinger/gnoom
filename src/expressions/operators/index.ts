@@ -19,7 +19,7 @@ import { SetOperatorMap } from './set';
 import { StringOperatorMap } from './string';
 import { TextOperatorMap } from './text';
 import { TimestampOperatorMap } from './timestamp';
-import { TrigonometryOperatorMap } from './trigonometry.operator';
+import { TrigonometryOperatorMap } from './trigonometry';
 import { TypeOperatorMap } from './type.operator';
 
 export type OperatorExpressions<

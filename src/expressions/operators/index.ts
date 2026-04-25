@@ -16,7 +16,7 @@ import { LiteralExpressionOperatorMap } from './literal-expression';
 import { MiscellaneousOperatorMap } from './miscellaneous';
 import { ObjectOperatorMap } from './object';
 import { SetOperatorMap } from './set';
-import { StringOperatorMap } from './string.operator';
+import { StringOperatorMap } from './string';
 import { TextOperatorMap } from './text.operator';
 import { TimestampOperatorMap } from './timestamp.operator';
 import { TrigonometryOperatorMap } from './trigonometry.operator';

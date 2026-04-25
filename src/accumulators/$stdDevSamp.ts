@@ -1,3 +1,3 @@
 export interface $stdDevSamp {
-  $stdDevSamp: <V extends number>(value: V) => V;
+  $stdDevSamp: (value: number) => number;
 }

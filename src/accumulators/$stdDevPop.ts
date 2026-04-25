@@ -1,3 +1,3 @@
 export interface $stdDevPop {
-  $stdDevPop: <V extends number>(value: V) => V;
+  $stdDevPop: (value: number) => number;
 }

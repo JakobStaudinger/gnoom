@@ -34,8 +34,7 @@ describe('$bucketAuto', () => {
       type Result = ExtractDocumentType<typeof _result>;
       expectTypeOf<Result>().toExtend<{
         _id: number;
-        // TOOD: should be `string[]` but generics from the signature get lost
-        strings: unknown[];
+        strings: string[];
         lowest: number;
       }>();
     });

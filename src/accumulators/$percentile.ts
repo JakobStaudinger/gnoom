@@ -1,11 +1,11 @@
 import { StaticInput } from '../expressions/static-input';
 
 export interface $percentile {
-  $percentile: <V extends number>(
+  $percentile: (
     input: StaticInput<{
-      input: V;
+      input: number;
       p: number[];
       method: StaticInput<'approximate'>;
     }>
-  ) => V[];
+  ) => number[];
 }

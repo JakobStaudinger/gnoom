@@ -2,7 +2,7 @@ import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
 } from '../map-syntax';
-import { ArithmetricOperatorMap } from './arithmetic.operator';
+import { ArithmeticOperatorMap } from './arithmetic';
 import { ArrayOperatorMap } from './array.operator';
 import { BitwiseOperatorMap } from './bitwise.operator';
 import { BooleanOperatorMap } from './boolean.operator';
@@ -21,28 +21,6 @@ import { TextOperatorMap } from './text.operator';
 import { TimestampOperatorMap } from './timestamp.operator';
 import { TrigonometryOperatorMap } from './trigonometry.operator';
 import { TypeOperatorMap } from './type.operator';
-
-export interface OperatorMap
-  extends
-    ArithmetricOperatorMap,
-    ArrayOperatorMap,
-    BitwiseOperatorMap,
-    BooleanOperatorMap,
-    ComparisonOperatorMap,
-    ConditionalOperatorMap,
-    DataSizeOperatorMap,
-    DateOperatorMap,
-    GroupOperatorMap,
-    LiteralExpressionOperatorMap,
-    MiscellaneousOperatorMap,
-    ObjectOperatorMap,
-    SetOperatorMap,
-    StringOperatorMap,
-    EncryptedStringOperatorMap,
-    TextOperatorMap,
-    TimestampOperatorMap,
-    TrigonometryOperatorMap,
-    TypeOperatorMap {}
 
 export type OperatorExpressions<
   T extends object,
@@ -64,6 +42,28 @@ export type EvaluateOperator<T extends object, Input> = {
       : never
     : never;
 }[keyof Input & string];
+
+interface OperatorMap
+  extends
+    ArithmeticOperatorMap,
+    ArrayOperatorMap,
+    BitwiseOperatorMap,
+    BooleanOperatorMap,
+    ComparisonOperatorMap,
+    ConditionalOperatorMap,
+    DataSizeOperatorMap,
+    DateOperatorMap,
+    GroupOperatorMap,
+    LiteralExpressionOperatorMap,
+    MiscellaneousOperatorMap,
+    ObjectOperatorMap,
+    SetOperatorMap,
+    StringOperatorMap,
+    EncryptedStringOperatorMap,
+    TextOperatorMap,
+    TimestampOperatorMap,
+    TrigonometryOperatorMap,
+    TypeOperatorMap {}
 
 type ExtractRequired<
   Arr extends readonly unknown[],

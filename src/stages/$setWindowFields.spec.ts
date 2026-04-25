@@ -57,8 +57,7 @@ describe('$setWindowFields', () => {
       });
 
       type Result = ExtractDocumentType<typeof _result>['n'];
-      // TODO: should be `boolean[]` but generics from the operator signature get lost
-      expectTypeOf<Result>().toEqualTypeOf<unknown[]>();
+      expectTypeOf<Result>().toEqualTypeOf<boolean[]>();
     });
   });
 });

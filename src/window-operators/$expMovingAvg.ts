@@ -1,10 +1,10 @@
 import { StaticInput } from '../expressions/static-input';
 
 export interface $expMovingAvg {
-  $expMovingAvg: <V extends number>(
+  $expMovingAvg: (
     input: StaticInput<
-      | { input: V; N: StaticInput<number> }
-      | { input: V; alpha: StaticInput<number> }
+      | { input: number; N: StaticInput<number> }
+      | { input: number; alpha: StaticInput<number> }
     >
-  ) => V;
+  ) => number;
 }

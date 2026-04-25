@@ -1,3 +1,3 @@
 export interface $covarianceSamp {
-  $covarianceSamp: <V extends number>(x: V, y: V) => V;
+  $covarianceSamp: (x: number, y: number) => number;
 }

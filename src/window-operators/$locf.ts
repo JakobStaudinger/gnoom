@@ -1,3 +1,3 @@
 export interface $locf {
-  $locf: <V>(value: V) => V;
+  $locf: (value: number) => number;
 }

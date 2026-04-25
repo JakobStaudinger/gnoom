@@ -17,7 +17,7 @@ import { MiscellaneousOperatorMap } from './miscellaneous';
 import { ObjectOperatorMap } from './object';
 import { SetOperatorMap } from './set';
 import { StringOperatorMap } from './string';
-import { TextOperatorMap } from './text.operator';
+import { TextOperatorMap } from './text';
 import { TimestampOperatorMap } from './timestamp.operator';
 import { TrigonometryOperatorMap } from './trigonometry.operator';
 import { TypeOperatorMap } from './type.operator';

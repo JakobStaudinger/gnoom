@@ -9,7 +9,7 @@ import { BooleanOperatorMap } from './boolean';
 import { ComparisonOperatorMap } from './comparison';
 import { ConditionalOperatorMap } from './conditional';
 import { DataSizeOperatorMap } from './data-size';
-import { DateOperatorMap } from './date.operator';
+import { DateOperatorMap } from './date';
 import { EncryptedStringOperatorMap } from './encrypted-string.operator';
 import { GroupOperatorMap } from './group.operator';
 import { LiteralExpressionOperatorMap } from './literal-expression.operator';

@@ -1,5 +1,5 @@
 import { ArrayQueryPredicate } from './array';
-import { BitwiseQueryPredicate } from './bitwise.query-predicate';
+import { BitwiseQueryPredicate } from './bitwise';
 import { ComparisonQueryPredicate } from './comparison.query-predicate';
 import { DataTypeQueryPredicate } from './data-type.query-predicate';
 import { GeospatialQueryPredicate } from './geospatial.query-predicate';
@@ -11,7 +11,7 @@ export type QueryPredicate<T> = ValueQueryPredicate<T> | QueryPredicateMap<T>;
 interface QueryPredicateMap<T>
   extends
     ArrayQueryPredicate<T>,
-    BitwiseQueryPredicate<T>,
+    BitwiseQueryPredicate,
     ComparisonQueryPredicate<T>,
     DataTypeQueryPredicate<T>,
     GeospatialQueryPredicate<T>,

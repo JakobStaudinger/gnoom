@@ -106,23 +106,19 @@ describe('Expressions', () => {
       expectTypeOf<Result>().toEqualTypeOf<unknown[]>();
     });
 
-    /*
-      TODO: TS cannot represent a type that is "any string that doesn't start with '$'"
-      so strings that are actually field paths are interpreted as literal strings
-    */
-    // it.skip('should disallow expressions for sub-fields also marked static', () => {
-    //   const _expression = {
-    //     $filter: {
-    //       input: '$array',
-    //       as: '$string',
-    //       cond: true
-    //     }
-    //   } as const;
+    it('should disallow expressions for sub-fields also marked static', () => {
+      const _expression = {
+        $filter: {
+          input: '$array',
+          as: '$string',
+          cond: true
+        }
+      } as const;
 
-    //   type Result = EvaluateAggregateExpression<Input, typeof _expression>;
+      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-    //   expectTypeOf<Result>().toBeNever();
-    // });
+      expectTypeOf<Result>().toBeNever();
+    });
   });
 
   describe('Rest parameters', () => {

@@ -9,10 +9,12 @@ export type TypeScriptToMongoSyntax<
   Operators,
   MaxDepth extends unknown[] = ArrayOfLength<3>
 > = {
-  [K in keyof Operators]: Operators[K] extends (
-    ...params: infer Params
-  ) => infer _R
-    ? TypeScriptParametersToMongoSyntax<T, Params, MaxDepth>
+  [K in keyof Operators]: Operators[K] extends infer Op
+    ? Op extends unknown
+      ? Op extends (...params: infer Params) => infer _R
+        ? TypeScriptParametersToMongoSyntax<T, Params, MaxDepth>
+        : never
+      : never
     : never;
 };
 
@@ -24,23 +26,33 @@ export type TypeScriptParametersToMongoSyntax<
   ? never
   : Params extends readonly []
     ? EmptyObject
-    : Params extends readonly [StaticInput<infer R> | infer _NonStaticInput]
-      ?
-          | AggregateExpression<T, Tail<MaxDepth>>
-          | (R extends object
-              ? {
-                  readonly [K in keyof R]: NonNullable<
-                    R[K]
-                  > extends StaticInput<infer _I>
-                    ? ConstantExpression<T, Tail<MaxDepth>>
-                    : AggregateExpression<T, Tail<MaxDepth>>;
-                }
-              : ConstantExpression<T, Tail<MaxDepth>>)
+    : Params extends readonly [infer P]
+      ? TypeScriptParameterToMongoSyntax<T, P, MaxDepth>
       : {
           readonly [K in keyof Params]: K extends number | `${number}`
-            ? AggregateExpression<T, Tail<MaxDepth>>
+            ? TypeScriptParameterToMongoSyntax<T, Params[K], MaxDepth>
             : Params[K];
         };
+
+type TypeScriptParameterToMongoSyntax<
+  T extends object,
+  Param,
+  MaxDepth extends unknown[]
+> = Param extends infer P
+  ? P extends unknown
+    ? P extends StaticInput<infer R>
+      ? R extends object
+        ? {
+            readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
+              infer _I
+            >
+              ? ConstantExpression<T, Tail<MaxDepth>>
+              : AggregateExpression<T, Tail<MaxDepth>>;
+          }
+        : ConstantExpression<T, Tail<MaxDepth>>
+      : AggregateExpression<T, Tail<MaxDepth>>
+    : never
+  : never;
 
 export type MongoParametersToTypeScriptSyntax<
   T extends object,

@@ -1,12 +1,16 @@
 import { Aggregate } from '../aggregate';
 import { QueryPredicate } from '../query-predicates';
+import { AggregateState, MustBeFirstStage } from '../types/aggregate-state';
 import { DeepKeyof, DeepType } from '../types/deep';
 import { Merge } from '../types/merge';
 
-export interface GeoNearStage<T extends object> {
-  $geoNear: <const S extends GeoNearSpecification<T>>(
-    specification: S
-  ) => Aggregate<GeoNearOutput<T, S>>;
+export interface GeoNearStage<T extends object, State extends AggregateState> {
+  $geoNear: MustBeFirstStage<
+    State,
+    <const S extends GeoNearSpecification<T>>(
+      specification: S
+    ) => Aggregate<GeoNearOutput<T, S>>
+  >;
 }
 
 export type GeoNearSpecification<T extends object> = {

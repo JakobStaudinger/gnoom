@@ -1,3 +1,4 @@
+import { AggregateState, UnlessFinalized } from '../types/aggregate-state';
 import { AddFieldsStage } from './$addFields';
 import { BucketStage } from './$bucket';
 import { BucketAutoStage } from './$bucketAuto';
@@ -20,15 +21,22 @@ import { UnionWithStage } from './$unionWith';
 import { UnsetStage } from './$unset';
 import { UnwindStage } from './$unwind';
 
-export interface AllStages<T extends object>
+export type AllStages<T extends object, State extends AggregateState> = {
+  [S in keyof AllStagesMap<T, State>]: UnlessFinalized<
+    State,
+    AllStagesMap<T, State>[S]
+  >;
+};
+
+interface AllStagesMap<T extends object, State extends AggregateState>
   extends
     AddFieldsStage<T>,
     BucketStage<T>,
     BucketAutoStage<T>,
     CountStage,
-    DocumentsStage,
+    DocumentsStage<State>,
     FacetStage<T>,
-    GeoNearStage<T>,
+    GeoNearStage<T, State>,
     GraphLookupStage<T>,
     GroupStage<T>,
     LimitStage<T>,

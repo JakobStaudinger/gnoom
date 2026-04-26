@@ -1,5 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
+import { NestedPipelineState } from '../types/aggregate-state';
 
 export interface FacetStage<T extends object> {
   $facet: <const S extends FacetSpecification<T>>(
@@ -8,7 +9,9 @@ export interface FacetStage<T extends object> {
 }
 
 export type FacetSpecification<T extends object> = {
-  [K in string]: (aggregate: Aggregate<T>) => AggregateLike<unknown>;
+  [K in string]: (
+    aggregate: Aggregate<T, NestedPipelineState>
+  ) => AggregateLike<unknown>;
 };
 
 type FacetOutput<T extends object, S extends FacetSpecification<T>> = {

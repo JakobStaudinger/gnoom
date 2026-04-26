@@ -1,5 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
+import { NestedPipelineState } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 
 export interface LookupStage<T extends object> {
@@ -23,10 +24,14 @@ export type LookupSpecification<
     | {
         localField: DeepKeyof<T>;
         foreignField: DeepKeyof<Other>;
-        pipeline?: (aggregate: Aggregate<Other>) => AggregateLike<unknown>;
+        pipeline?: (
+          aggregate: Aggregate<Other, NestedPipelineState>
+        ) => AggregateLike<unknown>;
       }
     | {
-        pipeline: (aggregate: Aggregate<Other>) => AggregateLike<unknown>;
+        pipeline: (
+          aggregate: Aggregate<Other, NestedPipelineState>
+        ) => AggregateLike<unknown>;
       }
   );
 

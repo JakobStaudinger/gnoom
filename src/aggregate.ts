@@ -2,6 +2,11 @@ import { AggregationCursor } from 'mongodb';
 import { AllStages } from './stages';
 import { Merge } from './types/merge';
 import { AggregateLike } from './types/aggregate-like';
+import {
+  AggregateState,
+  InitialState,
+  NestedPipelineState
+} from './types/aggregate-state';
 
 const OUTPUT_TYPE = Symbol('OutputType');
 
@@ -26,14 +31,19 @@ interface AggregateBase<T extends object> {
   ): Aggregate<ReturnType<Fn>>;
 }
 
-export interface Aggregate<T extends object>
-  extends AggregateBase<T>, AllStages<T> {}
+export interface Aggregate<
+  T extends object,
+  State extends AggregateState = { hasStage: true; isNestedPipeline: false }
+>
+  extends AggregateBase<T>, AllStages<T, State> {}
 
 type PipelineCallback = <T extends object>(
-  aggregate: Aggregate<T>
+  aggregate: Aggregate<T, NestedPipelineState>
 ) => AggregateLike<object>;
 
-function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
+function constructAggregate<T extends object, State extends AggregateState>(
+  stages: unknown[]
+): Aggregate<T, State> {
   return new Proxy(
     {
       toArray() {
@@ -70,11 +80,11 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       ) {
         return this;
       }
-    } satisfies AggregateBase<T> as unknown as Aggregate<T>,
+    } satisfies AggregateBase<T> as unknown as Aggregate<T, State>,
     {
       get(target, property, receiver) {
         if (typeof property === 'string' && property.startsWith('$')) {
-          const stageName = property as keyof AllStages<T>;
+          const stageName = property as keyof AllStages<T, State>;
 
           const fn = (spec: unknown) =>
             constructAggregate([...stages, { [stageName]: processSpec(spec) }]);
@@ -94,7 +104,7 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
   );
 }
 
-export function aggregate<T extends object>(): Aggregate<T> {
+export function aggregate<T extends object>(): Aggregate<T, InitialState> {
   return constructAggregate([]);
 }
 

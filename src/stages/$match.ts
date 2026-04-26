@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
-import { DeepKeyof, DeepType } from '../types/deep-keyof';
+import { DeepKeyof, DeepType } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { Primitive } from '../types/primitive';
 

@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { FieldPathExpression } from '../expressions/field-path.expression';
-import { DeepType } from '../types/deep-keyof';
+import { DeepType, FromDeepEntry } from '../types/deep';
 import { Merge } from '../types/merge';
 
 export interface UnwindStage<T extends object> {
@@ -40,10 +40,3 @@ export type UnwindOutput<T extends object, S extends UnwindSpecification<T>> =
             (I extends string ? { [K in I]: number } : unknown)
         >
       : never;
-
-type FromDeepEntry<
-  Key extends string,
-  Value
-> = Key extends `${infer Head}.${infer Tail}`
-  ? { [K in Head]: FromDeepEntry<Tail, Value> }
-  : { [K in Key]: Value };

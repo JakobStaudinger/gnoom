@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
-import { DeepKeyof } from '../types/deep-keyof';
+import { DeepKeyof } from '../types/deep';
 
 export interface LookupStage<T extends object> {
   $lookup: <Other extends object>() => <

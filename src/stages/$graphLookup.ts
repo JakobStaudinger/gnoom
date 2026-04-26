@@ -1,7 +1,7 @@
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
-import { DeepKeyof } from '../types/deep-keyof';
+import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
 
 export interface GraphLookupStage<T extends object> {

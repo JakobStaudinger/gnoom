@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { QueryPredicate } from '../query-predicates';
-import { DeepKeyof, DeepType } from '../types/deep-keyof';
+import { DeepKeyof, DeepType } from '../types/deep';
 import { Merge } from '../types/merge';
 
 export interface GeoNearStage<T extends object> {

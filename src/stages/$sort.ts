@@ -1,5 +1,5 @@
 import { Aggregate } from '../aggregate';
-import { DeepKeyof } from '../types/deep-keyof';
+import { DeepKeyof } from '../types/deep';
 
 export interface SortStage<T extends object> {
   $sort: <const S extends SortSpecification<T>>(

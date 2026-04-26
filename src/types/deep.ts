@@ -1,4 +1,5 @@
 import { ObjectId, Timestamp } from 'mongodb';
+import { AnyObject } from './object';
 
 export type DeepKeyof<T> = T extends (infer E)[]
   ? DeepKeyof<E>
@@ -19,3 +20,18 @@ export type DeepType<T, K> = T extends (infer E)[]
         ? DeepType<T[Head], Tail>
         : never
       : never;
+
+export type FromDeepEntry<
+  Key extends string,
+  Value
+> = Key extends `${infer Head}.${infer Tail}`
+  ? { [K in Head]: FromDeepEntry<Tail, Value> }
+  : { [K in Key]: Value };
+
+export type DeepEntries<T, Prefix extends string = ''> = {
+  [K in keyof T & string]: T[K] extends AnyObject
+    ? DeepEntries<T[K], `${Prefix}${K}.`>
+    : T[K] extends (infer E)[]
+      ? DeepEntries<E, `${Prefix}${K}.`>
+      : [`${Prefix}${K}`, T[K]];
+}[keyof T & string];

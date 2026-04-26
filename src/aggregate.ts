@@ -56,7 +56,7 @@ function constructAggregate<T extends object>(stages: unknown[]): Aggregate<T> {
       custom(stage: unknown): Aggregate<T> {
         return constructAggregate([...stages, stage]);
       },
-      addToType<A extends object>(this: Aggregate<Omit<T, keyof A> & A>) {
+      addToType<A extends object>(this: Aggregate<Merge<T, A>>) {
         return this;
       },
       removeFromType<K extends PropertyKey>(this: Aggregate<Omit<T, K>>) {

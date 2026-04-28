@@ -11,6 +11,7 @@ import { GroupStage } from './$group';
 import { LimitStage } from './$limit';
 import { LookupStage } from './$lookup';
 import { MatchStage } from './$match';
+import { MergeStage } from './$merge';
 import { ProjectStage } from './$project';
 import { ReplaceRootStage } from './$replaceRoot';
 import { SetWindowFieldsStage } from './$setWindowFields';
@@ -42,6 +43,7 @@ interface AllStagesMap<T extends object, State extends AggregateState>
     LimitStage<T>,
     LookupStage<T>,
     MatchStage<T>,
+    MergeStage<T, State>,
     ProjectStage<T>,
     ReplaceRootStage<T>,
     SetWindowFieldsStage<T>,

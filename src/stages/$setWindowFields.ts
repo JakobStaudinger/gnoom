@@ -13,7 +13,7 @@ export interface SetWindowFieldsStage<T extends object> {
   ) => Aggregate<SetWindowFieldsOutput<T, S>>;
 }
 
-export interface SetWindowFieldsSpecification<T extends object> {
+interface SetWindowFieldsSpecification<T extends object> {
   partitionBy?: AggregateExpression<T>;
   sortBy?: SortSpecification<T>;
   output: Record<string, WindowOperatorExpression<T>>;

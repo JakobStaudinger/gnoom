@@ -8,7 +8,7 @@ export interface FacetStage<T extends object> {
   ) => Aggregate<FacetOutput<T, S>>;
 }
 
-export type FacetSpecification<T extends object> = {
+type FacetSpecification<T extends object> = {
   [K in string]: PipelineCallback<T>;
 };
 

@@ -13,11 +13,11 @@ export interface ReplaceRootStage<T extends object> {
   ) => Aggregate<ReplaceRootOutput<T, S>>;
 }
 
-export type ReplaceRootSpecification<T extends object> = {
+type ReplaceRootSpecification<T extends object> = {
   [K in string]: AggregateExpression<T>;
 };
 
-export type ReplaceRootOutput<
+type ReplaceRootOutput<
   T extends object,
   S extends ReplaceRootSpecification<T>
 > = {

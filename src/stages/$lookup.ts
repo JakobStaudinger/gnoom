@@ -16,7 +16,7 @@ interface RequiredLookupSpecificationFields {
   as: string;
 }
 
-export type LookupSpecification<
+type LookupSpecification<
   T extends object,
   Other extends object
 > = RequiredLookupSpecificationFields &
@@ -31,7 +31,7 @@ export type LookupSpecification<
       }
   );
 
-export type LookupOutput<
+type LookupOutput<
   T extends object,
   Other extends object,
   S extends LookupSpecification<T, Other>

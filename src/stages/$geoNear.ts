@@ -13,7 +13,7 @@ export interface GeoNearStage<T extends object, State extends AggregateState> {
   >;
 }
 
-export type GeoNearSpecification<T extends object> = {
+type GeoNearSpecification<T extends object> = {
   distanceField: string;
   distanceMultiplier?: number;
   includeLocs?: string;
@@ -28,10 +28,7 @@ export type GeoNearSpecification<T extends object> = {
   spherical?: boolean;
 };
 
-export type GeoNearOutput<
-  T extends object,
-  S extends GeoNearSpecification<T>
-> = Merge<
+type GeoNearOutput<T extends object, S extends GeoNearSpecification<T>> = Merge<
   T,
   {
     [K in S['distanceField']]: number;

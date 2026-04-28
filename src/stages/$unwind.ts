@@ -9,7 +9,7 @@ export interface UnwindStage<T extends object> {
   ) => Aggregate<UnwindOutput<T, S>>;
 }
 
-export type UnwindSpecification<T extends object> =
+type UnwindSpecification<T extends object> =
   | FieldPathExpression<T>
   | {
       path: FieldPathExpression<T>;
@@ -17,7 +17,7 @@ export type UnwindSpecification<T extends object> =
       includeArrayIndex?: string;
     };
 
-export type UnwindOutput<T extends object, S extends UnwindSpecification<T>> =
+type UnwindOutput<T extends object, S extends UnwindSpecification<T>> =
   S extends FieldPathExpression<T>
     ? UnwindOutput<T, { path: S }>
     : S extends {

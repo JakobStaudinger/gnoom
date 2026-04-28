@@ -14,7 +14,7 @@ export interface GroupStage<T extends object> {
   ) => Aggregate<GroupOutput<T, S>>;
 }
 
-export type GroupSpecification<T extends object> = {
+type GroupSpecification<T extends object> = {
   _id: AggregateExpression<T>;
 } & Record<string, AggregateExpression<T> | AccumulatorExpression<T>>;
 

@@ -10,7 +10,7 @@ export interface UnionWithStage<T extends object> {
   ) => Aggregate<UnionWithOutput<T, Other, S>>;
 }
 
-export type UnionWithSpecification<Other extends object> =
+type UnionWithSpecification<Other extends object> =
   | {
       coll: string;
       pipeline?: PipelineCallback<Other>;
@@ -19,7 +19,7 @@ export type UnionWithSpecification<Other extends object> =
       pipeline: PipelineCallback<Other>;
     };
 
-export type UnionWithOutput<
+type UnionWithOutput<
   T extends object,
   Other extends object,
   S extends UnionWithSpecification<Other>

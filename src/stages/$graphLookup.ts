@@ -12,10 +12,7 @@ export interface GraphLookupStage<T extends object> {
   ) => Aggregate<GraphLookupOutput<T, Other, S>>;
 }
 
-export interface GraphLookupSpecification<
-  T extends object,
-  Other extends object
-> {
+interface GraphLookupSpecification<T extends object, Other extends object> {
   from: string;
   startWith: AggregateExpression<T>;
   connectFromField: DeepKeyof<Other>;
@@ -26,7 +23,7 @@ export interface GraphLookupSpecification<
   restrictSearchWithMatch?: QueryPredicate<Other>;
 }
 
-export type GraphLookupOutput<
+type GraphLookupOutput<
   T extends object,
   Other extends object,
   S extends GraphLookupSpecification<T, Other>

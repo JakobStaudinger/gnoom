@@ -26,7 +26,7 @@ type QueryPredicates<T extends object> = {
       : QueryPredicate<DeepType<T, K>>;
 };
 
-export type MatchSpecification<T extends object> = QueryPredicates<T> & {
+type MatchSpecification<T extends object> = QueryPredicates<T> & {
   $expr?: AggregateExpression<T>;
   $sampleRate?: number;
   $jsonSchema?: unknown;

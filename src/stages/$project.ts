@@ -10,7 +10,7 @@ export interface ProjectStage<T extends object> {
   ) => Aggregate<ProjectOutput<T, S>>;
 }
 
-export type ProjectSpecification<T extends object> = {
+type ProjectSpecification<T extends object> = {
   [K in keyof T]?:
     | 1
     | true
@@ -19,7 +19,7 @@ export type ProjectSpecification<T extends object> = {
     | Exclude<AggregateExpression<T>, number | boolean>;
 };
 
-export type ProjectOutput<T extends object, S extends ProjectSpecification<T>> =
+type ProjectOutput<T extends object, S extends ProjectSpecification<T>> =
   IsPureExclusion<S> extends true
     ? Omit<T, keyof S>
     : {

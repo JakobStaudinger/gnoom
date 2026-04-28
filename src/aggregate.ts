@@ -1,12 +1,8 @@
 import { AggregationCursor } from 'mongodb';
 import { AllStages } from './stages';
+import { AggregateState, InitialState } from './types/aggregate-state';
 import { Merge } from './types/merge';
-import { AggregateLike } from './types/aggregate-like';
-import {
-  AggregateState,
-  InitialState,
-  NestedPipelineState
-} from './types/aggregate-state';
+import { PipelineCallback } from './types/pipeline';
 
 const OUTPUT_TYPE = Symbol('OutputType');
 
@@ -36,10 +32,6 @@ export interface Aggregate<
   State extends AggregateState = { hasStage: true; isNestedPipeline: false }
 >
   extends AggregateBase<T>, AllStages<T, State> {}
-
-type PipelineCallback = <T extends object>(
-  aggregate: Aggregate<T, NestedPipelineState>
-) => AggregateLike<object>;
 
 function constructAggregate<T extends object, State extends AggregateState>(
   stages: unknown[]
@@ -112,7 +104,7 @@ function processSpec(spec: unknown) {
   if (isObject(spec)) {
     for (const prop of Object.keys(spec) as (keyof typeof spec)[]) {
       if (typeof spec[prop] === 'function') {
-        const fn = spec[prop] as PipelineCallback;
+        const fn = spec[prop] as PipelineCallback<object>;
         const result = fn(aggregate());
         spec[prop] = Array.isArray(result) ? result : result.toArray();
       }

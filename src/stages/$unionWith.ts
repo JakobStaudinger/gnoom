@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
-import { NestedPipelineState } from '../types/aggregate-state';
+import { PipelineCallback } from '../types/pipeline';
 
 export interface UnionWithStage<T extends object> {
   $unionWith: <Other extends object>() => <
@@ -13,14 +13,10 @@ export interface UnionWithStage<T extends object> {
 export type UnionWithSpecification<Other extends object> =
   | {
       coll: string;
-      pipeline?: (
-        aggregate: Aggregate<Other, NestedPipelineState>
-      ) => AggregateLike<unknown>;
+      pipeline?: PipelineCallback<Other>;
     }
   | {
-      pipeline: (
-        aggregate: Aggregate<Other, NestedPipelineState>
-      ) => AggregateLike<unknown>;
+      pipeline: PipelineCallback<Other>;
     };
 
 export type UnionWithOutput<

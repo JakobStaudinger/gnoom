@@ -15,6 +15,7 @@ import { MergeStage } from './$merge';
 import { OutStage } from './$out';
 import { ProjectStage } from './$project';
 import { ReplaceRootStage } from './$replaceRoot';
+import { SampleStage } from './$sample';
 import { SetWindowFieldsStage } from './$setWindowFields';
 import { SkipStage } from './$skip';
 import { SortStage } from './$sort';
@@ -48,6 +49,7 @@ interface AllStagesMap<T extends object, State extends AggregateState>
     OutStage<T, State>,
     ProjectStage<T>,
     ReplaceRootStage<T>,
+    SampleStage<T>,
     SetWindowFieldsStage<T>,
     SkipStage<T>,
     SortStage<T>,

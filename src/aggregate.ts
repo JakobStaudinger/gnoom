@@ -85,7 +85,8 @@ function constructAggregate<T extends object, State extends AggregateState>(
             '$lookup',
             '$graphLookup',
             '$unionWith',
-            '$merge'
+            '$merge',
+            '$out'
           ];
 
           if (specialStages.includes(stageName)) {

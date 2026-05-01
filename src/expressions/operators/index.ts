@@ -22,6 +22,7 @@ import { TextOperators } from './text';
 import { TimestampOperators } from './timestamp';
 import { TrigonometryOperators } from './trigonometry';
 import { TypeOperators } from './type';
+import { VariableOperators } from './variable';
 
 export type OperatorExpressions<
   State extends AggregateState,
@@ -64,7 +65,8 @@ interface Operators
     TextOperators,
     TimestampOperators,
     TrigonometryOperators,
-    TypeOperators {}
+    TypeOperators,
+    VariableOperators {}
 
 type ExtractRequired<
   Arr extends readonly unknown[],

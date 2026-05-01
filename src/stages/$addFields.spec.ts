@@ -40,7 +40,13 @@ describe('$addFields', () => {
 
     it('should overwrite fields in the input document type', () => {
       const _result = aggregate<InputDocument>().$addFields({
-        n: 'new-value'
+        n: 'new-value',
+        l: {
+          $let: {
+            vars: { foo: 'hi', root: '$$ROOT' },
+            in: { hi: '$$foo' }
+          }
+        }
       });
       type Result = ExtractDocumentType<typeof _result>;
       type NewField = Result['n'];

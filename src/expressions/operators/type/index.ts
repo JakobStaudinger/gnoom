@@ -11,7 +11,7 @@ import { $toString } from './$toString';
 import { $type } from './$type';
 import { $toUUID } from './$toUUID';
 
-export interface TypeOperatorMap
+export interface TypeOperators
   extends
     $convert,
     $isNumber,

@@ -6,5 +6,5 @@ import { $percentile } from './$percentile';
 import { $stdDevPop } from './$stdDevPop';
 import { $stdDevSamp } from './$stdDevSamp';
 
-export interface GroupOperatorMap
+export interface GroupOperators
   extends $avg, $max, $median, $min, $percentile, $stdDevPop, $stdDevSamp {}

@@ -6,7 +6,7 @@ import { $setIntersection } from './$setIntersection';
 import { $setIsSubset } from './$setIsSubset';
 import { $setUnion } from './$setUnion';
 
-export interface SetOperatorMap
+export interface SetOperators
   extends
     $allElementsTrue,
     $anyElementTrue,

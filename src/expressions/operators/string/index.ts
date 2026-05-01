@@ -19,7 +19,7 @@ import { $toLower } from './$toLower';
 import { $trim } from './$trim';
 import { $toUpper } from './$toUpper';
 
-export interface StringOperatorMap
+export interface StringOperators
   extends
     $concat,
     $indexOfBytes,

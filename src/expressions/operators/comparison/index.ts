@@ -6,5 +6,5 @@ import { $lt } from './$lt';
 import { $lte } from './$lte';
 import { $ne } from './$ne';
 
-export interface ComparisonOperatorMap
+export interface ComparisonOperators
   extends $cmp, $eq, $gt, $gte, $lt, $lte, $ne {}

@@ -38,7 +38,7 @@ import { $sum } from './$sum';
 import { $top } from './$top';
 import { $topN } from './$topN';
 
-interface WindowOperatorMap<State extends AggregateState>
+interface WindowOperators<State extends AggregateState>
   extends
     $addToSet,
     $avg,
@@ -75,7 +75,7 @@ interface WindowOperatorMap<State extends AggregateState>
     $topN<State> {}
 
 export type WindowOperatorExpression<State extends AggregateState> = Partial<
-  TypeScriptToMongoSyntax<State, WindowOperatorMap<State>>
+  TypeScriptToMongoSyntax<State, WindowOperators<State>>
 > & {
   window?:
     | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
@@ -88,8 +88,8 @@ export type EvaluateWindowOperatorExpression<
   State extends AggregateState,
   E
 > = {
-  [K in keyof E]: K extends keyof WindowOperatorMap<State>
-    ? WindowOperatorMap<State>[K] extends infer Op
+  [K in keyof E]: K extends keyof WindowOperators<State>
+    ? WindowOperators<State>[K] extends infer Op
       ? MongoParametersToTypeScriptSyntax<State, E[K]> extends infer Args
         ? Args extends unknown[]
           ? Op extends (...args: Args) => infer R

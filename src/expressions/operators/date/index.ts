@@ -20,7 +20,7 @@ import { $isoWeekYear } from './$isoWeekYear';
 import { $isoWeek } from './$isoWeek';
 import { $isoDayOfWeek } from './$isoDayOfWeek';
 
-export interface DateOperatorMap
+export interface DateOperators
   extends
     $dateAdd,
     $dateDiff,

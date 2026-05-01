@@ -3,7 +3,7 @@ import { $encStrEndsWith } from './$encStrEndsWith';
 import { $encStrNormalizedEq } from './$encStrNormalizedEq';
 import { $encStrStartsWith } from './$encStrStartsWith';
 
-export interface EncryptedStringOperatorMap
+export interface EncryptedStringOperators
   extends
     $encStrContains,
     $encStrEndsWith,

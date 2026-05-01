@@ -16,7 +16,7 @@ import { $sqrt } from './$sqrt';
 import { $subtract } from './$subtract';
 import { $trunc } from './$trunc';
 
-export interface ArithmeticOperatorMap
+export interface ArithmeticOperators
   extends
     $abs,
     $add,

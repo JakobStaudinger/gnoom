@@ -1,4 +1,4 @@
 import { $meta } from './$meta';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface TextOperatorMap extends $meta {}
+export interface TextOperators extends $meta {}

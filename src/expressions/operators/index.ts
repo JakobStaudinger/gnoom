@@ -3,34 +3,34 @@ import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
 } from '../map-syntax';
-import { ArithmeticOperatorMap } from './arithmetic';
-import { ArrayOperatorMap } from './array';
-import { BitwiseOperatorMap } from './bitwise';
-import { BooleanOperatorMap } from './boolean';
-import { ComparisonOperatorMap } from './comparison';
-import { ConditionalOperatorMap } from './conditional';
-import { DataSizeOperatorMap } from './data-size';
-import { DateOperatorMap } from './date';
-import { EncryptedStringOperatorMap } from './encrypted-string';
-import { GroupOperatorMap } from './group';
-import { LiteralExpressionOperatorMap } from './literal-expression';
-import { MiscellaneousOperatorMap } from './miscellaneous';
-import { ObjectOperatorMap } from './object';
-import { SetOperatorMap } from './set';
-import { StringOperatorMap } from './string';
-import { TextOperatorMap } from './text';
-import { TimestampOperatorMap } from './timestamp';
-import { TrigonometryOperatorMap } from './trigonometry';
-import { TypeOperatorMap } from './type';
+import { ArithmeticOperators } from './arithmetic';
+import { ArrayOperators } from './array';
+import { BitwiseOperators } from './bitwise';
+import { BooleanOperators } from './boolean';
+import { ComparisonOperators } from './comparison';
+import { ConditionalOperators } from './conditional';
+import { DataSizeOperators } from './data-size';
+import { DateOperators } from './date';
+import { EncryptedStringOperators } from './encrypted-string';
+import { GroupOperators } from './group';
+import { LiteralExpressionOperators } from './literal-expression';
+import { MiscellaneousOperators } from './miscellaneous';
+import { ObjectOperators } from './object';
+import { SetOperators } from './set';
+import { StringOperators } from './string';
+import { TextOperators } from './text';
+import { TimestampOperators } from './timestamp';
+import { TrigonometryOperators } from './trigonometry';
+import { TypeOperators } from './type';
 
 export type OperatorExpressions<
   State extends AggregateState,
   MaxDepth extends unknown[]
-> = Partial<TypeScriptToMongoSyntax<State, OperatorMap, MaxDepth>>;
+> = Partial<TypeScriptToMongoSyntax<State, Operators, MaxDepth>>;
 
 export type EvaluateOperator<State extends AggregateState, Input> = {
-  [K in keyof Input & string]: K extends keyof OperatorMap
-    ? OperatorMap[K] extends infer Op
+  [K in keyof Input & string]: K extends keyof Operators
+    ? Operators[K] extends infer Op
       ? MongoParametersToTypeScriptSyntax<State, Input[K]> extends infer Args
         ? Args extends unknown[]
           ? Op extends (...args: Args) => infer R
@@ -44,27 +44,27 @@ export type EvaluateOperator<State extends AggregateState, Input> = {
     : never;
 }[keyof Input & string];
 
-interface OperatorMap
+interface Operators
   extends
-    ArithmeticOperatorMap,
-    ArrayOperatorMap,
-    BitwiseOperatorMap,
-    BooleanOperatorMap,
-    ComparisonOperatorMap,
-    ConditionalOperatorMap,
-    DataSizeOperatorMap,
-    DateOperatorMap,
-    GroupOperatorMap,
-    LiteralExpressionOperatorMap,
-    MiscellaneousOperatorMap,
-    ObjectOperatorMap,
-    SetOperatorMap,
-    StringOperatorMap,
-    EncryptedStringOperatorMap,
-    TextOperatorMap,
-    TimestampOperatorMap,
-    TrigonometryOperatorMap,
-    TypeOperatorMap {}
+    ArithmeticOperators,
+    ArrayOperators,
+    BitwiseOperators,
+    BooleanOperators,
+    ComparisonOperators,
+    ConditionalOperators,
+    DataSizeOperators,
+    DateOperators,
+    GroupOperators,
+    LiteralExpressionOperators,
+    MiscellaneousOperators,
+    ObjectOperators,
+    SetOperators,
+    StringOperators,
+    EncryptedStringOperators,
+    TextOperators,
+    TimestampOperators,
+    TrigonometryOperators,
+    TypeOperators {}
 
 type ExtractRequired<
   Arr extends readonly unknown[],

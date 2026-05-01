@@ -14,7 +14,7 @@ import { $tanh } from './$tanh';
 import { $degreesToRadians } from './$degreesToRadians';
 import { $radiansToDegrees } from './$radiansToDegrees';
 
-export interface TrigonometryOperatorMap
+export interface TrigonometryOperators
   extends
     $sin,
     $cos,

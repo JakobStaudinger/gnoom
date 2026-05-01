@@ -18,7 +18,7 @@ import { $slice } from './$slice';
 import { $sortArray } from './$sortArray';
 import { $zip } from './$zip';
 
-export interface ArrayOperatorMap
+export interface ArrayOperators
   extends
     $arrayElemAt,
     $arrayToObject,

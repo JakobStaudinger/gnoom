@@ -1,21 +1,28 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
+import { AggregateState, WithType } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface FacetStage<T extends object> {
-  $facet: <const S extends FacetSpecification<T>>(
+export interface FacetStage<State extends AggregateState> {
+  $facet: <const S extends FacetSpecification<State>>(
     specification: S
-  ) => Aggregate<FacetOutput<T, S>>;
+  ) => Aggregate<FacetOutput<State, S>>;
 }
 
-type FacetSpecification<T extends object> = {
-  [K in string]: PipelineCallback<T>;
+type FacetSpecification<State extends AggregateState> = {
+  [K in string]: PipelineCallback<State['T']>;
 };
 
-type FacetOutput<T extends object, S extends FacetSpecification<T>> = {
-  -readonly [K in keyof S]: S[K] extends (
-    ...args: infer _Args
-  ) => AggregateLike<infer Output>
-    ? Output[]
-    : never;
-};
+type FacetOutput<
+  State extends AggregateState,
+  S extends FacetSpecification<State>
+> = WithType<
+  State,
+  {
+    -readonly [K in keyof S]: S[K] extends (
+      ...args: infer _Args
+    ) => AggregateLike<infer Output>
+      ? Output['T'][]
+      : never;
+  }
+>;

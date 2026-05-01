@@ -1,6 +1,7 @@
 import { expectTypeOf } from 'expect-type';
-import { Aggregate, aggregate } from '../aggregate';
 import { ObjectId } from 'mongodb';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$facet', () => {
   describe('Output', () => {
@@ -9,8 +10,6 @@ describe('$facet', () => {
       price: number;
       datePublished: Date;
     };
-
-    type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
 
     it('should contain properties of all the sub-pipelines specified in the spec', () => {
       const _result = aggregate<Document>().$facet({

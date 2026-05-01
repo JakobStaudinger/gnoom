@@ -7,19 +7,26 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
+import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface GroupStage<T extends object> {
-  $group: <const S extends GroupSpecification<T>>(
+export interface GroupStage<State extends AggregateState> {
+  $group: <const S extends GroupSpecification<State>>(
     specification: S
-  ) => Aggregate<GroupOutput<T, S>>;
+  ) => Aggregate<GroupOutput<State, S>>;
 }
 
-type GroupSpecification<T extends object> = {
-  _id: AggregateExpression<T>;
-} & Record<string, AggregateExpression<T> | AccumulatorExpression<T>>;
+type GroupSpecification<State extends AggregateState> = {
+  _id: AggregateExpression<State>;
+} & Record<string, AggregateExpression<State> | AccumulatorExpression<State>>;
 
-type GroupOutput<T extends object, S extends GroupSpecification<T>> = {
-  _id: EvaluateAggregateExpression<T, S['_id']>;
-} & {
-  [K in Exclude<keyof S, '_id'>]: EvaluateAccumulatorExpression<T, S[K]>;
-};
+type GroupOutput<
+  State extends AggregateState,
+  S extends GroupSpecification<State>
+> = WithType<
+  State,
+  {
+    _id: EvaluateAggregateExpression<State, S['_id']>;
+  } & {
+    [K in Exclude<keyof S, '_id'>]: EvaluateAccumulatorExpression<State, S[K]>;
+  }
+>;

@@ -1,45 +1,54 @@
 import { AggregationCursor } from 'mongodb';
 import { AllStages } from './stages';
-import { AggregateState, InitialState } from './types/aggregate-state';
-import { Merge } from './types/merge';
+import {
+  AggregateState,
+  InitialState,
+  WithType
+} from './types/aggregate-state';
 import { PipelineCallback } from './types/pipeline';
+import { Merge } from './types/merge';
 
 const OUTPUT_TYPE = Symbol('OutputType');
 
-export interface AggregatePipeline<T> extends Array<object> {
-  [OUTPUT_TYPE]?: T;
+export interface AggregatePipeline<
+  State extends AggregateState
+> extends Array<object> {
+  [OUTPUT_TYPE]?: State['T'];
 }
 
-interface ExecuteFunction<T extends object> {
-  (pipeline: AggregatePipeline<T>): Promise<T[]> | AggregationCursor<T>;
+interface ExecuteFunction<State extends AggregateState> {
+  (
+    pipeline: AggregatePipeline<State>
+  ): Promise<State['T'][]> | AggregationCursor<State['T']>;
 }
 
-interface AggregateBase<T extends object> {
-  toArray(): AggregatePipeline<T>;
-  execute(fn: ExecuteFunction<T>): Promise<T[]>;
-  execute(client: { aggregate: ExecuteFunction<T> }): Promise<T[]>;
-  custom(stage: unknown): Aggregate<T>;
-  addToType<A extends object>(value?: A): Aggregate<Merge<T, A>>;
-  removeFromType<const K extends keyof T>(keys?: K): Aggregate<Omit<T, K>>;
-  replaceType<N extends object>(newValue?: N): Aggregate<N>;
-  modifyType<Fn extends (obj: T) => object>(
+interface AggregateBase<State extends AggregateState> {
+  toArray(): AggregatePipeline<State>;
+  execute(fn: ExecuteFunction<State>): Promise<State['T'][]>;
+  execute(client: { aggregate: ExecuteFunction<State> }): Promise<State['T'][]>;
+  custom(stage: unknown): Aggregate<State>;
+  addToType<A extends object>(
+    value?: A
+  ): Aggregate<WithType<State, Merge<State['T'], A>>>;
+  removeFromType<const K extends keyof State['T']>(
+    keys?: K
+  ): Aggregate<WithType<State, Omit<State['T'], K>>>;
+  replaceType<N extends object>(newValue?: N): Aggregate<WithType<State, N>>;
+  modifyType<Fn extends (obj: State['T']) => object>(
     callback: Fn
-  ): Aggregate<ReturnType<Fn>>;
+  ): Aggregate<WithType<State, ReturnType<Fn>>>;
 }
 
-export interface Aggregate<
-  T extends object,
-  State extends AggregateState = { hasStage: true; isNestedPipeline: false }
->
-  extends AggregateBase<T>, AllStages<T, State> {}
+export interface Aggregate<State extends AggregateState>
+  extends AggregateBase<State>, AllStages<State> {}
 
-function constructAggregate<T extends object, State extends AggregateState>(
+function constructAggregate<State extends AggregateState>(
   stages: unknown[]
-): Aggregate<T, State> {
+): Aggregate<State> {
   return new Proxy(
     {
       toArray() {
-        return stages as AggregatePipeline<T>;
+        return stages as AggregatePipeline<State>;
       },
       execute(fnOrClient) {
         const fn =
@@ -55,28 +64,30 @@ function constructAggregate<T extends object, State extends AggregateState>(
 
         return result;
       },
-      custom(stage: unknown): Aggregate<T> {
+      custom(stage: unknown): Aggregate<State> {
         return constructAggregate([...stages, stage]);
       },
-      addToType<A extends object>(this: Aggregate<Merge<T, A>>) {
+      addToType<A extends object>(this: Aggregate<WithType<State, A>>) {
         return this;
       },
-      removeFromType<K extends PropertyKey>(this: Aggregate<Omit<T, K>>) {
+      removeFromType<K extends PropertyKey>(
+        this: Aggregate<WithType<State, Omit<State['T'], K>>>
+      ) {
         return this;
       },
-      replaceType<R extends object>(this: Aggregate<R>) {
+      replaceType<R extends object>(this: Aggregate<WithType<State, R>>) {
         return this;
       },
-      modifyType<Fn extends (obj: T) => object>(
-        this: Aggregate<ReturnType<Fn>>
+      modifyType<Fn extends (obj: State['T']) => object>(
+        this: Aggregate<WithType<State, ReturnType<Fn>>>
       ) {
         return this;
       }
-    } satisfies AggregateBase<T> as unknown as Aggregate<T, State>,
+    } satisfies AggregateBase<State> as unknown as Aggregate<State>,
     {
       get(target, property, receiver) {
         if (typeof property === 'string' && property.startsWith('$')) {
-          const stageName = property as keyof AllStages<T, State>;
+          const stageName = property as keyof AllStages<State>;
 
           const fn = (spec: unknown) =>
             constructAggregate([...stages, { [stageName]: processSpec(spec) }]);
@@ -102,7 +113,7 @@ function constructAggregate<T extends object, State extends AggregateState>(
   );
 }
 
-export function aggregate<T extends object>(): Aggregate<T, InitialState> {
+export function aggregate<T extends object>(): Aggregate<InitialState<T>> {
   return constructAggregate([]);
 }
 

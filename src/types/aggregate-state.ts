@@ -1,17 +1,18 @@
 export interface AggregateState {
+  T: object;
   hasStage: boolean;
-  isNestedPipeline: boolean;
-  finalStage?: string;
+  allowedStages: string;
+  finalStage: string;
 }
 
 export type UnlessFinalized<
   State extends AggregateState,
   T
-> = State['finalStage'] extends string
-  ? (
+> = State['finalStage'] extends never
+  ? T
+  : (
       error: `${State['finalStage']} must be the last stage in a pipeline.`
-    ) => never
-  : T;
+    ) => never;
 
 export type MustBeFirstStage<
   State extends AggregateState,
@@ -20,18 +21,35 @@ export type MustBeFirstStage<
   ? (error: 'Must be the first stage in a pipeline') => never
   : T;
 
-export type NotInNestedPipelines<
-  State extends AggregateState,
-  T
-> = State['isNestedPipeline'] extends true
-  ? (error: 'Cannot use in sub-pipelines') => never
-  : T;
-
 export type Finalize<State extends AggregateState, Stage extends string> = Omit<
   State,
   'finalStage'
 > & { finalStage: Stage };
 
-export type InitialState = { hasStage: false; isNestedPipeline: false };
+export type WithType<State extends AggregateState, T extends object> = Omit<
+  State,
+  'T'
+> & { T: T };
 
-export type NestedPipelineState = { hasStage: false; isNestedPipeline: true };
+export type InitialState<T> = {
+  T: T;
+  hasStage: false;
+  allowedStages: string;
+  finalStage: never;
+};
+type AssertExtendsAggregateState<State extends AggregateState> = State;
+type _InitialStateGuard = AssertExtendsAggregateState<InitialState<object>>;
+
+export type NestedPipelineState<
+  T,
+  AllowedStages extends AggregateState['allowedStages']
+> = {
+  T: T;
+  hasStage: false;
+  allowedStages: AllowedStages;
+  finalStage: never;
+};
+
+type _NestedPipelineStateGuard = AssertExtendsAggregateState<
+  NestedPipelineState<object, string>
+>;

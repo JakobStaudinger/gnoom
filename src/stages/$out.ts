@@ -1,24 +1,24 @@
 import { Aggregate } from '../aggregate';
-import { AggregateState, Finalize } from '../types/aggregate-state';
+import { AggregateState, Finalize, WithType } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface OutStage<T extends object, State extends AggregateState> {
+export interface OutStage<State extends AggregateState> {
   $out: <Other extends object>() => <
-    const S extends OutSpecification<T, Other>
+    const S extends OutSpecification<State, Other>
   >(
     specification: S
-  ) => Aggregate<never, Finalize<State, '$out'>>;
+  ) => Aggregate<Finalize<WithType<State, never>, '$out'>>;
 }
 
-type OutSpecification<T extends object, Other extends object> =
+type OutSpecification<State extends AggregateState, Other extends object> =
   | string
   | {
       into: string | { db: string; coll: string };
       on?:
-        | (DeepKeyof<T> & DeepKeyof<Other>)
-        | (DeepKeyof<T> & DeepKeyof<Other>)[];
+        | (DeepKeyof<State['T']> & DeepKeyof<Other>)
+        | (DeepKeyof<State['T']> & DeepKeyof<Other>)[];
       let?: AnyObject;
       whenMatched?:
         | 'out'

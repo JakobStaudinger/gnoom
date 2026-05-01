@@ -7,27 +7,34 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
+import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface BucketStage<T extends object> {
-  $bucket: <const S extends BucketSpecification<T>>(
+export interface BucketStage<State extends AggregateState> {
+  $bucket: <const S extends BucketSpecification<State>>(
     specification: S
-  ) => Aggregate<BucketOutput<T, S>>;
+  ) => Aggregate<BucketOutput<State, S>>;
 }
 
-interface BucketSpecification<T extends object> {
-  groupBy: AggregateExpression<T>;
+interface BucketSpecification<State extends AggregateState> {
+  groupBy: AggregateExpression<State>;
   boundaries: [unknown, unknown, ...unknown[]];
   default?: unknown;
   output?: {
-    [K in string]: AccumulatorExpression<T>;
+    [K in string]: AccumulatorExpression<State>;
   };
 }
 
-type BucketOutput<T extends object, S extends BucketSpecification<T>> = {
-  _id: EvaluateAggregateExpression<T, S['groupBy']>;
-} & {
-  -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
-    T,
-    S['output'][K]
-  >;
-};
+type BucketOutput<
+  State extends AggregateState,
+  S extends BucketSpecification<State>
+> = WithType<
+  State,
+  {
+    _id: EvaluateAggregateExpression<State, S['groupBy']>;
+  } & {
+    -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
+      State,
+      S['output'][K]
+    >;
+  }
+>;

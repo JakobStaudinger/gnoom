@@ -1,24 +1,24 @@
 import { Aggregate } from '../aggregate';
-import { AggregateState, Finalize } from '../types/aggregate-state';
+import { AggregateState, Finalize, WithType } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface MergeStage<T extends object, State extends AggregateState> {
+export interface MergeStage<State extends AggregateState> {
   $merge: <Other extends object>() => <
-    const S extends MergeSpecification<T, Other>
+    const S extends MergeSpecification<State, Other>
   >(
     specification: S
-  ) => Aggregate<never, Finalize<State, '$merge'>>;
+  ) => Aggregate<Finalize<WithType<State, never>, '$merge'>>;
 }
 
-type MergeSpecification<T extends object, Other extends object> =
+type MergeSpecification<State extends AggregateState, Other extends object> =
   | string
   | {
       into: string | { db: string; coll: string };
       on?:
-        | (DeepKeyof<T> & DeepKeyof<Other>)
-        | (DeepKeyof<T> & DeepKeyof<Other>)[];
+        | (DeepKeyof<State['T']> & DeepKeyof<Other>)
+        | (DeepKeyof<State['T']> & DeepKeyof<Other>)[];
       let?: AnyObject;
       whenMatched?:
         | 'merge'

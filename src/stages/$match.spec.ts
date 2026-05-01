@@ -1,5 +1,6 @@
-import { Aggregate, aggregate } from '../aggregate';
 import { expectTypeOf } from 'expect-type';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$match', () => {
   describe('Type narrowing', () => {
@@ -25,8 +26,6 @@ describe('$match', () => {
         };
       };
     };
-
-    type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
 
     it('should not narrow types that are not matched', () => {
       const _result = aggregate<InputDocumentType>().$match({

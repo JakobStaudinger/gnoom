@@ -1,5 +1,6 @@
 import { Aggregate } from '../aggregate';
+import { AggregateState } from '../types/aggregate-state';
 
-export interface LimitStage<T extends object> {
-  $limit: (n: number) => Aggregate<T>;
+export interface LimitStage<State extends AggregateState> {
+  $limit: (n: number) => Aggregate<State>;
 }

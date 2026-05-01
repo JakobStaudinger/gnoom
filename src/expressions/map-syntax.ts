@@ -1,3 +1,4 @@
+import { AggregateState } from '../types/aggregate-state';
 import { EmptyObject } from '../types/object';
 import { ArrayOfLength, Tail } from '../types/recursion';
 import { ConstantExpression } from './constant.expression';
@@ -5,21 +6,21 @@ import { AggregateExpression, EvaluateAggregateExpression } from './index';
 import { StaticInput } from './static-input';
 
 export type TypeScriptToMongoSyntax<
-  T extends object,
+  State extends AggregateState,
   Operators,
   MaxDepth extends unknown[] = ArrayOfLength<3>
 > = {
   [K in keyof Operators]: Operators[K] extends infer Op
     ? Op extends unknown
       ? Op extends (...params: infer Params) => infer _R
-        ? TypeScriptParametersToMongoSyntax<T, Params, MaxDepth>
+        ? TypeScriptParametersToMongoSyntax<State, Params, MaxDepth>
         : never
       : never
     : never;
 };
 
 export type TypeScriptParametersToMongoSyntax<
-  T extends object,
+  State extends AggregateState,
   Params,
   MaxDepth extends unknown[] = ArrayOfLength<3>
 > = MaxDepth extends []
@@ -27,15 +28,15 @@ export type TypeScriptParametersToMongoSyntax<
   : Params extends readonly []
     ? EmptyObject
     : Params extends readonly [infer P]
-      ? TypeScriptParameterToMongoSyntax<T, P, MaxDepth>
+      ? TypeScriptParameterToMongoSyntax<State, P, MaxDepth>
       : {
           readonly [K in keyof Params]: K extends number | `${number}`
-            ? TypeScriptParameterToMongoSyntax<T, Params[K], MaxDepth>
+            ? TypeScriptParameterToMongoSyntax<State, Params[K], MaxDepth>
             : Params[K];
         };
 
 type TypeScriptParameterToMongoSyntax<
-  T extends object,
+  State extends AggregateState,
   Param,
   MaxDepth extends unknown[]
 > = Param extends infer P
@@ -46,23 +47,23 @@ type TypeScriptParameterToMongoSyntax<
             readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
               infer _I
             >
-              ? ConstantExpression<T, Tail<MaxDepth>>
-              : AggregateExpression<T, Tail<MaxDepth>>;
+              ? ConstantExpression<State, Tail<MaxDepth>>
+              : AggregateExpression<State, Tail<MaxDepth>>;
           }
-        : ConstantExpression<T, Tail<MaxDepth>>
-      : AggregateExpression<T, Tail<MaxDepth>>
+        : ConstantExpression<State, Tail<MaxDepth>>
+      : AggregateExpression<State, Tail<MaxDepth>>
     : never
   : never;
 
 export type MongoParametersToTypeScriptSyntax<
-  T extends object,
+  State extends AggregateState,
   Params
 > = Params extends readonly unknown[]
   ? {
       -readonly [K in keyof Params]: K extends number | `${number}`
-        ? EvaluateAggregateExpression<T, Params[K], true>
+        ? EvaluateAggregateExpression<State, Params[K], true>
         : Params[K];
     }
   : Params extends EmptyObject
     ? []
-    : [EvaluateAggregateExpression<T, Params, true>];
+    : [EvaluateAggregateExpression<State, Params, true>];

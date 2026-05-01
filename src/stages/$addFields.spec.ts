@@ -1,10 +1,9 @@
-import { Aggregate, aggregate } from '../aggregate';
 import { expectTypeOf } from 'expect-type';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$addFields', () => {
   describe('Output', () => {
-    type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
-
     type InputDocument = {
       n: number;
     };

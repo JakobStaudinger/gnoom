@@ -24,36 +24,36 @@ import { UnionWithStage } from './$unionWith';
 import { UnsetStage } from './$unset';
 import { UnwindStage } from './$unwind';
 
-export type AllStages<T extends object, State extends AggregateState> = {
-  [S in keyof AllStagesMap<T, State>]: UnlessFinalized<
+export type AllStages<State extends AggregateState> = {
+  [S in keyof AllStagesMap<State>]: UnlessFinalized<
     State,
-    AllStagesMap<T, State>[S]
+    AllStagesMap<State>[S]
   >;
 };
 
-interface AllStagesMap<T extends object, State extends AggregateState>
+interface AllStagesMap<State extends AggregateState>
   extends
-    AddFieldsStage<T>,
-    BucketStage<T>,
-    BucketAutoStage<T>,
-    CountStage,
+    AddFieldsStage<State>,
+    BucketStage<State>,
+    BucketAutoStage<State>,
+    CountStage<State>,
     DocumentsStage<State>,
-    FacetStage<T>,
-    GeoNearStage<T, State>,
-    GraphLookupStage<T>,
-    GroupStage<T>,
-    LimitStage<T>,
-    LookupStage<T>,
-    MatchStage<T>,
-    MergeStage<T, State>,
-    OutStage<T, State>,
-    ProjectStage<T>,
-    ReplaceRootStage<T>,
-    SampleStage<T>,
-    SetWindowFieldsStage<T>,
-    SkipStage<T>,
-    SortStage<T>,
-    SortByCountStage<T>,
-    UnionWithStage<T>,
-    UnsetStage<T>,
-    UnwindStage<T> {}
+    FacetStage<State>,
+    GeoNearStage<State>,
+    GraphLookupStage<State>,
+    GroupStage<State>,
+    LimitStage<State>,
+    LookupStage<State>,
+    MatchStage<State>,
+    MergeStage<State>,
+    OutStage<State>,
+    ProjectStage<State>,
+    ReplaceRootStage<State>,
+    SampleStage<State>,
+    SetWindowFieldsStage<State>,
+    SkipStage<State>,
+    SortStage<State>,
+    SortByCountStage<State>,
+    UnionWithStage<State>,
+    UnsetStage<State>,
+    UnwindStage<State> {}

@@ -1,13 +1,14 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
+import { AggregateState, WithType } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface UnionWithStage<T extends object> {
+export interface UnionWithStage<State extends AggregateState> {
   $unionWith: <Other extends object>() => <
     const S extends UnionWithSpecification<Other>
   >(
     specification: S
-  ) => Aggregate<UnionWithOutput<T, Other, S>>;
+  ) => Aggregate<UnionWithOutput<State, Other, S>>;
 }
 
 type UnionWithSpecification<Other extends object> =
@@ -20,15 +21,17 @@ type UnionWithSpecification<Other extends object> =
     };
 
 type UnionWithOutput<
-  T extends object,
+  State extends AggregateState,
   Other extends object,
   S extends UnionWithSpecification<Other>
-> =
-  | T
+> = WithType<
+  State,
+  | State['T']
   | ('pipeline' extends keyof S
       ? S['pipeline'] extends (
           ...args: infer _Args
-        ) => AggregateLike<infer Output extends object>
-        ? Output
+        ) => AggregateLike<infer Output>
+        ? Output['T']
         : never
-      : Other);
+      : Other)
+>;

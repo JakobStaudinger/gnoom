@@ -7,18 +7,19 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
+import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface BucketAutoStage<T extends object> {
-  $bucketAuto: <const S extends BucketAutoSpecification<T>>(
+export interface BucketAutoStage<State extends AggregateState> {
+  $bucketAuto: <const S extends BucketAutoSpecification<State>>(
     specification: S
-  ) => Aggregate<BucketAutoOutput<T, S>>;
+  ) => Aggregate<BucketAutoOutput<State, S>>;
 }
 
-interface BucketAutoSpecification<T extends object> {
-  groupBy: AggregateExpression<T>;
+interface BucketAutoSpecification<State extends AggregateState> {
+  groupBy: AggregateExpression<State>;
   buckets: number;
   output?: {
-    [K in string]: AccumulatorExpression<T>;
+    [K in string]: AccumulatorExpression<State>;
   };
   granularity?: BucketGranularity;
 }
@@ -39,13 +40,16 @@ type BucketGranularity =
   | 'POWERSOF2';
 
 type BucketAutoOutput<
-  T extends object,
-  S extends BucketAutoSpecification<T>
-> = {
-  _id: EvaluateAggregateExpression<T, S['groupBy']>;
-} & {
-  -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
-    T,
-    S['output'][K]
-  >;
-};
+  State extends AggregateState,
+  S extends BucketAutoSpecification<State>
+> = WithType<
+  State,
+  {
+    _id: EvaluateAggregateExpression<State, S['groupBy']>;
+  } & {
+    -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
+      State,
+      S['output'][K]
+    >;
+  }
+>;

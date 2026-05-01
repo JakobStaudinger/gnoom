@@ -3,31 +3,39 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
+import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface ProjectStage<T extends object> {
-  $project: <const S extends ProjectSpecification<T>>(
+export interface ProjectStage<State extends AggregateState> {
+  $project: <const S extends ProjectSpecification<State>>(
     specification: S
-  ) => Aggregate<ProjectOutput<T, S>>;
+  ) => Aggregate<ProjectOutput<State, S>>;
 }
 
-type ProjectSpecification<T extends object> = {
-  [K in keyof T]?:
+type ProjectSpecification<State extends AggregateState> = {
+  [K in keyof State['T']]?:
     | 1
     | true
     | 0
     | false
-    | Exclude<AggregateExpression<T>, number | boolean>;
+    | Exclude<AggregateExpression<State>, number | boolean>;
 };
 
-type ProjectOutput<T extends object, S extends ProjectSpecification<T>> =
+type ProjectOutput<
+  State extends AggregateState,
+  S extends ProjectSpecification<State>
+> = WithType<
+  State,
   IsPureExclusion<S> extends true
-    ? Omit<T, keyof S>
+    ? Omit<State['T'], keyof S>
     : {
         -readonly [K in keyof S as S[K] extends 0 | false
           ? never
           : K]: S[K] extends 1 | true
-          ? T[K & keyof T]
-          : EvaluateAggregateExpression<T, S[K]>;
-      } & ('_id' extends keyof S ? unknown : { [K in keyof T & '_id']: T[K] });
+          ? State['T'][K & keyof State['T']]
+          : EvaluateAggregateExpression<State, S[K]>;
+      } & ('_id' extends keyof S
+        ? unknown
+        : { [K in keyof State['T'] & '_id']: State['T'][K] })
+>;
 
 type IsPureExclusion<S> = S[keyof S] extends 0 | false ? true : false;

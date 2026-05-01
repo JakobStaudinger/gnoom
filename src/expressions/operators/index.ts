@@ -1,3 +1,4 @@
+import { AggregateState } from '../../types/aggregate-state';
 import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
@@ -23,14 +24,14 @@ import { TrigonometryOperatorMap } from './trigonometry';
 import { TypeOperatorMap } from './type';
 
 export type OperatorExpressions<
-  T extends object,
+  State extends AggregateState,
   MaxDepth extends unknown[]
-> = Partial<TypeScriptToMongoSyntax<T, OperatorMap, MaxDepth>>;
+> = Partial<TypeScriptToMongoSyntax<State, OperatorMap, MaxDepth>>;
 
-export type EvaluateOperator<T extends object, Input> = {
+export type EvaluateOperator<State extends AggregateState, Input> = {
   [K in keyof Input & string]: K extends keyof OperatorMap
     ? OperatorMap[K] extends infer Op
-      ? MongoParametersToTypeScriptSyntax<T, Input[K]> extends infer Args
+      ? MongoParametersToTypeScriptSyntax<State, Input[K]> extends infer Args
         ? Args extends unknown[]
           ? Op extends (...args: Args) => infer R
             ? ((...args: ExtractRequired<Args>) => never) extends Op

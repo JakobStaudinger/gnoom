@@ -1,12 +1,13 @@
 import { Aggregate } from '../aggregate';
+import { AggregateState } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 
-export interface SortStage<T extends object> {
-  $sort: <const S extends SortSpecification<T>>(
+export interface SortStage<State extends AggregateState> {
+  $sort: <const S extends SortSpecification<State>>(
     specification: S
-  ) => Aggregate<T>;
+  ) => Aggregate<State>;
 }
 
-export type SortSpecification<T extends object> = {
-  [K in DeepKeyof<T>]?: 1 | -1 | { $meta: 'textScore' };
+export type SortSpecification<State extends AggregateState> = {
+  [K in DeepKeyof<State['T']>]?: 1 | -1 | { $meta: 'textScore' };
 };

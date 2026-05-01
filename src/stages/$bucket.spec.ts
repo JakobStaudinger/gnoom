@@ -1,11 +1,10 @@
-import { ObjectId } from 'mongodb';
-import { Aggregate, aggregate } from '../aggregate';
 import { expectTypeOf } from 'expect-type';
+import { ObjectId } from 'mongodb';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$bucket', () => {
   describe('Output', () => {
-    type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
-
     type InputDocument = {
       _id: ObjectId;
       n: number;

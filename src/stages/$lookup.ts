@@ -1,14 +1,16 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
+import { AggregateState, WithType } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
+import { Merge } from '../types/merge';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface LookupStage<T extends object> {
+export interface LookupStage<State extends AggregateState> {
   $lookup: <Other extends object>() => <
-    const S extends LookupSpecification<T, Other>
+    const S extends LookupSpecification<State, Other>
   >(
     specification: S
-  ) => Aggregate<LookupOutput<T, Other, S>>;
+  ) => Aggregate<LookupOutput<State, Other, S>>;
 }
 
 interface RequiredLookupSpecificationFields {
@@ -17,12 +19,12 @@ interface RequiredLookupSpecificationFields {
 }
 
 type LookupSpecification<
-  T extends object,
+  State extends AggregateState,
   Other extends object
 > = RequiredLookupSpecificationFields &
   (
     | {
-        localField: DeepKeyof<T>;
+        localField: DeepKeyof<State['T']>;
         foreignField: DeepKeyof<Other>;
         pipeline?: PipelineCallback<Other>;
       }
@@ -32,15 +34,21 @@ type LookupSpecification<
   );
 
 type LookupOutput<
-  T extends object,
+  State extends AggregateState,
   Other extends object,
-  S extends LookupSpecification<T, Other>
-> = T & {
-  [K in S['as']]: 'pipeline' extends keyof S
-    ? S['pipeline'] extends (
-        ...args: infer _Args
-      ) => AggregateLike<infer Output>
-      ? Output[]
-      : never
-    : Other[];
-};
+  S extends LookupSpecification<State, Other>
+> = WithType<
+  State,
+  Merge<
+    State['T'],
+    {
+      [K in S['as']]: 'pipeline' extends keyof S
+        ? S['pipeline'] extends (
+            ...args: infer _Args
+          ) => AggregateLike<infer Output>
+          ? Output['T'][]
+          : never
+        : Other[];
+    }
+  >
+>;

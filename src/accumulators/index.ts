@@ -2,6 +2,7 @@ import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
 } from '../expressions/map-syntax';
+import { AggregateState } from '../types/aggregate-state';
 import { $addToSet } from './$addToSet';
 import { $avg } from './$avg';
 import { $bottom } from './$bottom';
@@ -25,12 +26,12 @@ import { $sum } from './$sum';
 import { $top } from './$top';
 import { $topN } from './$topN';
 
-export interface AccumulatorMap<T extends object>
+export interface AccumulatorMap<State extends AggregateState>
   extends
     $addToSet,
     $avg,
-    $bottom<T>,
-    $bottomN<T>,
+    $bottom<State>,
+    $bottomN<State>,
     $count,
     $first,
     $firstN,
@@ -47,17 +48,17 @@ export interface AccumulatorMap<T extends object>
     $stdDevPop,
     $stdDevSamp,
     $sum,
-    $top<T>,
-    $topN<T> {}
+    $top<State>,
+    $topN<State> {}
 
-export type AccumulatorExpression<T extends object> = Partial<
-  TypeScriptToMongoSyntax<T, AccumulatorMap<T>>
+export type AccumulatorExpression<State extends AggregateState> = Partial<
+  TypeScriptToMongoSyntax<State, AccumulatorMap<State>>
 >;
 
-export type EvaluateAccumulatorExpression<T extends object, E> = {
-  [K in keyof E]: K extends keyof AccumulatorMap<T>
-    ? AccumulatorMap<T>[K] extends infer Acc
-      ? MongoParametersToTypeScriptSyntax<T, E[K]> extends infer Args
+export type EvaluateAccumulatorExpression<State extends AggregateState, E> = {
+  [K in keyof E]: K extends keyof AccumulatorMap<State>
+    ? AccumulatorMap<State>[K] extends infer Acc
+      ? MongoParametersToTypeScriptSyntax<State, E[K]> extends infer Args
         ? Args extends unknown[]
           ? Acc extends (...args: Args) => infer R
             ? R

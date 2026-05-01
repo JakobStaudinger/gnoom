@@ -1,6 +1,7 @@
 import { expectTypeOf } from 'expect-type';
-import { Aggregate, aggregate } from '../aggregate';
 import { ObjectId } from 'mongodb';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$graphLookup', () => {
   describe('Output', () => {
@@ -9,8 +10,6 @@ describe('$graphLookup', () => {
       name: string;
       followers: ObjectId[];
     };
-
-    type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
 
     it('should add a property with the name specified in `as`', () => {
       const _result = aggregate<Account>().$graphLookup<Account>()({

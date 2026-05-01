@@ -5,12 +5,39 @@ import { QueryPredicate } from '../query-predicates';
 import { DeepKeyof, DeepType } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { Primitive } from '../types/primitive';
+import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface MatchStage<T extends object> {
-  $match: <const S extends MatchSpecification<T>>(
+export interface MatchStage<State extends AggregateState> {
+  $match: <const S extends MatchSpecification<State>>(
     specification: S
-  ) => Aggregate<MatchOutput<T, S>>;
+  ) => Aggregate<MatchOutput<State, S>>;
 }
+
+type MatchSpecification<State extends AggregateState> = QueryPredicates<
+  State['T']
+> & {
+  $expr?: AggregateExpression<State>;
+  $sampleRate?: number;
+  $jsonSchema?: unknown;
+  $and?: MatchSpecification<State>[];
+  $or?: MatchSpecification<State>[];
+  $nor?: MatchSpecification<State>[];
+};
+
+type MatchOutput<
+  State extends AggregateState,
+  S extends MatchSpecification<State>
+> = WithType<State, MatchOutputHelper<State, S>>;
+
+type MatchOutputHelper<
+  State extends AggregateState,
+  S extends MatchSpecification<State>
+> = {
+  [K in keyof State['T']]: K extends keyof S
+    ? Narrow<State['T'][K], S[K]>
+    : State['T'][K];
+} & NarrowOr<State, S> &
+  NarrowAnd<State, S>;
 
 type QueryPredicates<T extends object> = {
   [K in DeepKeyof<T>]?: DeepType<T, K> extends Primitive
@@ -25,20 +52,6 @@ type QueryPredicates<T extends object> = {
         }
       : QueryPredicate<DeepType<T, K>>;
 };
-
-type MatchSpecification<T extends object> = QueryPredicates<T> & {
-  $expr?: AggregateExpression<T>;
-  $sampleRate?: number;
-  $jsonSchema?: unknown;
-  $and?: MatchSpecification<T>[];
-  $or?: MatchSpecification<T>[];
-  $nor?: MatchSpecification<T>[];
-};
-
-type MatchOutput<T extends object, S extends MatchSpecification<T>> = {
-  [K in keyof T]: K extends keyof S ? Narrow<T[K], S[K]> : T[K];
-} & NarrowOr<T, S> &
-  NarrowAnd<T, S>;
 
 type Narrow<T, S> = unknown extends NarrowHelper<T, S> ? T : NarrowHelper<T, S>;
 
@@ -97,26 +110,26 @@ type NegateMap = {
   $gte: '$lt';
 };
 
-type NarrowOr<T extends object, S> = S extends { $or: infer Spec }
-  ? NarrowOrHelper<T, Spec> extends never
+type NarrowOr<State extends AggregateState, S> = S extends { $or: infer Spec }
+  ? NarrowOrHelper<State, Spec> extends never
     ? unknown
-    : NarrowOrHelper<T, Spec>
+    : NarrowOrHelper<State, Spec>
   : unknown;
 
-type NarrowOrHelper<T extends object, E> = E extends [
-  infer Head extends MatchSpecification<T>,
+type NarrowOrHelper<State extends AggregateState, E> = E extends [
+  infer Head extends MatchSpecification<State>,
   ...infer Tail
 ]
-  ? MatchOutput<T, Head> | NarrowOrHelper<T, Tail>
+  ? MatchOutputHelper<State, Head> | NarrowOrHelper<State, Tail>
   : never;
 
-type NarrowAnd<T extends object, S> = S extends { $and: infer Spec }
-  ? NarrowAndHelper<T, Spec>
+type NarrowAnd<State extends AggregateState, S> = S extends { $and: infer Spec }
+  ? NarrowAndHelper<State, Spec>
   : unknown;
 
-type NarrowAndHelper<T extends object, E> = E extends [
-  infer Head extends MatchSpecification<T>,
+type NarrowAndHelper<State extends AggregateState, E> = E extends [
+  infer Head extends MatchSpecification<State>,
   ...infer Tail
 ]
-  ? MatchOutput<T, Head> & NarrowAndHelper<T, Tail>
+  ? MatchOutputHelper<State, Head> & NarrowAndHelper<State, Tail>
   : unknown;

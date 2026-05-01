@@ -3,21 +3,35 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
-import { AggregateState, MustBeFirstStage } from '../types/aggregate-state';
+import {
+  AggregateState,
+  MustBeFirstStage,
+  WithType
+} from '../types/aggregate-state';
 import { EmptyObject } from '../types/object';
 
 export interface DocumentsStage<State extends AggregateState> {
   $documents: MustBeFirstStage<
     State,
-    <const S extends DocumentsSpecification>(
+    <const S extends DocumentsSpecification<State>>(
       specification: S
-    ) => Aggregate<DocumentsOutput<S>>
+    ) => Aggregate<DocumentsOutput<State, S>>
   >;
 }
 
-type DocumentsSpecification = AggregateExpression<EmptyObject>;
+type DocumentsSpecification<State extends AggregateState> = AggregateExpression<
+  WithType<State, EmptyObject>
+>;
 
-type DocumentsOutput<S extends DocumentsSpecification> =
-  EvaluateAggregateExpression<EmptyObject, S> extends (infer T extends object)[]
+type DocumentsOutput<
+  State extends AggregateState,
+  S extends DocumentsSpecification<State>
+> = WithType<
+  State,
+  EvaluateAggregateExpression<
+    WithType<State, EmptyObject>,
+    S
+  > extends (infer T extends object)[]
     ? T
-    : never;
+    : never
+>;

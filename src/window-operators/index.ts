@@ -3,6 +3,7 @@ import {
   TypeScriptToMongoSyntax
 } from '../expressions/map-syntax';
 import { TimeUnit } from '../expressions/operators/date/types';
+import { AggregateState } from '../types/aggregate-state';
 import { $addToSet } from './$addToSet';
 import { $avg } from './$avg';
 import { $bottom } from './$bottom';
@@ -37,12 +38,12 @@ import { $sum } from './$sum';
 import { $top } from './$top';
 import { $topN } from './$topN';
 
-interface WindowOperatorMap<T extends object>
+interface WindowOperatorMap<State extends AggregateState>
   extends
     $addToSet,
     $avg,
-    $bottom<T>,
-    $bottomN<T>,
+    $bottom<State>,
+    $bottomN<State>,
     $count,
     $covariancePop,
     $covarianceSamp,
@@ -70,11 +71,11 @@ interface WindowOperatorMap<T extends object>
     $stdDevPop,
     $stdDevSamp,
     $sum,
-    $top<T>,
-    $topN<T> {}
+    $top<State>,
+    $topN<State> {}
 
-export type WindowOperatorExpression<T extends object> = Partial<
-  TypeScriptToMongoSyntax<T, WindowOperatorMap<T>>
+export type WindowOperatorExpression<State extends AggregateState> = Partial<
+  TypeScriptToMongoSyntax<State, WindowOperatorMap<State>>
 > & {
   window?:
     | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
@@ -83,10 +84,13 @@ export type WindowOperatorExpression<T extends object> = Partial<
 
 type DocumentBoundary = 'current' | 'unbounded' | number;
 
-export type EvaluateWindowOperatorExpression<T extends object, E> = {
-  [K in keyof E]: K extends keyof WindowOperatorMap<T>
-    ? WindowOperatorMap<T>[K] extends infer Op
-      ? MongoParametersToTypeScriptSyntax<T, E[K]> extends infer Args
+export type EvaluateWindowOperatorExpression<
+  State extends AggregateState,
+  E
+> = {
+  [K in keyof E]: K extends keyof WindowOperatorMap<State>
+    ? WindowOperatorMap<State>[K] extends infer Op
+      ? MongoParametersToTypeScriptSyntax<State, E[K]> extends infer Args
         ? Args extends unknown[]
           ? Op extends (...args: Args) => infer R
             ? R

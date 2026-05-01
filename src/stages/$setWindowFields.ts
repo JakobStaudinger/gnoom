@@ -1,5 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
+import { AggregateState, WithType } from '../types/aggregate-state';
 import { Merge } from '../types/merge';
 import {
   EvaluateWindowOperatorExpression,
@@ -7,27 +8,30 @@ import {
 } from '../window-operators';
 import { SortSpecification } from './$sort';
 
-export interface SetWindowFieldsStage<T extends object> {
-  $setWindowFields: <const S extends SetWindowFieldsSpecification<T>>(
+export interface SetWindowFieldsStage<State extends AggregateState> {
+  $setWindowFields: <const S extends SetWindowFieldsSpecification<State>>(
     specification: S
-  ) => Aggregate<SetWindowFieldsOutput<T, S>>;
+  ) => Aggregate<SetWindowFieldsOutput<State, S>>;
 }
 
-interface SetWindowFieldsSpecification<T extends object> {
-  partitionBy?: AggregateExpression<T>;
-  sortBy?: SortSpecification<T>;
-  output: Record<string, WindowOperatorExpression<T>>;
+interface SetWindowFieldsSpecification<State extends AggregateState> {
+  partitionBy?: AggregateExpression<State>;
+  sortBy?: SortSpecification<State>;
+  output: Record<string, WindowOperatorExpression<State>>;
 }
 
 type SetWindowFieldsOutput<
-  T extends object,
-  S extends SetWindowFieldsSpecification<T>
-> = Merge<
-  T,
-  {
-    -readonly [K in keyof S['output']]: EvaluateWindowOperatorExpression<
-      T,
-      S['output'][K]
-    >;
-  }
+  State extends AggregateState,
+  S extends SetWindowFieldsSpecification<State>
+> = WithType<
+  State,
+  Merge<
+    State['T'],
+    {
+      -readonly [K in keyof S['output']]: EvaluateWindowOperatorExpression<
+        State,
+        S['output'][K]
+      >;
+    }
+  >
 >;

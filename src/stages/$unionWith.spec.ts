@@ -1,5 +1,6 @@
 import { expectTypeOf } from 'expect-type';
-import { Aggregate, aggregate } from '../aggregate';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$unionWith', () => {
   describe('Output', () => {
@@ -13,8 +14,6 @@ describe('$unionWith', () => {
       title: string;
       authorName: string;
     };
-
-    type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
 
     it('should result in T | Other', () => {
       const _result = aggregate<Book>().$unionWith<Author>()({

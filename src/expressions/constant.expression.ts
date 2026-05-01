@@ -1,3 +1,4 @@
+import { AggregateState } from '../types/aggregate-state';
 import { AnyObject } from '../types/object';
 import { Primitive } from '../types/primitive';
 import { ArrayOfLength, Tail } from '../types/recursion';
@@ -7,7 +8,7 @@ import {
 } from './expressions';
 
 export type ConstantExpression<
-  T extends object,
+  State extends AggregateState,
   MaxDepth extends unknown[] = ArrayOfLength<2>
 > =
   | Primitive
@@ -16,18 +17,18 @@ export type ConstantExpression<
   | (MaxDepth['length'] extends 0
       ? AnyObject | unknown[]
       :
-          | Record<string, AggregateExpression<T, Tail<MaxDepth>>>
-          | AggregateExpression<T, Tail<MaxDepth>>[]);
+          | Record<string, AggregateExpression<State, Tail<MaxDepth>>>
+          | AggregateExpression<State, Tail<MaxDepth>>[]);
 
 export type EvaluateConstant<
-  T extends object,
+  State extends AggregateState,
   S,
   IncludeStatic
 > = S extends AnyObject
   ? keyof S & `$${string}` extends never
     ? {
         -readonly [K in keyof S]: EvaluateAggregateExpression<
-          T,
+          State,
           S[K],
           IncludeStatic
         >;

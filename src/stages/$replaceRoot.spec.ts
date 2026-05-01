@@ -1,10 +1,9 @@
 import { expectTypeOf } from 'expect-type';
 import { ObjectId } from 'mongodb';
-import { aggregate, Aggregate } from '../aggregate';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$replaceRoot', () => {
-  type ExtractDocumentType<T> = T extends Aggregate<infer R> ? R : never;
-
   type InputDocument = {
     _id: ObjectId;
     n: number;

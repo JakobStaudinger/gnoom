@@ -1,18 +1,21 @@
 import { StaticInput } from '../expressions/static-input';
 import { SortSpecification } from '../stages/$sort';
+import { AggregateState } from '../types/aggregate-state';
 import { AnyObject } from '../types/object';
 import { Overload, OverloadTransformation } from '../types/overload';
 import { Primitive } from '../types/primitive';
 
-export interface $bottom<T extends object> {
-  $bottom: Overload<Primitive | AnyObject | unknown[], Signature<T>>;
+export interface $bottom<State extends AggregateState> {
+  $bottom: Overload<Primitive | AnyObject | unknown[], Signature<State>>;
 }
 
-interface Signature<T extends object> extends OverloadTransformation {
-  output: (input: Input<T, this['T']>) => this['T'];
+interface Signature<
+  State extends AggregateState
+> extends OverloadTransformation {
+  output: (input: Input<State, this['T']>) => this['T'];
 }
 
-type Input<T extends object, O> = StaticInput<{
-  sortBy: StaticInput<SortSpecification<T>>;
+type Input<State extends AggregateState, O> = StaticInput<{
+  sortBy: StaticInput<SortSpecification<State>>;
   output: O;
 }>;

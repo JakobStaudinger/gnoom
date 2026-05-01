@@ -1,42 +1,52 @@
 import { Aggregate } from '../aggregate';
 import { QueryPredicate } from '../query-predicates';
-import { AggregateState, MustBeFirstStage } from '../types/aggregate-state';
+import {
+  AggregateState,
+  MustBeFirstStage,
+  WithType
+} from '../types/aggregate-state';
 import { DeepKeyof, DeepType } from '../types/deep';
 import { Merge } from '../types/merge';
 
-export interface GeoNearStage<T extends object, State extends AggregateState> {
+export interface GeoNearStage<State extends AggregateState> {
   $geoNear: MustBeFirstStage<
     State,
-    <const S extends GeoNearSpecification<T>>(
+    <const S extends GeoNearSpecification<State>>(
       specification: S
-    ) => Aggregate<GeoNearOutput<T, S>>
+    ) => Aggregate<GeoNearOutput<State, S>>
   >;
 }
 
-type GeoNearSpecification<T extends object> = {
+type GeoNearSpecification<State extends AggregateState> = {
   distanceField: string;
   distanceMultiplier?: number;
   includeLocs?: string;
-  key?: DeepKeyof<T>;
+  key?: DeepKeyof<State['T']>;
   maxDistance?: number;
   minDistance?: number;
   near: {
     type: 'Point';
     coordinates: [longitude: number, latitude: number];
   };
-  query?: QueryPredicate<T>;
+  query?: QueryPredicate<State['T']>;
   spherical?: boolean;
 };
 
-type GeoNearOutput<T extends object, S extends GeoNearSpecification<T>> = Merge<
-  T,
-  {
-    [K in S['distanceField']]: number;
-  } & ('includeLocs' extends keyof S
-    ? {
-        [K in S['includeLocs'] & string]: S['key'] extends string
-          ? DeepType<T, S['key']>
-          : unknown;
-      }
-    : unknown)
+type GeoNearOutput<
+  State extends AggregateState,
+  S extends GeoNearSpecification<State>
+> = WithType<
+  State,
+  Merge<
+    State['T'],
+    {
+      [K in S['distanceField']]: number;
+    } & ('includeLocs' extends keyof S
+      ? {
+          [K in S['includeLocs'] & string]: S['key'] extends string
+            ? DeepType<State, S['key']>
+            : unknown;
+        }
+      : unknown)
+  >
 >;

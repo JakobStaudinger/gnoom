@@ -1,29 +1,33 @@
 import { Aggregate } from '../aggregate';
 import {
-  EvaluateAggregateExpression,
-  AggregateExpression
+  AggregateExpression,
+  EvaluateAggregateExpression
 } from '../expressions';
+import { AggregateState, WithType } from '../types/aggregate-state';
 import { Merge } from '../types/merge';
 
-export interface AddFieldsStage<T extends object> {
-  $addFields: AddFieldsStageDefinition<T>;
-  $set: AddFieldsStageDefinition<T>;
+export interface AddFieldsStage<State extends AggregateState> {
+  $addFields: AddFieldsStageDefinition<State>;
+  $set: AddFieldsStageDefinition<State>;
 }
 
-type AddFieldsStageDefinition<T extends object> = <
-  const S extends AddFieldsSpecification<T>
+type AddFieldsStageDefinition<State extends AggregateState> = <
+  const S extends AddFieldsSpecification<State>
 >(
   specification: S
-) => Aggregate<AddFieldsOutput<T, S>>;
+) => Aggregate<AddFieldsOutput<State, S>>;
 
-type AddFieldsSpecification<T extends object> = {
-  [K in string]: AggregateExpression<T>;
+type AddFieldsSpecification<State extends AggregateState> = {
+  [K in string]: AggregateExpression<State>;
 };
 
 type AddFieldsOutput<
-  T extends object,
-  S extends AddFieldsSpecification<T>
-> = Merge<
-  T,
-  { -readonly [K in keyof S]: EvaluateAggregateExpression<T, S[K]> }
+  State extends AggregateState,
+  S extends AddFieldsSpecification<State>
+> = WithType<
+  State,
+  Merge<
+    State['T'],
+    { -readonly [K in keyof S]: EvaluateAggregateExpression<State, S[K]> }
+  >
 >;

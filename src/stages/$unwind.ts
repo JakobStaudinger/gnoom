@@ -1,41 +1,50 @@
 import { Aggregate } from '../aggregate';
 import { FieldPathExpression } from '../expressions/field-path.expression';
+import { AggregateState, WithType } from '../types/aggregate-state';
 import { DeepType, FromDeepEntry } from '../types/deep';
 import { Merge } from '../types/merge';
 
-export interface UnwindStage<T extends object> {
-  $unwind: <const S extends UnwindSpecification<T>>(
+export interface UnwindStage<State extends AggregateState> {
+  $unwind: <const S extends UnwindSpecification<State>>(
     specification: S
-  ) => Aggregate<UnwindOutput<T, S>>;
+  ) => Aggregate<UnwindOutput<State, S>>;
 }
 
-type UnwindSpecification<T extends object> =
-  | FieldPathExpression<T>
+type UnwindSpecification<State extends AggregateState> =
+  | FieldPathExpression<State>
   | {
-      path: FieldPathExpression<T>;
+      path: FieldPathExpression<State>;
       preserveNullAndEmptyArrays?: boolean;
       includeArrayIndex?: string;
     };
 
-type UnwindOutput<T extends object, S extends UnwindSpecification<T>> =
-  S extends FieldPathExpression<T>
-    ? UnwindOutput<T, { path: S }>
+type UnwindOutput<
+  State extends AggregateState,
+  S extends UnwindSpecification<State>
+> = WithType<State, UnwindOutputHelper<State, S>>;
+
+type UnwindOutputHelper<
+  State extends AggregateState,
+  S extends UnwindSpecification<State>
+> =
+  S extends FieldPathExpression<State>
+    ? UnwindOutputHelper<State, { path: S }>
     : S extends {
           path: `$${infer Path}`;
           preserveNullAndEmptyArrays?: infer Preserve;
           includeArrayIndex?: infer I;
         }
       ? Merge<
-          T,
+          State['T'],
           FromDeepEntry<
             Path,
-            DeepType<T, Path> extends (infer E)[]
+            DeepType<State['T'], Path> extends (infer E)[]
               ? Preserve extends true
                 ? E | null
                 : E
               : Preserve extends true
-                ? DeepType<T, Path>
-                : NonNullable<DeepType<T, Path>>
+                ? DeepType<State['T'], Path>
+                : NonNullable<DeepType<State['T'], Path>>
           > &
             (I extends string ? { [K in I]: number } : unknown)
         >

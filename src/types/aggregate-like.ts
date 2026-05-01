@@ -1,5 +1,6 @@
 import { AggregatePipeline } from '../aggregate';
+import { AggregateState } from './aggregate-state';
 
-export type AggregateLike<T> =
-  | AggregatePipeline<T>
-  | { toArray: () => AggregatePipeline<T> };
+export type AggregateLike<State extends AggregateState> =
+  | AggregatePipeline<State>
+  | { toArray: () => AggregatePipeline<State> };

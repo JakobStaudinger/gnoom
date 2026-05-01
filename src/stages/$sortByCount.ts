@@ -3,16 +3,21 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
+import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface SortByCountStage<T extends object> {
-  $sortByCount: <const S extends SortByCountSpecification<T>>(
+export interface SortByCountStage<State extends AggregateState> {
+  $sortByCount: <const S extends SortByCountSpecification<State>>(
     specification: S
-  ) => Aggregate<SortByCountOutput<T, S>>;
+  ) => Aggregate<SortByCountOutput<State, S>>;
 }
 
-type SortByCountSpecification<T extends object> = AggregateExpression<T>;
+type SortByCountSpecification<State extends AggregateState> =
+  AggregateExpression<State>;
 
 type SortByCountOutput<
-  T extends object,
-  S extends SortByCountSpecification<T>
-> = { _id: EvaluateAggregateExpression<T, S>; count: number };
+  State extends AggregateState,
+  S extends SortByCountSpecification<State>
+> = WithType<
+  State,
+  { _id: EvaluateAggregateExpression<State, S>; count: number }
+>;

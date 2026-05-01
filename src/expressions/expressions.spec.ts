@@ -1,16 +1,17 @@
 import { expectTypeOf } from 'expect-type';
 import { EvaluateAggregateExpression } from './index';
+import { InitialState } from '../types/aggregate-state';
 
 describe('Expressions', () => {
   describe('General', () => {
-    type Input = {
+    type Input = InitialState<{
       n: number;
       s: string;
       nested: {
         b: boolean;
         n: number;
       };
-    };
+    }>;
 
     it('should accept a constant expression', () => {
       const _expression = { $abs: 42 } as const;
@@ -62,11 +63,11 @@ describe('Expressions', () => {
   });
 
   describe('Static Input', () => {
-    type Input = {
+    type Input = InitialState<{
       number: number;
       array: number[];
       string: string;
-    };
+    }>;
 
     it('should allow literals', () => {
       const _expression = {
@@ -79,9 +80,9 @@ describe('Expressions', () => {
     });
 
     it('should not allow expressions', () => {
-      type SpecializedInput = {
+      type SpecializedInput = InitialState<{
         input: { input: number };
-      };
+      }>;
       const _expression = { $sigmoid: '$input' } as const;
 
       type Result = EvaluateAggregateExpression<
@@ -121,12 +122,12 @@ describe('Expressions', () => {
   });
 
   describe('Rest parameters', () => {
-    type Input = {
+    type Input = InitialState<{
       number1: number;
       number2: number;
       number3: number;
       string: string;
-    };
+    }>;
 
     it('should accept arbitrarily many parameters', () => {
       const _expression = {
@@ -163,15 +164,18 @@ describe('Expressions', () => {
     it('should take an empty object as its value', () => {
       const _expression = { $rand: {} } as const;
 
-      type Result = EvaluateAggregateExpression<object, typeof _expression>;
+      type Result = EvaluateAggregateExpression<
+        InitialState<object>,
+        typeof _expression
+      >;
 
       expectTypeOf<Result>().toBeNumber();
     });
 
     it('should not accept paths to an empty object', () => {
-      type Input = {
+      type Input = InitialState<{
         empty: Record<string, never>;
-      };
+      }>;
 
       const _expression = { $rand: '$empty' } as const;
 
@@ -182,12 +186,12 @@ describe('Expressions', () => {
   });
 
   describe('Overloading', () => {
-    type Input = {
+    type Input = InitialState<{
       date1: Date;
       date2: Date;
       number1: number;
       number2: number;
-    };
+    }>;
 
     it('should add two numbers and result in a number', () => {
       const _expression = {

@@ -18,7 +18,7 @@ type EvaluateVariableExpressionHelper<
     : undefined;
 
 export type VariableExpression<State extends AggregateState> =
-  `$${VariableExpressionHelper<State['systemVariables']>}`;
+  `$$${VariableExpressionHelper<State['systemVariables']>}`;
 
 type VariableExpressionHelper<T extends object> = {
   [K in keyof T & string]: T[K] extends Date | ObjectId | Timestamp

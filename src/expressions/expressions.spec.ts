@@ -1,6 +1,7 @@
 import { expectTypeOf } from 'expect-type';
-import { EvaluateAggregateExpression } from './index';
+import { Timestamp } from 'mongodb';
 import { InitialState } from '../types/aggregate-state';
+import { EvaluateAggregateExpression } from './index';
 
 describe('Expressions', () => {
   describe('General', () => {
@@ -118,6 +119,24 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toBeNever();
+    });
+
+    it('should allow system variables', () => {
+      const _expression = {
+        root: '$$ROOT',
+        current: '$$CURRENT',
+        now: '$$NOW',
+        time: '$$CLUSTER_TIME'
+      } as const;
+
+      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
+
+      expectTypeOf<Result>().toEqualTypeOf<{
+        root: Input['T'];
+        current: Input['T'];
+        now: Date;
+        time: Timestamp;
+      }>();
     });
   });
 

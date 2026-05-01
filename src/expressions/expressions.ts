@@ -7,6 +7,10 @@ import {
 } from './field-path.expression';
 import { EvaluateOperator, OperatorExpressions } from './operators';
 import { StaticInput } from './static-input';
+import {
+  EvaluateVariableExpression,
+  VariableExpression
+} from './variable.expression';
 
 export type AggregateExpression<
   State extends AggregateState,
@@ -14,18 +18,21 @@ export type AggregateExpression<
 > =
   | OperatorExpressions<State, MaxDepth>
   | ConstantExpression<State, MaxDepth>
-  | FieldPathExpression<State>;
+  | FieldPathExpression<State>
+  | VariableExpression<State>;
 
 export type EvaluateAggregateExpression<
   State extends AggregateState,
   Expression,
   IncludeStatic = false
-> = Expression extends `$${infer Path}`
-  ? EvaluateFieldPathExpression<State, Path>
-  : HasReservedKey<Expression> extends true
-    ? EvaluateOperator<State, Expression>
-    : IncludeStatic extends true
-      ? StaticInput<EvaluateConstant<State, Expression, IncludeStatic>>
-      : EvaluateConstant<State, Expression, IncludeStatic>;
+> = Expression extends `$$${infer Path}`
+  ? EvaluateVariableExpression<State, Path>
+  : Expression extends `$${infer Path}`
+    ? EvaluateFieldPathExpression<State, Path>
+    : HasReservedKey<Expression> extends true
+      ? EvaluateOperator<State, Expression>
+      : IncludeStatic extends true
+        ? StaticInput<EvaluateConstant<State, Expression, IncludeStatic>>
+        : EvaluateConstant<State, Expression, IncludeStatic>;
 
 type HasReservedKey<T> = keyof T & `$${string}` extends never ? false : true;

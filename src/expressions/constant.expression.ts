@@ -1,6 +1,6 @@
 import { AggregateState } from '../types/aggregate-state';
+import { NonCollapsingUnknown } from '../types/non-collapsing-unknown';
 import { AnyObject } from '../types/object';
-import { Primitive } from '../types/primitive';
 import { ArrayOfLength, Tail } from '../types/recursion';
 import {
   AggregateExpression,
@@ -11,11 +11,9 @@ export type ConstantExpression<
   State extends AggregateState,
   MaxDepth extends unknown[] = ArrayOfLength<2>
 > =
-  | Primitive
-  | null
-  | undefined
+  | NonCollapsingUnknown
   | (MaxDepth['length'] extends 0
-      ? AnyObject | unknown[]
+      ? never
       :
           | Record<string, AggregateExpression<State, Tail<MaxDepth>>>
           | AggregateExpression<State, Tail<MaxDepth>>[]);

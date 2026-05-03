@@ -1,5 +1,5 @@
 import { AggregateState } from '../types/aggregate-state';
-import { NonCollapsingUnknown } from '../types/non-collapsing-unknown';
+import { NonCollapsingUnknown } from '../types/non-collapsing';
 import { AnyObject } from '../types/object';
 import { ArrayOfLength, Tail } from '../types/recursion';
 import {

@@ -1,9 +1,10 @@
 import { ObjectId, Timestamp } from 'mongodb';
+import { NonCollapsingNumber, NonCollapsingString } from './non-collapsing';
 
 export type Primitive =
-  | (string & {})
+  | NonCollapsingString
   | boolean
-  | number
+  | NonCollapsingNumber
   | Date
   | Timestamp
   | ObjectId;

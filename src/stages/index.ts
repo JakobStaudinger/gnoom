@@ -2,6 +2,7 @@ import { AggregateState, UnlessFinalized } from '../types/aggregate-state';
 import { $addFields } from './$addFields';
 import { $bucket } from './$bucket';
 import { $bucketAuto } from './$bucketAuto';
+import { $changeStream } from './$changeStream';
 import { $count } from './$count';
 import { $documents } from './$documents';
 import { $facet } from './$facet';
@@ -36,6 +37,7 @@ interface AllStagesMap<State extends AggregateState>
     $addFields<State>,
     $bucket<State>,
     $bucketAuto<State>,
+    $changeStream<State>,
     $count<State>,
     $documents<State>,
     $facet<State>,

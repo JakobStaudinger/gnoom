@@ -4,6 +4,7 @@ import { $bucket } from './$bucket';
 import { $bucketAuto } from './$bucketAuto';
 import { $changeStream } from './$changeStream';
 import { $changeStreamSplitLargeEvent } from './$changeStreamSplitLargeEvent';
+import { $collStats } from './$collStats';
 import { $count } from './$count';
 import { $documents } from './$documents';
 import { $facet } from './$facet';
@@ -40,6 +41,7 @@ interface AllStagesMap<State extends AggregateState>
     $bucketAuto<State>,
     $changeStream<State>,
     $changeStreamSplitLargeEvent<State>,
+    $collStats<State>,
     $count<State>,
     $documents<State>,
     $facet<State>,

@@ -3,19 +3,19 @@ import { AggregateLike } from '../types/aggregate-like';
 import { AggregateState, WithType } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface FacetStage<State extends AggregateState> {
-  $facet: <const S extends FacetSpecification<State>>(
+export interface $facet<State extends AggregateState> {
+  $facet: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<FacetOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-type FacetSpecification<State extends AggregateState> = {
+type Specification<State extends AggregateState> = {
   [K in string]: PipelineCallback<State['T']>;
 };
 
-type FacetOutput<
+type Output<
   State extends AggregateState,
-  S extends FacetSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   {

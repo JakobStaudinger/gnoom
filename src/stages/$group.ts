@@ -9,19 +9,19 @@ import {
 } from '../expressions';
 import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface GroupStage<State extends AggregateState> {
-  $group: <const S extends GroupSpecification<State>>(
+export interface $group<State extends AggregateState> {
+  $group: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<GroupOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-type GroupSpecification<State extends AggregateState> = {
+type Specification<State extends AggregateState> = {
   _id: AggregateExpression<State>;
 } & Record<string, AggregateExpression<State> | AccumulatorExpression<State>>;
 
-type GroupOutput<
+type Output<
   State extends AggregateState,
-  S extends GroupSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   {

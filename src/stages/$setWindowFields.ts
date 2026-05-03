@@ -8,21 +8,21 @@ import {
 } from '../window-operators';
 import { SortSpecification } from './$sort';
 
-export interface SetWindowFieldsStage<State extends AggregateState> {
-  $setWindowFields: <const S extends SetWindowFieldsSpecification<State>>(
+export interface $setWindowFields<State extends AggregateState> {
+  $setWindowFields: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<SetWindowFieldsOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-interface SetWindowFieldsSpecification<State extends AggregateState> {
+interface Specification<State extends AggregateState> {
   partitionBy?: AggregateExpression<State>;
   sortBy?: SortSpecification<State>;
   output: Record<string, WindowOperatorExpression<State>>;
 }
 
-type SetWindowFieldsOutput<
+type Output<
   State extends AggregateState,
-  S extends SetWindowFieldsSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   Merge<

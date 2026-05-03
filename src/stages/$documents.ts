@@ -10,22 +10,22 @@ import {
 } from '../types/aggregate-state';
 import { EmptyObject } from '../types/object';
 
-export interface DocumentsStage<State extends AggregateState> {
+export interface $documents<State extends AggregateState> {
   $documents: MustBeFirstStage<
     State,
-    <const S extends DocumentsSpecification<State>>(
+    <const S extends Specification<State>>(
       specification: S
-    ) => Aggregate<DocumentsOutput<State, S>>
+    ) => Aggregate<Output<State, S>>
   >;
 }
 
-type DocumentsSpecification<State extends AggregateState> = AggregateExpression<
+type Specification<State extends AggregateState> = AggregateExpression<
   WithType<State, EmptyObject>
 >;
 
-type DocumentsOutput<
+type Output<
   State extends AggregateState,
-  S extends DocumentsSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   EvaluateAggregateExpression<

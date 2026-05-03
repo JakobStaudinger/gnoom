@@ -9,13 +9,13 @@ import {
 } from '../expressions';
 import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface BucketAutoStage<State extends AggregateState> {
-  $bucketAuto: <const S extends BucketAutoSpecification<State>>(
+export interface $bucketAuto<State extends AggregateState> {
+  $bucketAuto: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<BucketAutoOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-interface BucketAutoSpecification<State extends AggregateState> {
+interface Specification<State extends AggregateState> {
   groupBy: AggregateExpression<State>;
   buckets: number;
   output?: {
@@ -39,9 +39,9 @@ type BucketGranularity =
   | 'E192'
   | 'POWERSOF2';
 
-type BucketAutoOutput<
+type Output<
   State extends AggregateState,
-  S extends BucketAutoSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   {

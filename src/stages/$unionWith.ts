@@ -3,15 +3,15 @@ import { AggregateLike } from '../types/aggregate-like';
 import { AggregateState, WithType } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface UnionWithStage<State extends AggregateState> {
+export interface $unionWith<State extends AggregateState> {
   $unionWith: <Other extends object>() => <
-    const S extends UnionWithSpecification<Other>
+    const S extends Specification<Other>
   >(
     specification: S
-  ) => Aggregate<UnionWithOutput<State, Other, S>>;
+  ) => Aggregate<Output<State, Other, S>>;
 }
 
-type UnionWithSpecification<Other extends object> =
+type Specification<Other extends object> =
   | {
       coll: string;
       pipeline?: PipelineCallback<Other>;
@@ -20,10 +20,10 @@ type UnionWithSpecification<Other extends object> =
       pipeline: PipelineCallback<Other>;
     };
 
-type UnionWithOutput<
+type Output<
   State extends AggregateState,
   Other extends object,
-  S extends UnionWithSpecification<Other>
+  S extends Specification<Other>
 > = WithType<
   State,
   | State['T']

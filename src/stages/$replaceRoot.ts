@@ -5,24 +5,22 @@ import {
 } from '../expressions';
 import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface ReplaceRootStage<State extends AggregateState> {
-  $replaceRoot: <
-    const S extends ReplaceRootSpecification<State>
-  >(specification: {
+export interface $replaceRoot<State extends AggregateState> {
+  $replaceRoot: <const S extends Specification<State>>(specification: {
     newRoot: S;
-  }) => Aggregate<ReplaceRootOutput<State, S>>;
-  $replaceWith: <const S extends ReplaceRootSpecification<State>>(
+  }) => Aggregate<Output<State, S>>;
+  $replaceWith: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<ReplaceRootOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-type ReplaceRootSpecification<State extends AggregateState> = {
+type Specification<State extends AggregateState> = {
   [K in string]: AggregateExpression<State>;
 };
 
-type ReplaceRootOutput<
+type Output<
   State extends AggregateState,
-  S extends ReplaceRootSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   { -readonly [K in keyof S]: EvaluateAggregateExpression<State, S[K]> }

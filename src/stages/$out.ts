@@ -4,15 +4,15 @@ import { DeepKeyof } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface OutStage<State extends AggregateState> {
+export interface $out<State extends AggregateState> {
   $out: <Other extends object>() => <
-    const S extends OutSpecification<State, Other>
+    const S extends Specification<State, Other>
   >(
     specification: S
   ) => Aggregate<Finalize<WithType<State, never>, '$out'>>;
 }
 
-type OutSpecification<State extends AggregateState, Other extends object> =
+type Specification<State extends AggregateState, Other extends object> =
   | string
   | {
       into: string | { db: string; coll: string };

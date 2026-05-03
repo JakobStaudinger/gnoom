@@ -1,28 +1,28 @@
 import { AggregateState, UnlessFinalized } from '../types/aggregate-state';
-import { AddFieldsStage } from './$addFields';
-import { BucketStage } from './$bucket';
-import { BucketAutoStage } from './$bucketAuto';
-import { CountStage } from './$count';
-import { DocumentsStage } from './$documents';
-import { FacetStage } from './$facet';
-import { GeoNearStage } from './$geoNear';
-import { GraphLookupStage } from './$graphLookup';
-import { GroupStage } from './$group';
-import { LimitStage } from './$limit';
-import { LookupStage } from './$lookup';
-import { MatchStage } from './$match';
-import { MergeStage } from './$merge';
-import { OutStage } from './$out';
-import { ProjectStage } from './$project';
-import { ReplaceRootStage } from './$replaceRoot';
-import { SampleStage } from './$sample';
-import { SetWindowFieldsStage } from './$setWindowFields';
-import { SkipStage } from './$skip';
-import { SortStage } from './$sort';
-import { SortByCountStage } from './$sortByCount';
-import { UnionWithStage } from './$unionWith';
-import { UnsetStage } from './$unset';
-import { UnwindStage } from './$unwind';
+import { $addFields } from './$addFields';
+import { $bucket } from './$bucket';
+import { $bucketAuto } from './$bucketAuto';
+import { $count } from './$count';
+import { $documents } from './$documents';
+import { $facet } from './$facet';
+import { $geoNear } from './$geoNear';
+import { $graphLookup } from './$graphLookup';
+import { $group } from './$group';
+import { $limit } from './$limit';
+import { $lookup } from './$lookup';
+import { $match } from './$match';
+import { $merge } from './$merge';
+import { $out } from './$out';
+import { $project } from './$project';
+import { $replaceRoot } from './$replaceRoot';
+import { $sample } from './$sample';
+import { $setWindowFields } from './$setWindowFields';
+import { $skip } from './$skip';
+import { $sort } from './$sort';
+import { $sortByCount } from './$sortByCount';
+import { $unionWith } from './$unionWith';
+import { $unset } from './$unset';
+import { $unwind } from './$unwind';
 
 export type AllStages<State extends AggregateState> = {
   [S in keyof AllStagesMap<State>]: UnlessFinalized<
@@ -33,27 +33,27 @@ export type AllStages<State extends AggregateState> = {
 
 interface AllStagesMap<State extends AggregateState>
   extends
-    AddFieldsStage<State>,
-    BucketStage<State>,
-    BucketAutoStage<State>,
-    CountStage<State>,
-    DocumentsStage<State>,
-    FacetStage<State>,
-    GeoNearStage<State>,
-    GraphLookupStage<State>,
-    GroupStage<State>,
-    LimitStage<State>,
-    LookupStage<State>,
-    MatchStage<State>,
-    MergeStage<State>,
-    OutStage<State>,
-    ProjectStage<State>,
-    ReplaceRootStage<State>,
-    SampleStage<State>,
-    SetWindowFieldsStage<State>,
-    SkipStage<State>,
-    SortStage<State>,
-    SortByCountStage<State>,
-    UnionWithStage<State>,
-    UnsetStage<State>,
-    UnwindStage<State> {}
+    $addFields<State>,
+    $bucket<State>,
+    $bucketAuto<State>,
+    $count<State>,
+    $documents<State>,
+    $facet<State>,
+    $geoNear<State>,
+    $graphLookup<State>,
+    $group<State>,
+    $limit<State>,
+    $lookup<State>,
+    $match<State>,
+    $merge<State>,
+    $out<State>,
+    $project<State>,
+    $replaceRoot<State>,
+    $sample<State>,
+    $setWindowFields<State>,
+    $skip<State>,
+    $sort<State>,
+    $sortByCount<State>,
+    $unionWith<State>,
+    $unset<State>,
+    $unwind<State> {}

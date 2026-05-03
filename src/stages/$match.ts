@@ -7,31 +7,31 @@ import { AnyObject } from '../types/object';
 import { Primitive } from '../types/primitive';
 import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface MatchStage<State extends AggregateState> {
-  $match: <const S extends MatchSpecification<State>>(
+export interface $match<State extends AggregateState> {
+  $match: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<MatchOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-type MatchSpecification<State extends AggregateState> = QueryPredicates<
+type Specification<State extends AggregateState> = QueryPredicates<
   State['T']
 > & {
   $expr?: AggregateExpression<State>;
   $sampleRate?: number;
   $jsonSchema?: unknown;
-  $and?: MatchSpecification<State>[];
-  $or?: MatchSpecification<State>[];
-  $nor?: MatchSpecification<State>[];
+  $and?: Specification<State>[];
+  $or?: Specification<State>[];
+  $nor?: Specification<State>[];
 };
 
-type MatchOutput<
+type Output<
   State extends AggregateState,
-  S extends MatchSpecification<State>
+  S extends Specification<State>
 > = WithType<State, MatchOutputHelper<State, S>>;
 
 type MatchOutputHelper<
   State extends AggregateState,
-  S extends MatchSpecification<State>
+  S extends Specification<State>
 > = {
   [K in keyof State['T']]: K extends keyof S
     ? Narrow<State['T'][K], S[K]>
@@ -117,7 +117,7 @@ type NarrowOr<State extends AggregateState, S> = S extends { $or: infer Spec }
   : unknown;
 
 type NarrowOrHelper<State extends AggregateState, E> = E extends [
-  infer Head extends MatchSpecification<State>,
+  infer Head extends Specification<State>,
   ...infer Tail
 ]
   ? MatchOutputHelper<State, Head> | NarrowOrHelper<State, Tail>
@@ -128,7 +128,7 @@ type NarrowAnd<State extends AggregateState, S> = S extends { $and: infer Spec }
   : unknown;
 
 type NarrowAndHelper<State extends AggregateState, E> = E extends [
-  infer Head extends MatchSpecification<State>,
+  infer Head extends Specification<State>,
   ...infer Tail
 ]
   ? MatchOutputHelper<State, Head> & NarrowAndHelper<State, Tail>

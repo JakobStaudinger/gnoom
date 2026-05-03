@@ -5,12 +5,12 @@ import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
 import { PipelineCallback } from '../types/pipeline';
 
-export interface LookupStage<State extends AggregateState> {
+export interface $lookup<State extends AggregateState> {
   $lookup: <Other extends object>() => <
-    const S extends LookupSpecification<State, Other>
+    const S extends Specification<State, Other>
   >(
     specification: S
-  ) => Aggregate<LookupOutput<State, Other, S>>;
+  ) => Aggregate<Output<State, Other, S>>;
 }
 
 interface RequiredLookupSpecificationFields {
@@ -18,7 +18,7 @@ interface RequiredLookupSpecificationFields {
   as: string;
 }
 
-type LookupSpecification<
+type Specification<
   State extends AggregateState,
   Other extends object
 > = RequiredLookupSpecificationFields &
@@ -33,10 +33,10 @@ type LookupSpecification<
       }
   );
 
-type LookupOutput<
+type Output<
   State extends AggregateState,
   Other extends object,
-  S extends LookupSpecification<State, Other>
+  S extends Specification<State, Other>
 > = WithType<
   State,
   Merge<

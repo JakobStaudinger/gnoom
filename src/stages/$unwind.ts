@@ -4,13 +4,13 @@ import { AggregateState, WithType } from '../types/aggregate-state';
 import { DeepType, FromDeepEntry } from '../types/deep';
 import { Merge } from '../types/merge';
 
-export interface UnwindStage<State extends AggregateState> {
-  $unwind: <const S extends UnwindSpecification<State>>(
+export interface $unwind<State extends AggregateState> {
+  $unwind: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<UnwindOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-type UnwindSpecification<State extends AggregateState> =
+type Specification<State extends AggregateState> =
   | FieldPathExpression<State>
   | {
       path: FieldPathExpression<State>;
@@ -18,14 +18,14 @@ type UnwindSpecification<State extends AggregateState> =
       includeArrayIndex?: string;
     };
 
-type UnwindOutput<
+type Output<
   State extends AggregateState,
-  S extends UnwindSpecification<State>
+  S extends Specification<State>
 > = WithType<State, UnwindOutputHelper<State, S>>;
 
 type UnwindOutputHelper<
   State extends AggregateState,
-  S extends UnwindSpecification<State>
+  S extends Specification<State>
 > =
   S extends FieldPathExpression<State>
     ? UnwindOutputHelper<State, { path: S }>

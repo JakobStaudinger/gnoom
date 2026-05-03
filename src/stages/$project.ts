@@ -5,13 +5,13 @@ import {
 } from '../expressions';
 import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface ProjectStage<State extends AggregateState> {
-  $project: <const S extends ProjectSpecification<State>>(
+export interface $project<State extends AggregateState> {
+  $project: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<ProjectOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-type ProjectSpecification<State extends AggregateState> = {
+type Specification<State extends AggregateState> = {
   [K in keyof State['T']]?:
     | 1
     | true
@@ -20,9 +20,9 @@ type ProjectSpecification<State extends AggregateState> = {
     | Exclude<AggregateExpression<State>, number | boolean>;
 };
 
-type ProjectOutput<
+type Output<
   State extends AggregateState,
-  S extends ProjectSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   IsPureExclusion<S> extends true

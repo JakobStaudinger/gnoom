@@ -1,17 +1,17 @@
 import { Aggregate } from '../aggregate';
 import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface UnsetStage<State extends AggregateState> {
-  $unset: <const S extends UnsetSpecification<State>>(
+export interface $unset<State extends AggregateState> {
+  $unset: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<UnsetOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-type UnsetSpecification<State extends AggregateState> =
+type Specification<State extends AggregateState> =
   | keyof State['T']
   | (keyof State['T'])[];
 
-type UnsetOutput<
+type Output<
   State extends AggregateState,
-  S extends UnsetSpecification<State>
+  S extends Specification<State>
 > = WithType<State, Omit<State['T'], S extends (infer K)[] ? K : S>>;

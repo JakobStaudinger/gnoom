@@ -6,24 +6,24 @@ import {
 import { AggregateState, WithType } from '../types/aggregate-state';
 import { Merge } from '../types/merge';
 
-export interface AddFieldsStage<State extends AggregateState> {
-  $addFields: AddFieldsStageDefinition<State>;
-  $set: AddFieldsStageDefinition<State>;
+export interface $addFields<State extends AggregateState> {
+  $addFields: Signature<State>;
+  $set: Signature<State>;
 }
 
-type AddFieldsStageDefinition<State extends AggregateState> = <
-  const S extends AddFieldsSpecification<State>
+type Signature<State extends AggregateState> = <
+  const S extends Specification<State>
 >(
   specification: S
-) => Aggregate<AddFieldsOutput<State, S>>;
+) => Aggregate<Output<State, S>>;
 
-type AddFieldsSpecification<State extends AggregateState> = {
+type Specification<State extends AggregateState> = {
   [K in string]: AggregateExpression<State>;
 };
 
-type AddFieldsOutput<
+type Output<
   State extends AggregateState,
-  S extends AddFieldsSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   Merge<

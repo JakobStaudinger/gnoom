@@ -9,13 +9,13 @@ import {
 } from '../expressions';
 import { AggregateState, WithType } from '../types/aggregate-state';
 
-export interface BucketStage<State extends AggregateState> {
-  $bucket: <const S extends BucketSpecification<State>>(
+export interface $bucket<State extends AggregateState> {
+  $bucket: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<BucketOutput<State, S>>;
+  ) => Aggregate<Output<State, S>>;
 }
 
-interface BucketSpecification<State extends AggregateState> {
+interface Specification<State extends AggregateState> {
   groupBy: AggregateExpression<State>;
   boundaries: [unknown, unknown, ...unknown[]];
   default?: unknown;
@@ -24,9 +24,9 @@ interface BucketSpecification<State extends AggregateState> {
   };
 }
 
-type BucketOutput<
+type Output<
   State extends AggregateState,
-  S extends BucketSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   {

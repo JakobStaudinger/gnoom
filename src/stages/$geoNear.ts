@@ -8,16 +8,16 @@ import {
 import { DeepKeyof, DeepType } from '../types/deep';
 import { Merge } from '../types/merge';
 
-export interface GeoNearStage<State extends AggregateState> {
+export interface $geoNear<State extends AggregateState> {
   $geoNear: MustBeFirstStage<
     State,
-    <const S extends GeoNearSpecification<State>>(
+    <const S extends Specification<State>>(
       specification: S
-    ) => Aggregate<GeoNearOutput<State, S>>
+    ) => Aggregate<Output<State, S>>
   >;
 }
 
-type GeoNearSpecification<State extends AggregateState> = {
+type Specification<State extends AggregateState> = {
   distanceField: string;
   distanceMultiplier?: number;
   includeLocs?: string;
@@ -32,9 +32,9 @@ type GeoNearSpecification<State extends AggregateState> = {
   spherical?: boolean;
 };
 
-type GeoNearOutput<
+type Output<
   State extends AggregateState,
-  S extends GeoNearSpecification<State>
+  S extends Specification<State>
 > = WithType<
   State,
   Merge<

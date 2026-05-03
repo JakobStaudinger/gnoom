@@ -1,4 +1,4 @@
-import { ObjectId, Timestamp } from 'mongodb';
+import { ObjectId, Timestamp, UUID } from 'mongodb';
 import { NonCollapsingNumber, NonCollapsingString } from './non-collapsing';
 
 export type Primitive =
@@ -7,4 +7,5 @@ export type Primitive =
   | NonCollapsingNumber
   | Date
   | Timestamp
-  | ObjectId;
+  | ObjectId
+  | UUID;

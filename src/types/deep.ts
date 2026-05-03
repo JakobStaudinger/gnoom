@@ -1,10 +1,10 @@
-import { ObjectId, Timestamp } from 'mongodb';
+import { ObjectId, Timestamp, UUID } from 'mongodb';
 import { AnyObject } from './object';
 
 export type DeepKeyof<T> = T extends (infer E)[]
   ? DeepKeyof<E>
   : {
-      [K in keyof T & string]: T[K] extends ObjectId | Date | Timestamp
+      [K in keyof T & string]: T[K] extends ObjectId | Date | Timestamp | UUID
         ? K
         : T[K] extends object | unknown[]
           ? K | `${K}.${DeepKeyof<T[K]>}`

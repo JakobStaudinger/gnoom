@@ -6,6 +6,7 @@ import { $changeStream } from './$changeStream';
 import { $changeStreamSplitLargeEvent } from './$changeStreamSplitLargeEvent';
 import { $collStats } from './$collStats';
 import { $count } from './$count';
+import { $densify } from './$densify';
 import { $documents } from './$documents';
 import { $facet } from './$facet';
 import { $geoNear } from './$geoNear';
@@ -43,6 +44,7 @@ interface AllStagesMap<State extends AggregateState>
     $changeStreamSplitLargeEvent<State>,
     $collStats<State>,
     $count<State>,
+    $densify<State>,
     $documents<State>,
     $facet<State>,
     $geoNear<State>,

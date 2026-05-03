@@ -4,7 +4,7 @@ import { ExtractDocumentType } from '../testing/extract-document-type';
 import { ObjectId } from 'mongodb';
 import { AnyObject } from '../types/object';
 
-describe('$changeStreamSplitLargeEvent', () => {
+describe('$collStats', () => {
   describe('Output', () => {
     type InputDocument = {
       _id: ObjectId;

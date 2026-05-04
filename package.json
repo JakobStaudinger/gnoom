@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "test": " jest",
+    "test": "(tsc -p tsconfig.spec.json --noEmit &); jest && wait",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

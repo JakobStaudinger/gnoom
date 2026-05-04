@@ -21,8 +21,8 @@ type Output<
   {
     -readonly [K in keyof S]: S[K] extends (
       ...args: infer _Args
-    ) => AggregateLike<infer Output>
-      ? Output['T'][]
+    ) => AggregateLike<infer O>
+      ? O['T'][]
       : never;
   }
 >;

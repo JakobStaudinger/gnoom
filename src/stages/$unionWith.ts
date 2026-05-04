@@ -28,10 +28,8 @@ type Output<
   State,
   | State['T']
   | ('pipeline' extends keyof S
-      ? S['pipeline'] extends (
-          ...args: infer _Args
-        ) => AggregateLike<infer Output>
-        ? Output['T']
+      ? S['pipeline'] extends (...args: infer _Args) => AggregateLike<infer O>
+        ? O['T']
         : never
       : Other)
 >;

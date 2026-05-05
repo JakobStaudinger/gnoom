@@ -1,10 +1,12 @@
-import { AnyObject } from '../../../types/object';
-import { Overload, OverloadTransformation } from '../../../types/overload';
-import { Primitive } from '../../../types/primitive';
+import {
+  Overload,
+  OverloadTransformation,
+  UnknownOverloaded
+} from '../../../types/overload';
 import { StaticInput } from '../../static-input';
 
 export interface $filter {
-  $filter: Overload<Primitive | AnyObject | unknown[], Signature>;
+  $filter: Overload<UnknownOverloaded, Signature>;
 }
 
 interface Signature extends OverloadTransformation {

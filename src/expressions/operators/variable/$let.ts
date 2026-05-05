@@ -1,10 +1,13 @@
 import { AnyObject } from '../../../types/object';
-import { Overload, OverloadTransformation } from '../../../types/overload';
-import { Primitive } from '../../../types/primitive';
+import {
+  Overload,
+  OverloadTransformation,
+  UnknownOverloaded
+} from '../../../types/overload';
 import { StaticInput } from '../../static-input';
 
 export interface $let {
-  $let: Overload<Primitive | AnyObject | unknown[], Signature>;
+  $let: Overload<UnknownOverloaded, Signature>;
 }
 
 interface Signature extends OverloadTransformation {

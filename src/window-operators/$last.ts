@@ -1,9 +1,11 @@
-import { AnyObject } from '../types/object';
-import { Overload, OverloadTransformation } from '../types/overload';
-import { Primitive } from '../types/primitive';
+import {
+  Overload,
+  OverloadTransformation,
+  UnknownOverloaded
+} from '../types/overload';
 
 export interface $last {
-  $last: Overload<Primitive | AnyObject | unknown[], Signature>;
+  $last: Overload<UnknownOverloaded, Signature>;
 }
 
 interface Signature extends OverloadTransformation {

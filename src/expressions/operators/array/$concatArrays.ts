@@ -1,9 +1,11 @@
-import { AnyObject } from '../../../types/object';
-import { Overload, OverloadTransformation } from '../../../types/overload';
-import { Primitive } from '../../../types/primitive';
+import {
+  Overload,
+  OverloadTransformation,
+  UnknownOverloaded
+} from '../../../types/overload';
 
 export interface $concatArrays {
-  $concatArrays: Overload<Primitive | AnyObject | unknown[], Signature>;
+  $concatArrays: Overload<UnknownOverloaded, Signature>;
 }
 
 interface Signature extends OverloadTransformation {

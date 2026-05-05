@@ -1,9 +1,11 @@
-import { AnyObject } from '../../../types/object';
-import { Overload, OverloadTransformation } from '../../../types/overload';
-import { Primitive } from '../../../types/primitive';
+import {
+  Overload,
+  OverloadTransformation,
+  UnknownOverloaded
+} from '../../../types/overload';
 
 export interface $slice {
-  $slice: Overload<Primitive | AnyObject | unknown[], Signature>;
+  $slice: Overload<UnknownOverloaded, Signature>;
 }
 
 interface Signature extends OverloadTransformation {

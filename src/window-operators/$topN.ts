@@ -1,12 +1,14 @@
 import { StaticInput } from '../expressions/static-input';
 import { SortSpecification } from '../stages/$sort';
 import { AggregateState } from '../types/aggregate-state';
-import { AnyObject } from '../types/object';
-import { Overload, OverloadTransformation } from '../types/overload';
-import { Primitive } from '../types/primitive';
+import {
+  Overload,
+  OverloadTransformation,
+  UnknownOverloaded
+} from '../types/overload';
 
 export interface $topN<State extends AggregateState> {
-  $topN: Overload<Primitive | AnyObject | unknown[], Signature<State>>;
+  $topN: Overload<UnknownOverloaded, Signature<State>>;
 }
 
 interface Signature<

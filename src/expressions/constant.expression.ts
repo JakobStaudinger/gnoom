@@ -1,4 +1,5 @@
 import { AggregateState } from '../types/aggregate-state';
+import { GnoomError } from '../types/error';
 import { NonCollapsingUnknown } from '../types/non-collapsing';
 import { AnyObject } from '../types/object';
 import { ArrayOfLength, Tail } from '../types/recursion';
@@ -31,5 +32,8 @@ export type EvaluateConstant<
           IncludeStatic
         >;
       }
-    : never
+    : GnoomError<{
+        message: 'Unexpected syntax in constant expression';
+        details: keyof S & `$${string}`;
+      }>
   : S;

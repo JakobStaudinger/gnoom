@@ -2,6 +2,7 @@ import { Timestamp } from 'mongodb';
 
 export interface AggregateState {
   T: object;
+  error: unknown;
   systemVariables: SystemVariables<object>;
   hasStage: boolean;
   allowedStages: string;
@@ -41,8 +42,14 @@ export type WithType<State extends AggregateState, T extends object> = Omit<
   'T'
 > & { T: T };
 
+export type WithError<State extends AggregateState, E> = Omit<
+  State,
+  'error'
+> & { error: State['error'] | E };
+
 export interface InitialState<T> {
   T: T;
+  error: never;
   hasStage: false;
   allowedStages: string;
   finalStage: never;
@@ -56,6 +63,7 @@ export interface NestedPipelineState<
   AllowedStages extends AggregateState['allowedStages']
 > {
   T: T;
+  error: never;
   hasStage: false;
   allowedStages: AllowedStages;
   finalStage: never;

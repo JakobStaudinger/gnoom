@@ -1,4 +1,5 @@
 import { AggregateState } from '../../types/aggregate-state';
+import { GnoomError } from '../../types/error';
 import {
   MongoParametersToTypeScriptSyntax,
   TypeScriptToMongoSyntax
@@ -30,20 +31,49 @@ export type OperatorExpressions<
 > = Partial<TypeScriptToMongoSyntax<State, Operators, MaxDepth>>;
 
 export type EvaluateOperator<State extends AggregateState, Input> = {
-  [K in keyof Input & string]: K extends keyof Operators
-    ? Operators[K] extends infer Op
-      ? MongoParametersToTypeScriptSyntax<State, Input[K]> extends infer Args
-        ? Args extends unknown[]
-          ? Op extends (...args: Args) => infer R
-            ? ((...args: ExtractRequired<Args>) => never) extends Op
-              ? R
-              : never
-            : never
-          : never
+  [K in keyof Input & string]: EvaluateErrors<
+    EvaluateOperatorHelper<State, Input, K>
+  >;
+}[keyof Input & string];
+
+type EvaluateErrors<T> = [Exclude<T, GnoomError<{ message: string }>>] extends [
+  never
+]
+  ? T extends GnoomError<infer E>
+    ? GnoomError<E>
+    : never
+  : Exclude<T, GnoomError<{ message: string }>>;
+
+type EvaluateOperatorHelper<
+  State extends AggregateState,
+  Input,
+  K extends keyof Input & string
+> = K extends keyof Operators
+  ? Operators[K] extends infer Op
+    ? MongoParametersToTypeScriptSyntax<State, Input[K]> extends infer Args
+      ? Args extends unknown[]
+        ? Op extends (...args: Args) => infer R
+          ? ((...args: ExtractRequired<Args>) => never) extends Op
+            ? R
+            : GnoomError<{
+                message: 'Too many arguments passed to operator';
+                operator: K;
+                signature: Op;
+                arguments: Args;
+              }>
+          : GnoomError<{
+              message: 'Invalid arguments passed to operator';
+              operator: K;
+              signature: Op;
+              arguments: Args;
+            }>
         : never
       : never
-    : never;
-}[keyof Input & string];
+    : never
+  : GnoomError<{
+      message: 'Unknown operator';
+      operator: K;
+    }>;
 
 interface Operators
   extends

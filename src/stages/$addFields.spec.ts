@@ -1,6 +1,9 @@
 import { expectTypeOf } from 'expect-type';
 import { aggregate } from '../aggregate';
-import { ExtractDocumentType } from '../testing/extract-document-type';
+import {
+  ExtractDocumentType,
+  ExtractError
+} from '../testing/extract-document-type';
 
 describe('$addFields', () => {
   describe('Output', () => {
@@ -48,22 +51,20 @@ describe('$addFields', () => {
       expectTypeOf<NewField>().toBeString();
     });
 
-    it("should result in `never` when operator arguments don't match", () => {
+    it("should result in an error when operator arguments don't match", () => {
       const _result = aggregate<InputDocument>().$addFields({
         random: { $add: ['my-string', { $rand: {} }] }
       });
-      type Result = ExtractDocumentType<typeof _result>;
-      type NewField = Result['random'];
-      expectTypeOf<NewField>().toBeNever();
+      type E = ExtractError<typeof _result>;
+      expectTypeOf<E>().not.toBeNever();
     });
 
-    it('should result in `never` when any property key starts with $', () => {
+    it('should result in an error when any property key starts with $', () => {
       const _result = aggregate<InputDocument>().$addFields({
-        random: { $add: ['my-string', { $rand: {} }], regularField: '' }
+        random: { $add: ['$n', { $rand: {} }], regularField: '' }
       });
-      type Result = ExtractDocumentType<typeof _result>;
-      type NewField = Result['random'];
-      expectTypeOf<NewField>().toBeNever();
+      type E = ExtractError<typeof _result>;
+      expectTypeOf<E>().not.toBeNever();
     });
   });
 });

@@ -2,6 +2,7 @@ import { expectTypeOf } from 'expect-type';
 import { Timestamp } from 'mongodb';
 import { InitialState } from '../types/aggregate-state';
 import { EvaluateAggregateExpression } from './index';
+import { GnoomError } from '../types/error';
 
 describe('Expressions', () => {
   describe('General', () => {
@@ -27,7 +28,9 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toBeNever();
+      expectTypeOf<Result>().toExtend<
+        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+      >();
     });
 
     it('should accept a path that resolves to a number', () => {
@@ -43,7 +46,9 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().not.toBeNumber();
+      expectTypeOf<Result>().toExtend<
+        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+      >();
     });
 
     it('should accept a nested path that resolves to a number', () => {
@@ -91,7 +96,9 @@ describe('Expressions', () => {
         typeof _expression
       >;
 
-      expectTypeOf<Result>().toBeNever();
+      expectTypeOf<Result>().toExtend<
+        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+      >();
     });
 
     it('should allow expressions for sub-fields', () => {
@@ -118,7 +125,9 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toBeNever();
+      expectTypeOf<Result>().toExtend<
+        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+      >();
     });
 
     it('should allow system variables', () => {
@@ -165,7 +174,9 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toBeNever();
+      expectTypeOf<Result>().toExtend<
+        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+      >();
     });
 
     it('should be type-safe', () => {
@@ -175,7 +186,9 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toBeNever();
+      expectTypeOf<Result>().toExtend<
+        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+      >();
     });
   });
 
@@ -200,7 +213,9 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toBeNever();
+      expectTypeOf<Result>().toExtend<
+        GnoomError<{ message: 'Too many arguments passed to operator' }>
+      >();
     });
   });
 

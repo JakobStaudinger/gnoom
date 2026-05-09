@@ -1,4 +1,5 @@
 import { Timestamp } from 'mongodb';
+import { ErrorsFromFields } from './error';
 
 export interface AggregateState {
   T: object;
@@ -37,10 +38,10 @@ export type Finalize<State extends AggregateState, Stage extends string> = Omit<
   'finalStage'
 > & { finalStage: Stage };
 
-export type WithType<State extends AggregateState, T extends object> = Omit<
-  State,
-  'T'
-> & { T: T };
+export type WithType<
+  State extends AggregateState,
+  T extends object
+> = WithError<Omit<State, 'T'> & { T: T }, ErrorsFromFields<T>>;
 
 export type WithError<State extends AggregateState, E> = Omit<
   State,

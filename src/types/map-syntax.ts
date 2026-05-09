@@ -1,9 +1,12 @@
-import { AggregateState } from '../types/aggregate-state';
-import { EmptyObject } from '../types/object';
-import { ArrayOfLength, Tail } from '../types/recursion';
-import { ConstantExpression } from './constant.expression';
-import { AggregateExpression, EvaluateAggregateExpression } from './index';
-import { StaticInput } from './static-input';
+import { AggregateState } from './aggregate-state';
+import { EmptyObject } from './object';
+import { ArrayOfLength, Tail } from './recursion';
+import { ConstantExpression } from '../expressions/constant.expression';
+import {
+  AggregateExpression,
+  EvaluateAggregateExpression
+} from '../expressions/index';
+import { StaticInput } from '../expressions/static-input';
 
 export type TypeScriptToMongoSyntax<
   State extends AggregateState,

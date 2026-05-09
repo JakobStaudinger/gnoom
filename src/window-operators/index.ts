@@ -1,9 +1,7 @@
-import {
-  MongoParametersToTypeScriptSyntax,
-  TypeScriptToMongoSyntax
-} from '../expressions/map-syntax';
 import { TimeUnit } from '../expressions/operators/date/types';
 import { AggregateState } from '../types/aggregate-state';
+import { EvaluateFunctionLikeExpression } from '../types/evaluate';
+import { TypeScriptToMongoSyntax } from '../types/map-syntax';
 import { $addToSet } from './$addToSet';
 import { $avg } from './$avg';
 import { $bottom } from './$bottom';
@@ -37,6 +35,26 @@ import { $stdDevSamp } from './$stdDevSamp';
 import { $sum } from './$sum';
 import { $top } from './$top';
 import { $topN } from './$topN';
+
+export type WindowOperatorExpression<State extends AggregateState> = Partial<
+  TypeScriptToMongoSyntax<State, WindowOperators<State>>
+> & {
+  window?:
+    | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
+    | { range: [lower: number, upper: number]; unit?: TimeUnit };
+};
+
+type DocumentBoundary = 'current' | 'unbounded' | number;
+
+export type EvaluateWindowOperatorExpression<
+  State extends AggregateState,
+  E
+> = EvaluateFunctionLikeExpression<
+  State,
+  E,
+  WindowOperators<State>,
+  'window operator'
+>;
 
 interface WindowOperators<State extends AggregateState>
   extends
@@ -73,30 +91,3 @@ interface WindowOperators<State extends AggregateState>
     $sum,
     $top<State>,
     $topN<State> {}
-
-export type WindowOperatorExpression<State extends AggregateState> = Partial<
-  TypeScriptToMongoSyntax<State, WindowOperators<State>>
-> & {
-  window?:
-    | { documents: [lower: DocumentBoundary, upper: DocumentBoundary] }
-    | { range: [lower: number, upper: number]; unit?: TimeUnit };
-};
-
-type DocumentBoundary = 'current' | 'unbounded' | number;
-
-export type EvaluateWindowOperatorExpression<
-  State extends AggregateState,
-  E
-> = {
-  [K in keyof E]: K extends keyof WindowOperators<State>
-    ? WindowOperators<State>[K] extends infer Op
-      ? MongoParametersToTypeScriptSyntax<State, E[K]> extends infer Args
-        ? Args extends unknown[]
-          ? Op extends (...args: Args) => infer R
-            ? R
-            : never
-          : never
-        : never
-      : never
-    : never;
-}[keyof E];

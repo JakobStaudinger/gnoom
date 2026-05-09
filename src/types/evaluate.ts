@@ -1,0 +1,51 @@
+import { AggregateState } from './aggregate-state';
+import { ErrorIfAllOverloadsErrored, GnoomError } from './error';
+import { MongoParametersToTypeScriptSyntax } from './map-syntax';
+
+export type EvaluateFunctionLikeExpression<
+  State extends AggregateState,
+  E,
+  Map,
+  Name extends string
+> = {
+  [K in keyof E]: ErrorIfAllOverloadsErrored<
+    EvaluateFunctionLikeExpressionHelper<State, E, K, Map, Name>
+  >;
+}[keyof E];
+
+type EvaluateFunctionLikeExpressionHelper<
+  State extends AggregateState,
+  E,
+  K extends keyof E,
+  Map,
+  Name extends string
+> = K extends keyof Map
+  ? Map[K] extends infer Acc
+    ? MongoParametersToTypeScriptSyntax<State, E[K]> extends infer Args
+      ? Args extends unknown[]
+        ? Acc extends (...args: Args) => infer R
+          ? ((...args: ExtractRequired<Args>) => never) extends Acc
+            ? R
+            : GnoomError<{
+                message: `Too many arguments passed to ${Name}`;
+                name: K;
+                signature: Acc;
+                arguments: Args;
+              }>
+          : GnoomError<{
+              message: `Invalid arguments passed to ${Name}`;
+              name: K;
+              signature: Acc;
+              arguments: Args;
+            }>
+        : never
+      : never
+    : never
+  : GnoomError<{ message: `Unknown ${Name}`; name: K }>;
+
+type ExtractRequired<
+  Arr extends readonly unknown[],
+  Acc extends unknown[] = []
+> = Arr extends readonly [infer _Head, ...infer Tail]
+  ? ExtractRequired<Tail, [...Acc, unknown]>
+  : Acc;

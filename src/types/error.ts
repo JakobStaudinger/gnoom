@@ -9,3 +9,11 @@ export type ErrorsFromFields<O> = O[keyof O] extends infer T
     ? E
     : never
   : never;
+
+export type ErrorIfAllOverloadsErrored<T> = [
+  Exclude<T, GnoomError<{ message: string }>>
+] extends [never]
+  ? T extends GnoomError<infer E>
+    ? GnoomError<E>
+    : never
+  : Exclude<T, GnoomError<{ message: string }>>;

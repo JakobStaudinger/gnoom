@@ -23,23 +23,14 @@ interface ExecuteFunction<State extends AggregateState> {
   ): Promise<State['T'][]> | AggregationCursor<State['T']>;
 }
 
-type AddErrorGuard<
-  Fn,
-  State extends AggregateState
-> = State['error'] extends never
-  ? Fn
-  : Fn extends (...args: infer Args) => infer R
-    ? (...args: [...Args, State['error']]) => R
-    : never;
-
 interface AggregateBase<State extends AggregateState> {
-  toArray: AddErrorGuard<() => AggregatePipeline<State>, State>;
-  execute: AddErrorGuard<
-    (
-      fnOrClient: ExecuteFunction<State> | { aggregate: ExecuteFunction<State> }
-    ) => Promise<State['T'][]>,
-    State
-  >;
+  toArray: (
+    ...errors: State['error'] extends never ? [] : [error: State['error']]
+  ) => AggregatePipeline<State>;
+  execute: (
+    fnOrClient: ExecuteFunction<State> | { aggregate: ExecuteFunction<State> },
+    ...errors: State['error'] extends never ? [] : [error: State['error']]
+  ) => Promise<State['T'][]>;
   custom(stage: unknown): Aggregate<State>;
   addToType<A extends object>(
     value?: A
@@ -67,14 +58,15 @@ function constructAggregate<State extends AggregateState>(
       execute(
         fnOrClient:
           | ExecuteFunction<State>
-          | { aggregate: ExecuteFunction<State> }
+          | { aggregate: ExecuteFunction<State> },
+        ...args
       ) {
         const fn =
           typeof fnOrClient === 'function'
             ? fnOrClient
             : fnOrClient.aggregate.bind(fnOrClient);
 
-        const result = fn(this.toArray(null!));
+        const result = fn(this.toArray(...args));
 
         if ('toArray' in result) {
           return result.toArray();

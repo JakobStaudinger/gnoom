@@ -5,8 +5,9 @@ import {
   InitialState,
   WithType
 } from './types/aggregate-state';
-import { PipelineCallback } from './types/pipeline';
 import { Merge } from './types/merge';
+import { PipelineCallback } from './types/pipeline';
+import { WithoutFunctions } from './types/without-functions';
 
 const OUTPUT_TYPE = Symbol('OutputType');
 
@@ -130,7 +131,9 @@ function constructAggregate<State extends AggregateState>(
   );
 }
 
-export function aggregate<T extends object>(): Aggregate<InitialState<T>> {
+export function aggregate<T extends object>(): Aggregate<
+  InitialState<WithoutFunctions<T>>
+> {
   return constructAggregate([]);
 }
 

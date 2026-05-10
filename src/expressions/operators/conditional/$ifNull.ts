@@ -1,3 +1,13 @@
+import {
+  Overload,
+  OverloadTransformation,
+  UnknownOverloaded
+} from '../../../types/overload';
+
 export interface $ifNull {
-  $ifNull: <T>(value: T, ...fallbacks: T[]) => T;
+  $ifNull: Overload<UnknownOverloaded, Signature>;
+}
+
+interface Signature extends OverloadTransformation {
+  output: (value: this['T'], ...fallbacks: this['T'][]) => this['T'];
 }

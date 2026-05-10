@@ -17,3 +17,5 @@ export type ErrorIfAllOverloadsErrored<T> = [
     ? GnoomError<E>
     : never
   : Exclude<T, GnoomError<{ message: string }>>;
+
+export type ErrorMessage<E> = E extends { message: infer M } ? M : never;

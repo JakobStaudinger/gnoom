@@ -48,6 +48,11 @@ export type WithError<State extends AggregateState, E> = Omit<
   'error'
 > & { error: State['error'] | E };
 
+export type IgnoreError<State extends AggregateState, E> = Omit<
+  State,
+  'error'
+> & { error: Exclude<State['error'], { message: E }> };
+
 export interface InitialState<T> {
   T: T;
   error: never;

@@ -2,12 +2,14 @@ import { AggregationCursor } from 'mongodb';
 import { AllStages } from './stages';
 import {
   AggregateState,
+  IgnoreError,
   InitialState,
   WithType
 } from './types/aggregate-state';
 import { Merge } from './types/merge';
 import { PipelineCallback } from './types/pipeline';
 import { WithoutFunctions } from './types/without-functions';
+import { ErrorMessage } from './types/error';
 
 const OUTPUT_TYPE = Symbol('OutputType');
 
@@ -42,6 +44,15 @@ interface AggregateBase<State extends AggregateState> {
   modifyType<Fn extends (obj: State['T']) => object>(
     callback: Fn
   ): Aggregate<WithType<State, ReturnType<Fn>>>;
+  inspectError(
+    ...errors: State['error'] extends never
+      ? [error: never]
+      : [error: State['error']]
+  ): Aggregate<State>;
+  ignoreError<E extends ErrorMessage<State['error']>>(
+    errorMessage: E,
+    explanation: string
+  ): Aggregate<IgnoreError<State, E>>;
 }
 
 export interface Aggregate<State extends AggregateState>
@@ -91,6 +102,12 @@ function constructAggregate<State extends AggregateState>(
       modifyType<Fn extends (obj: State['T']) => object>(
         this: Aggregate<WithType<State, ReturnType<Fn>>>
       ) {
+        return this;
+      },
+      inspectError(this: Aggregate<State>) {
+        return this;
+      },
+      ignoreError<E>(this: Aggregate<IgnoreError<State, E>>) {
         return this;
       }
     } satisfies AggregateBase<State> as unknown as Aggregate<State>,

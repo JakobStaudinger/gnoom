@@ -8,17 +8,17 @@ export type EvaluateFunctionLikeExpression<
   Map,
   Name extends string
 > = {
-  [K in keyof E]: ErrorIfAllOverloadsErrored<
+  [K in keyof E & string]: ErrorIfAllOverloadsErrored<
     EvaluateFunctionLikeExpressionHelper<State, E, K, Map, Name>
   >;
-}[keyof E];
+}[keyof E & string];
 
 type EvaluateFunctionLikeExpressionHelper<
   State extends AggregateState,
   E,
-  K extends keyof E,
+  K extends keyof E & string,
   Map,
-  Name extends string
+  ExpressionType extends string
 > = K extends keyof Map
   ? Map[K] extends infer Acc
     ? MongoParametersToTypeScriptSyntax<State, E[K]> extends infer Args
@@ -27,13 +27,13 @@ type EvaluateFunctionLikeExpressionHelper<
           ? ((...args: ExtractRequired<Args>) => never) extends Acc
             ? R
             : GnoomError<{
-                message: `Too many arguments passed to ${Name}`;
+                message: `Too many arguments passed to ${ExpressionType} "${K}"`;
                 name: K;
                 signature: Acc;
                 arguments: Args;
               }>
           : GnoomError<{
-              message: `Invalid arguments passed to ${Name}`;
+              message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
               name: K;
               signature: Acc;
               arguments: Args;
@@ -41,7 +41,7 @@ type EvaluateFunctionLikeExpressionHelper<
         : never
       : never
     : never
-  : GnoomError<{ message: `Unknown ${Name}`; name: K }>;
+  : GnoomError<{ message: `Unknown ${ExpressionType} "${K}"`; name: K }>;
 
 type ExtractRequired<
   Arr extends readonly unknown[],

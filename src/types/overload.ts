@@ -1,6 +1,10 @@
-import { NonCollapsingUnknown } from './non-collapsing';
+import { ObjectId, Timestamp, UUID } from 'mongodb';
+import {
+  NonCollapsingNumber,
+  NonCollapsingString,
+  NonCollapsingUnknown
+} from './non-collapsing';
 import { AnyObject } from './object';
-import { Primitive } from './primitive';
 
 export interface OverloadTransformation {
   output: unknown;
@@ -13,7 +17,7 @@ export type Overload<T, Fn extends OverloadTransformation> =
       ? U extends boolean
         ? never
         : U extends unknown
-          ? ApplyTransformation<U, Fn>
+          ? ApplyTransformation<Unbundle<U>, Fn>
           : never
       : never);
 
@@ -22,10 +26,31 @@ interface OverloadArrayTransformation extends OverloadTransformation {
   output: this['T'][];
 }
 
+declare const bundled: unique symbol;
+export type BundleOverload<T> = { [bundled]: T };
+type Unbundle<T> = T extends { [bundled]: infer _T } ? _T : T;
+
+type BundledPrimitive =
+  | BundleOverload<NonCollapsingString>
+  | boolean
+  | BundleOverload<NonCollapsingNumber>
+  | Date
+  | Timestamp
+  | ObjectId
+  | UUID;
+
 export type UnknownOverloaded =
-  | Primitive
+  | UnknownOverloadedHelper
+  | Overload<UnknownOverloadedHelper, BundleNullableTransformation>;
+
+interface BundleNullableTransformation extends OverloadTransformation {
+  output: BundleOverload<this['T'] | null | undefined>;
+}
+
+type UnknownOverloadedHelper =
+  | BundledPrimitive
   | AnyObject
-  | OverloadArray<Primitive | AnyObject>
+  | OverloadArray<BundledPrimitive | AnyObject>
   | NonCollapsingUnknown[];
 
 type OverloadBoolean<T, Fn extends OverloadTransformation> = boolean extends T

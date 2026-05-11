@@ -8,16 +8,7 @@ interface Input {
 aggregate<Input>()
   .$addFields({
     incremented: {
-      $add: [
-        '$myNumber',
-        {
-          $cond: {
-            if: '$shouldIncrement',
-            then: 1,
-            else: 0
-          }
-        }
-      ]
+      $add: ['$myNumber', '$shouldIncrement']
     }
   })
   .ignoreError('Invalid arguments passed to operator "$add"', '')

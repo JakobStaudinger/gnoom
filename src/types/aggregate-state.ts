@@ -15,6 +15,7 @@ interface SystemVariables<T> {
   CLUSTER_TIME: Timestamp;
   ROOT: T;
   CURRENT: T;
+  REMOVE: undefined;
 }
 
 export type UnlessFinalized<

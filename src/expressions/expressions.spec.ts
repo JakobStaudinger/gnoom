@@ -29,7 +29,7 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+        GnoomError<{ message: 'Invalid arguments passed to operator "$abs"' }>
       >();
     });
 
@@ -47,7 +47,7 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+        GnoomError<{ message: 'Invalid arguments passed to operator "$abs"' }>
       >();
     });
 
@@ -97,7 +97,9 @@ describe('Expressions', () => {
       >;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+        GnoomError<{
+          message: 'Invalid arguments passed to operator "$sigmoid"';
+        }>
       >();
     });
 
@@ -126,7 +128,9 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+        GnoomError<{
+          message: 'Invalid arguments passed to operator "$filter"';
+        }>
       >();
     });
 
@@ -175,7 +179,7 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+        GnoomError<{ message: 'Invalid arguments passed to operator "$add"' }>
       >();
     });
 
@@ -187,7 +191,7 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Invalid arguments passed to operator' }>
+        GnoomError<{ message: 'Invalid arguments passed to operator "$add"' }>
       >();
     });
   });
@@ -214,7 +218,7 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Too many arguments passed to operator' }>
+        GnoomError<{ message: 'Too many arguments passed to operator "$rand"' }>
       >();
     });
   });

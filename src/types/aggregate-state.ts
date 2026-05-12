@@ -1,5 +1,6 @@
 import { Timestamp } from 'mongodb';
-import { ErrorsFromFields } from './error';
+import { ErrorsFromFields, GnoomError } from './error';
+import { Aggregate } from '../aggregate';
 
 export interface AggregateState {
   T: object;
@@ -25,13 +26,13 @@ export type UnlessFinalized<
   ? T
   : (
       error: `${State['finalStage']} must be the last stage in a pipeline.`
-    ) => never;
+    ) => Aggregate<State>;
 
 export type MustBeFirstStage<
   State extends AggregateState,
   T
 > = State['hasStage'] extends true
-  ? (error: 'Must be the first stage in a pipeline') => never
+  ? (error: 'Must be the first stage in a pipeline') => Aggregate<State>
   : T;
 
 export type Finalize<State extends AggregateState, Stage extends string> = Omit<
@@ -49,10 +50,10 @@ export type WithError<State extends AggregateState, E> = Omit<
   'error'
 > & { error: State['error'] | E };
 
-export type IgnoreError<State extends AggregateState, E> = Omit<
+export type IgnoreError<State extends AggregateState, E extends string> = Omit<
   State,
   'error'
-> & { error: Exclude<State['error'], { message: E }> };
+> & { error: Exclude<State['error'], GnoomError<{ message: E }>> };
 
 export interface InitialState<T> {
   T: T;

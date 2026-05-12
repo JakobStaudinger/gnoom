@@ -9,9 +9,9 @@ import {
 import { Merge } from './types/merge';
 import { PipelineCallback } from './types/pipeline';
 import { WithoutFunctions } from './types/without-functions';
-import { ErrorMessage } from './types/error';
+import { AssertNoErrorState, ErrorMessage } from './types/error';
 
-const OUTPUT_TYPE = Symbol('OutputType');
+declare const OUTPUT_TYPE: unique symbol;
 
 export interface AggregatePipeline<
   State extends AggregateState
@@ -26,12 +26,10 @@ interface ExecuteFunction<State extends AggregateState> {
 }
 
 interface AggregateBase<State extends AggregateState> {
-  toArray: (
-    ...errors: State['error'] extends never ? [] : [error: State['error']]
-  ) => AggregatePipeline<State>;
+  toArray: (...errors: AssertNoErrorState<State>) => AggregatePipeline<State>;
   execute: (
     fnOrClient: ExecuteFunction<State> | { aggregate: ExecuteFunction<State> },
-    ...errors: State['error'] extends never ? [] : [error: State['error']]
+    ...errors: AssertNoErrorState<State>
   ) => Promise<State['T'][]>;
   custom(stage: unknown): Aggregate<State>;
   addToType<A extends object>(
@@ -107,7 +105,7 @@ function constructAggregate<State extends AggregateState>(
       inspectError(this: Aggregate<State>) {
         return this;
       },
-      ignoreError<E>(this: Aggregate<IgnoreError<State, E>>) {
+      ignoreError<E extends string>(this: Aggregate<IgnoreError<State, E>>) {
         return this;
       }
     } satisfies AggregateBase<State> as unknown as Aggregate<State>,

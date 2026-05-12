@@ -1,3 +1,5 @@
+import { AggregateState } from './aggregate-state';
+
 declare const GNOOM_ERROR: unique symbol;
 
 export interface GnoomError<E extends { message: string }> {
@@ -5,8 +7,8 @@ export interface GnoomError<E extends { message: string }> {
 }
 
 export type ErrorsFromFields<O> = O[keyof O] extends infer T
-  ? T extends GnoomError<infer E>
-    ? E
+  ? T extends GnoomError<infer _E>
+    ? T
     : never
   : never;
 
@@ -18,4 +20,8 @@ export type ErrorIfAllOverloadsErrored<T> = [
     : never
   : Exclude<T, GnoomError<{ message: string }>>;
 
-export type ErrorMessage<E> = E extends { message: infer M } ? M : never;
+export type ErrorMessage<E> =
+  E extends GnoomError<{ message: infer M extends string }> ? M : never;
+
+export type AssertNoErrorState<State extends AggregateState> =
+  State['error'] extends never ? [] : [State['error']];

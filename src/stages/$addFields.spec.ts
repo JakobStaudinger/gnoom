@@ -59,7 +59,7 @@ describe('$addFields', () => {
       expectTypeOf<E>().not.toBeNever();
     });
 
-    it('should result in an error when any property key starts with $', () => {
+    it('should result in an error when you mix operators and nested fields', () => {
       const _result = aggregate<InputDocument>().$addFields({
         random: { $add: ['$n', { $rand: {} }], regularField: '' }
       });

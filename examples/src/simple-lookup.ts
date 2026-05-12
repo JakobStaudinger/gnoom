@@ -25,7 +25,7 @@ const pipeline = aggregate<Order>()
     from: 'customers',
     localField: 'customerId',
     foreignField: '_id',
-    pipeline: (p) => p.$project({ name: 0 }).toArray(),
+    pipeline: (p) => p.$project({ name: 0 }),
     as: 'customer'
   })
   .$unwind('$customer')

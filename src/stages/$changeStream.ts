@@ -1,13 +1,20 @@
 import { Timestamp, UUID } from 'mongodb';
 import { Aggregate } from '../aggregate';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import {
+  AggregateState,
+  MustBeFirstStage,
+  WithType
+} from '../types/aggregate-state';
 import { AnyObject } from '../types/object';
 import { DeepKeyof } from '../types/deep';
 
 export interface $changeStream<State extends AggregateState> {
-  $changeStream: <const S extends Specification>(
-    specification: S
-  ) => Aggregate<Output<State, S>>;
+  $changeStream: MustBeFirstStage<
+    State,
+    <const S extends Specification>(
+      specification: S
+    ) => Aggregate<Output<State, S>>
+  >;
 }
 
 type ResumeToken = unknown;

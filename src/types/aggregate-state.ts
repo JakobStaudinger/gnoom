@@ -1,10 +1,8 @@
 import { Timestamp } from 'mongodb';
-import { ErrorsFromFields, GnoomError } from './error';
 import { Aggregate } from '../aggregate';
 
 export interface AggregateState {
   T: object;
-  error: unknown;
   systemVariables: SystemVariables<object>;
   hasStage: boolean;
   allowedStages: string;
@@ -40,20 +38,10 @@ export type Finalize<State extends AggregateState, Stage extends string> = Omit<
   'finalStage'
 > & { finalStage: Stage };
 
-export type WithType<
-  State extends AggregateState,
-  T extends object
-> = WithError<Omit<State, 'T'> & { T: T }, ErrorsFromFields<T>>;
-
-export type WithError<State extends AggregateState, E> = Omit<
+export type WithType<State extends AggregateState, T extends object> = Omit<
   State,
-  'error'
-> & { error: State['error'] | E };
-
-export type IgnoreError<State extends AggregateState, E extends string> = Omit<
-  State,
-  'error'
-> & { error: Exclude<State['error'], GnoomError<{ message: E }>> };
+  'T'
+> & { T: T };
 
 export interface InitialState<T> {
   T: T;

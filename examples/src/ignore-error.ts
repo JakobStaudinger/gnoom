@@ -11,5 +11,5 @@ aggregate<Input>()
       $add: ['$myNumber', '$shouldIncrement']
     }
   })
-  .ignoreError('Invalid arguments passed to operator "$add"', '')
+  .addToType<{ incremented: number }>()
   .toArray();

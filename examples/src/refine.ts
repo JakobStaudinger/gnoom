@@ -14,7 +14,9 @@ const pipeline = aggregate<CustomDocument>()
   .removeFromType<'fieldToBeRemoved'>()
   // @ts-expect-error fieldToBeRemoved was removed from the type
   .$match({ fieldToBeRemoved: true })
-  .replaceType<{ completelyDifferent: string; nested: { property: number } }>()
+  .modifyType<
+    () => { completelyDifferent: string; nested: { property: number } }
+  >()
   .$match({ completelyDifferent: 'totally' })
   .modifyType((obj) => ({ root: obj }))
   .$match({ 'root.nested.property': { $eq: 10 } })

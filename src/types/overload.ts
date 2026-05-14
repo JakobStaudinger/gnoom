@@ -40,14 +40,6 @@ type BundledPrimitive =
   | UUID;
 
 export type UnknownOverloaded =
-  | UnknownOverloadedHelper
-  | Overload<UnknownOverloadedHelper, BundleNullableTransformation>;
-
-interface BundleNullableTransformation extends OverloadTransformation {
-  output: BundleOverload<this['T'] | null | undefined>;
-}
-
-type UnknownOverloadedHelper =
   | BundledPrimitive
   | AnyObject
   | OverloadArray<BundledPrimitive | AnyObject>

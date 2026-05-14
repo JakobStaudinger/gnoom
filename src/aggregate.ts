@@ -37,9 +37,8 @@ interface AggregateBase<State extends AggregateState> {
   removeFromType<const K extends keyof State['T']>(
     keys?: K
   ): Aggregate<WithType<State, Omit<State['T'], K>>>;
-  replaceType<N extends object>(newValue?: N): Aggregate<WithType<State, N>>;
   modifyType<Fn extends (obj: State['T']) => object>(
-    callback: Fn
+    callback?: Fn
   ): Aggregate<WithType<State, ReturnType<Fn>>>;
 }
 
@@ -82,9 +81,6 @@ function constructAggregate<State extends AggregateState>(
       removeFromType<K extends PropertyKey>(
         this: Aggregate<WithType<State, Omit<State['T'], K>>>
       ) {
-        return this;
-      },
-      replaceType<R extends object>(this: Aggregate<WithType<State, R>>) {
         return this;
       },
       modifyType<Fn extends (obj: State['T']) => object>(

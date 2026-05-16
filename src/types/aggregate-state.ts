@@ -1,5 +1,6 @@
 import { Timestamp } from 'mongodb';
 import { Aggregate } from '../aggregate';
+import { AnyObject, EmptyObject } from './object';
 
 export interface AggregateState {
   T: object;
@@ -56,16 +57,19 @@ type _InitialStateGuard = AssertExtendsAggregateState<InitialState<object>>;
 
 export interface NestedPipelineState<
   T,
-  AllowedStages extends AggregateState['allowedStages']
+  AllowedStages extends AggregateState['allowedStages'],
+  Variables extends AnyObject
 > {
   T: T;
   error: never;
   hasStage: false;
   allowedStages: AllowedStages;
   finalStage: never;
-  systemVariables: SystemVariables<this['T']>;
+  systemVariables: Variables extends EmptyObject
+    ? SystemVariables<this['T']>
+    : SystemVariables<this['T']> & Variables;
 }
 
 type _NestedPipelineStateGuard = AssertExtendsAggregateState<
-  NestedPipelineState<object, string>
+  NestedPipelineState<object, string, EmptyObject>
 >;

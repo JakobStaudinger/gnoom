@@ -6,25 +6,32 @@ import { PipelineCallback } from '../types/pipeline';
 
 export interface $merge<State extends AggregateState> {
   $merge: <Other extends object>() => <
-    const S extends Specification<State, Other>
+    const Variables extends AnyObject,
+    const S extends Specification<State, Other, Variables>
   >(
-    specification: S
+    specification: S & {
+      let?: Variables;
+    }
   ) => Aggregate<Finalize<WithType<State, never>, '$merge'>>;
 }
 
-type Specification<State extends AggregateState, Other extends object> =
+type Specification<
+  State extends AggregateState,
+  Other extends object,
+  Variables extends AnyObject
+> =
   | string
   | {
       into: string | { db: string; coll: string };
       on?:
         | (DeepKeyof<State['T']> & DeepKeyof<Other>)
         | (DeepKeyof<State['T']> & DeepKeyof<Other>)[];
-      let?: AnyObject;
+      let?: Variables;
       whenMatched?:
         | 'merge'
         | 'replace'
         | 'keepExisting'
         | 'fail'
-        | PipelineCallback<Other>;
+        | PipelineCallback<Other, Variables>;
       whenNotMatched?: 'insert' | 'discard' | 'fail';
     };

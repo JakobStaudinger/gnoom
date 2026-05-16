@@ -3,14 +3,18 @@ import { AggregateLike } from '../types/aggregate-like';
 import { AggregateState, WithType } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
+import { AnyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
 
 export interface $lookup<State extends AggregateState> {
   $lookup: <Other extends object>() => <
-    const S extends Specification<State, Other>
+    const Variables extends AnyObject,
+    const S extends Specification<State, Other, Variables>
   >(
-    specification: S
-  ) => Aggregate<Output<State, Other, S>>;
+    specification: S & {
+      let?: Variables;
+    }
+  ) => Aggregate<Output<State, Other, Variables, S>>;
 }
 
 interface RequiredLookupSpecificationFields {
@@ -20,23 +24,27 @@ interface RequiredLookupSpecificationFields {
 
 type Specification<
   State extends AggregateState,
-  Other extends object
+  Other extends object,
+  Variables extends AnyObject
 > = RequiredLookupSpecificationFields &
   (
     | {
         localField: DeepKeyof<State['T']>;
         foreignField: DeepKeyof<Other>;
-        pipeline?: PipelineCallback<Other>;
+        let?: Variables;
+        pipeline?: PipelineCallback<Other, Variables>;
       }
     | {
-        pipeline: PipelineCallback<Other>;
+        let?: Variables;
+        pipeline: PipelineCallback<Other, Variables>;
       }
   );
 
 type Output<
   State extends AggregateState,
   Other extends object,
-  S extends Specification<State, Other>
+  Variables extends AnyObject,
+  S extends Specification<State, Other, Variables>
 > = WithType<
   State,
   Merge<

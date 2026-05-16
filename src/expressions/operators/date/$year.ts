@@ -1,7 +1,11 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 
 export interface $year {
-  $year: (
-    date: Date | StaticInput<{ date: Date; timezone?: string }>
-  ) => number;
+  $year: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [date: Date | StaticInput<{ date: Date; timezone?: string }>];
+  return: number;
 }

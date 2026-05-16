@@ -1,13 +1,22 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 
 export interface $dateFromString {
-  $dateFromString: <E = never, N = null>(
+  $dateFromString: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [
     input: StaticInput<{
       dateString: string;
       format?: string;
       timezone?: string;
-      onError?: E;
-      onNull?: N;
+      onError?: unknown;
+      onNull?: unknown;
     }>
-  ) => Date | E | N;
+  ];
+  return:
+    | Date
+    | this['arguments'][0]['onError']
+    | this['arguments'][0]['onNull'];
 }

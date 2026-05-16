@@ -1,8 +1,13 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 import { TimeUnit, Weekday } from './types';
 
 export interface $dateTrunc {
-  $dateTrunc: (
+  $dateTrunc: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [
     input: StaticInput<{
       date: Date | null;
       unit: TimeUnit;
@@ -10,5 +15,6 @@ export interface $dateTrunc {
       timezone?: string;
       startOfWeek?: Weekday;
     }>
-  ) => Date | null;
+  ];
+  return: Date | null;
 }

@@ -61,12 +61,14 @@ type TypeScriptParameterToMongoSyntax<
 export type MongoParametersToTypeScriptSyntax<
   State extends AggregateState,
   Params
-> = Params extends readonly unknown[]
-  ? {
-      -readonly [K in keyof Params]: K extends number | `${number}`
-        ? EvaluateAggregateExpression<State, Params[K], true>
-        : Params[K];
-    }
-  : Params extends EmptyObject
-    ? []
-    : [EvaluateAggregateExpression<State, Params, true>];
+> = Params extends readonly []
+  ? unknown
+  : Params extends readonly unknown[]
+    ? {
+        -readonly [K in keyof Params]: K extends number | `${number}`
+          ? EvaluateAggregateExpression<State, Params[K], true>
+          : Params[K];
+      }
+    : Params extends EmptyObject
+      ? []
+      : [EvaluateAggregateExpression<State, Params, true>];

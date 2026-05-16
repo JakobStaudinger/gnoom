@@ -38,7 +38,12 @@ type EvaluateFunctionLikeExpressionHelper<
               signature: Acc;
               arguments: Args;
             }>
-        : never
+        : GnoomError<{
+            message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
+            name: K;
+            signature: Acc;
+            arguments: E[K];
+          }>
       : never
     : never
   : GnoomError<{ message: `Unknown ${ExpressionType} "${K}"`; name: K }>;

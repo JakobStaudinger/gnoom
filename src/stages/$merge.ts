@@ -3,11 +3,12 @@ import { AggregateState, Finalize, WithType } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
+import { WithoutFunctions } from '../types/without-functions';
 
 export interface $merge<State extends AggregateState> {
   $merge: <Other extends object>() => <
     const Variables extends AnyObject,
-    const S extends Specification<State, Other, Variables>
+    const S extends Specification<State, WithoutFunctions<Other>, Variables>
   >(
     specification: S & {
       let?: Variables;

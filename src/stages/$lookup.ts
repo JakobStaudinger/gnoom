@@ -5,16 +5,17 @@ import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
 import { AnyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
+import { WithoutFunctions } from '../types/without-functions';
 
 export interface $lookup<State extends AggregateState> {
   $lookup: <Other extends object>() => <
     const Variables extends AnyObject,
-    const S extends Specification<State, Other, Variables>
+    const S extends Specification<State, WithoutFunctions<Other>, Variables>
   >(
     specification: S & {
       let?: Variables;
     }
-  ) => Aggregate<Output<State, Other, Variables, S>>;
+  ) => Aggregate<Output<State, WithoutFunctions<Other>, Variables, S>>;
 }
 
 interface RequiredLookupSpecificationFields {

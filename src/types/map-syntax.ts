@@ -1,12 +1,12 @@
-import { AggregateState } from './aggregate-state';
-import { EmptyObject } from './object';
-import { ArrayOfLength, Tail } from './recursion';
-import { ConstantExpression } from '../expressions/constant.expression';
 import {
   AggregateExpression,
   EvaluateAggregateExpression
 } from '../expressions/index';
 import { StaticInput } from '../expressions/static-input';
+import { AggregateState } from './aggregate-state';
+import { FunctionSignature } from './evaluate';
+import { EmptyObject } from './object';
+import { ArrayOfLength, Tail } from './recursion';
 
 export type TypeScriptToMongoSyntax<
   State extends AggregateState,
@@ -17,7 +17,9 @@ export type TypeScriptToMongoSyntax<
     ? Op extends unknown
       ? Op extends (...params: infer Params) => infer _R
         ? TypeScriptParametersToMongoSyntax<State, Params, MaxDepth>
-        : never
+        : Op extends FunctionSignature
+          ? TypeScriptParametersToMongoSyntax<State, Op['arguments'], MaxDepth>
+          : never
       : never
     : never;
 };
@@ -48,12 +50,12 @@ type TypeScriptParameterToMongoSyntax<
       ? R extends object
         ? {
             readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
-              infer _I
+              infer I
             >
-              ? ConstantExpression<State, Tail<MaxDepth>>
+              ? I
               : AggregateExpression<State, Tail<MaxDepth>>;
           }
-        : ConstantExpression<State, Tail<MaxDepth>>
+        : R
       : AggregateExpression<State, Tail<MaxDepth>>
     : never
   : never;

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../types/evaluate';
+
 export interface $count {
-  $count: () => number;
+  $count: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [];
+  return: number;
 }

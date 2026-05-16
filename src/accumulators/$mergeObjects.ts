@@ -1,5 +1,11 @@
+import { FunctionSignature } from '../types/evaluate';
 import { AnyObject } from '../types/object';
 
 export interface $mergeObjects {
-  $mergeObjects: <O extends AnyObject>(obj: O) => O;
+  $mergeObjects: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [obj: AnyObject];
+  return: this['arguments'][0];
 }

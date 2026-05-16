@@ -1,24 +1,19 @@
 import { StaticInput } from '../expressions/static-input';
 import { SortSpecification } from '../stages/$sort';
 import { AggregateState } from '../types/aggregate-state';
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../types/overload';
+import { FunctionSignature } from '../types/evaluate';
 
 export interface $bottomN<State extends AggregateState> {
-  $bottomN: Overload<UnknownOverloaded, Signature<State>>;
+  $bottomN: Signature<State>;
 }
 
-interface Signature<
-  State extends AggregateState
-> extends OverloadTransformation {
-  output: (input: Input<State, this['T']>) => this['T'][];
+interface Signature<State extends AggregateState> extends FunctionSignature {
+  arguments: [
+    input: StaticInput<{
+      n: number;
+      sortBy: StaticInput<SortSpecification<State>>;
+      output: unknown;
+    }>
+  ];
+  return: this['arguments'][0]['output'];
 }
-
-type Input<State extends AggregateState, O> = StaticInput<{
-  n: number;
-  sortBy: StaticInput<SortSpecification<State>>;
-  output: O;
-}>;

@@ -2,6 +2,11 @@ import { AggregateState } from './aggregate-state';
 import { ErrorIfAllOverloadsErrored, GnoomError } from './error';
 import { MongoParametersToTypeScriptSyntax } from './map-syntax';
 
+export interface FunctionSignature {
+  arguments: unknown[];
+  return: unknown;
+}
+
 export type EvaluateFunctionLikeExpression<
   State extends AggregateState,
   E,
@@ -32,12 +37,21 @@ type EvaluateFunctionLikeExpressionHelper<
                 signature: Acc;
                 arguments: Args;
               }>
-          : GnoomError<{
-              message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
-              name: K;
-              signature: Acc;
-              arguments: Args;
-            }>
+          : Acc extends FunctionSignature
+            ? Args extends Acc['arguments']
+              ? (Acc & { arguments: Args })['return']
+              : GnoomError<{
+                  message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
+                  name: K;
+                  signature: (...args: Acc['arguments']) => Acc['return'];
+                  arguments: Args;
+                }>
+            : GnoomError<{
+                message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
+                name: K;
+                signature: Acc;
+                arguments: Args;
+              }>
         : GnoomError<{
             message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
             name: K;

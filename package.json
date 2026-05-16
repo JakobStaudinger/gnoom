@@ -37,7 +37,7 @@
     "url": "https://github.com/JakobStaudinger/gnoom/issues"
   },
   "homepage": "https://github.com/JakobStaudinger/gnoom#readme",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.1.2",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",

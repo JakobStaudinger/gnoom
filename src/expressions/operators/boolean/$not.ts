@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $not {
-  $not: (expression: boolean) => boolean;
+  $not: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [expression: boolean];
+  return: boolean;
 }

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $or {
-  $or: (...expressions: boolean[]) => boolean;
+  $or: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [...expressions: boolean[]];
+  return: boolean;
 }

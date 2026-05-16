@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../types/evaluate';
+
 export interface $avg {
-  $avg: (value: number) => number;
+  $avg: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [value: number];
+  return: this['arguments'][0];
 }

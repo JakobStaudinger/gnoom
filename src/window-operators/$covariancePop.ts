@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../types/evaluate';
+
 export interface $covariancePop {
-  $covariancePop: (x: number, y: number) => number;
+  $covariancePop: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number, y: number];
+  return: number;
 }

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../types/evaluate';
+
 export interface $sum {
-  $sum: (value: number) => number;
+  $sum: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [value: number];
+  return: this['arguments'][0];
 }

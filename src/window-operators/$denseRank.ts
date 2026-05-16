@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../types/evaluate';
+
 export interface $denseRank {
-  $denseRank: () => number;
+  $denseRank: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [];
+  return: number;
 }

@@ -1,16 +1,11 @@
 import { StaticInput } from '../expressions/static-input';
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../types/overload';
+import { FunctionSignature } from '../types/evaluate';
 
 export interface $lastN {
-  $lastN: Overload<UnknownOverloaded, Signature>;
+  $lastN: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (value: Input<this['T']>) => this['T'][];
+interface Signature extends FunctionSignature {
+  arguments: [value: StaticInput<{ input: unknown; n: number }>];
+  return: this['arguments'][0]['input'][];
 }
-
-type Input<V> = StaticInput<{ input: V; n: number }>;

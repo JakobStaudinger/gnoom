@@ -1,20 +1,17 @@
 import { StaticInput } from '../expressions/static-input';
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../types/overload';
+import { FunctionSignature } from '../types/evaluate';
 
 export interface $shift {
-  $shift: Overload<UnknownOverloaded, Signature>;
+  $shift: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (input: Input<this['T']>) => this['T'];
+interface Signature extends FunctionSignature {
+  arguments: [
+    input: StaticInput<{
+      output: unknown;
+      by: StaticInput<number>;
+      default?: unknown;
+    }>
+  ];
+  return: this['arguments'][0]['output'] | this['arguments'][0]['default'];
 }
-
-type Input<V> = StaticInput<{
-  output: V;
-  by: StaticInput<number>;
-  default?: V;
-}>;

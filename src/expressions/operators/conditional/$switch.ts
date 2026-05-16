@@ -1,19 +1,18 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 
 export interface $switch {
-  $switch: Overload<UnknownOverloaded, Signature>;
+  $switch: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (input: Input<this['T']>) => this['T'];
+interface Signature extends FunctionSignature {
+  arguments: [
+    input: StaticInput<{
+      branches: { case: boolean; then: unknown }[];
+      default?: unknown;
+    }>
+  ];
+  return:
+    | this['arguments'][0]['branches'][number]['then']
+    | this['arguments'][0]['default'];
 }
-
-type Input<T> = StaticInput<{
-  branches: { case: boolean; then: T }[];
-  default?: T;
-}>;

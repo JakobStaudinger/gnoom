@@ -1,13 +1,10 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $ifNull {
-  $ifNull: Overload<UnknownOverloaded, Signature>;
+  $ifNull: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (value: this['T'], ...fallbacks: this['T'][]) => this['T'];
+interface Signature extends FunctionSignature {
+  arguments: [value: unknown, ...fallbacks: unknown[]];
+  return: this['arguments'][number];
 }

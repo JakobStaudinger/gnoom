@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $bitOr {
-  $bitOr: (...numbers: number[]) => number;
+  $bitOr: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [...number: number[]];
+  return: number;
 }

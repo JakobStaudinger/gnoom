@@ -16,14 +16,14 @@ type EvaluateVariableExpressionHelper<
     ? T[Head] extends object
       ? EvaluateVariableExpressionHelper<T[Head], Tail, `${Head}.`>
       : GnoomError<{
-          message: `Cannot access property "${Tail}" of "$${Prefix}${Head}"`;
+          message: `Cannot access property "${Tail}" of "$$${Prefix}${Head}"`;
         }>
-    : GnoomError<{ message: 'Key not found'; key: `$${Prefix}${Head}` }>
+    : GnoomError<{ message: 'Key not found'; key: `$$${Prefix}${Head}` }>
   : Path extends keyof T
     ? T[Path]
     : GnoomError<{
         message: 'Key not found';
-        key: `$${Prefix}${Path}`;
+        key: `$$${Prefix}${Path}`;
       }>;
 
 export type VariableExpression<State extends AggregateState> =

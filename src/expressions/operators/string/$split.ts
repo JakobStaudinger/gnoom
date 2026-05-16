@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $split {
-  $split: (input: string, delimeter: string) => string[];
+  $split: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [input: string, delimeter: string];
+  return: string[];
 }

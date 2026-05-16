@@ -1,3 +1,15 @@
+import { FunctionSignature } from '../../../types/evaluate';
+import { Primitive } from '../../../types/primitive';
+
 export interface $stdDevSamp {
-  $stdDevSamp: (<T>(values: T[]) => T) | (<T>(x: T, y: T, ...values: T[]) => T);
+  $stdDevSamp: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments:
+    | [values: Primitive[]]
+    | [x: Primitive, y: Primitive, ...values: Primitive[]];
+  return: this['arguments'][0] extends (infer T)[]
+    ? T
+    : this['arguments'][number];
 }

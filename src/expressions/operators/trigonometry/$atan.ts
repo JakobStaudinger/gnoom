@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $atan {
-  $atan: (x: number) => number;
+  $atan: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number];
+  return: number;
 }

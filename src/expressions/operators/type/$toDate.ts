@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $toDate {
-  $toDate: <T>(value: T) => Date;
+  $toDate: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [value: unknown];
+  return: Date;
 }

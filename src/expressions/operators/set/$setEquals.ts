@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $setEquals {
-  $setEquals: <T>(x: T[], y: T[], ...values: T[][]) => boolean;
+  $setEquals: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: unknown[], y: unknown[], ...values: unknown[][]];
+  return: boolean;
 }

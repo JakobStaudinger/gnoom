@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $toDouble {
-  $toDouble: <T>(value: T) => number;
+  $toDouble: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [value: unknown];
+  return: number;
 }

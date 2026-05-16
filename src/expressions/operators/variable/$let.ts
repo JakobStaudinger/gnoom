@@ -1,17 +1,14 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { AnyObject } from '../../../types/object';
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
 import { StaticInput } from '../../static-input';
 
 export interface $let {
-  $let: Overload<UnknownOverloaded, Signature>;
+  $let: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (input: Input<this['T']>) => this['T'];
+interface Signature extends FunctionSignature {
+  arguments: [
+    input: StaticInput<{ vars: StaticInput<AnyObject>; in: unknown }>
+  ];
+  return: this['arguments'][0]['in'];
 }
-
-type Input<T> = StaticInput<{ vars: StaticInput<AnyObject>; in: T }>;

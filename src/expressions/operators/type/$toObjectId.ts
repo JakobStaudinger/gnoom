@@ -1,5 +1,11 @@
 import { ObjectId } from 'mongodb';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $toObjectId {
-  $toObjectId: <T>(value: T) => ObjectId;
+  $toObjectId: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [value: unknown];
+  return: ObjectId;
 }

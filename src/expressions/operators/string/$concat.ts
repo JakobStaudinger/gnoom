@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $concat {
-  $concat: (x: string, y: string, ...values: string[]) => string;
+  $concat: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: string, y: string, ...values: string[]];
+  return: string;
 }

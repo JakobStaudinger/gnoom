@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $toDecimal {
-  $toDecimal: <T>(value: T) => number;
+  $toDecimal: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [value: unknown];
+  return: number;
 }

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $degreesToRadians {
-  $degreesToRadians: (x: number) => number;
+  $degreesToRadians: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number];
+  return: number;
 }

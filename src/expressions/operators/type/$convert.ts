@@ -1,3 +1,4 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 import {
   BinaryFormat,
@@ -8,14 +9,30 @@ import {
 } from './types';
 
 export interface $convert {
-  $convert: <T, R extends ConvertibleTypeIdentifier, E = never, N = null>(
+  $convert: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [
     input: StaticInput<{
-      input: T;
-      to: R | { type: R; subtype?: Subtype };
+      input: unknown;
+      to:
+        | ConvertibleTypeIdentifier
+        | { type: ConvertibleTypeIdentifier; subtype?: Subtype };
       byteOrder?: ByteOrder;
       format?: BinaryFormat;
-      onError?: E;
-      onNull?: N;
+      onError?: unknown;
+      onNull?: unknown;
     }>
-  ) => IdentifierToType<R> | N | E;
+  ];
+  return:
+    | IdentifierToType<
+        this['arguments'][0]['to'] extends
+          | { type: infer T extends ConvertibleTypeIdentifier }
+          | (infer T extends ConvertibleTypeIdentifier)
+          ? T
+          : never
+      >
+    | this['arguments'][0]['onError']
+    | this['arguments'][0]['onNull'];
 }

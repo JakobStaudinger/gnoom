@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $setDifference {
-  $setDifference: <T>(x: T[], y: T[]) => T[];
+  $setDifference: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: unknown[], y: unknown[]];
+  return: this['arguments'][0][number][];
 }

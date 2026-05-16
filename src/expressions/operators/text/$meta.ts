@@ -1,7 +1,13 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 
 export interface $meta {
-  $meta:
-    | ((keyword: StaticInput<'textScore'>) => number)
-    | ((keyword: StaticInput<'indexKey'>) => object | undefined);
+  $meta: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [keyword: StaticInput<'textScore'> | StaticInput<'indexKey'>];
+  return: this['arguments'][0] extends StaticInput<'textScore'>
+    ? number
+    : object | undefined;
 }

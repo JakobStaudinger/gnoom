@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $strLenCP {
-  $strLenCP: (input: string) => number;
+  $strLenCP: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [input: string];
+  return: number;
 }

@@ -1,7 +1,17 @@
+import { FunctionSignature } from '../../../types/evaluate';
+import { Primitive } from '../../../types/primitive';
 import { StaticInput } from '../../static-input';
 
 export interface $median {
-  $median: <T>(
-    input: StaticInput<{ input: T[]; method: StaticInput<'approximate'> }>
-  ) => T;
+  $median: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [
+    input: StaticInput<{
+      input: Primitive[];
+      method: StaticInput<'approximate'>;
+    }>
+  ];
+  return: this['arguments'][0]['input'][number];
 }

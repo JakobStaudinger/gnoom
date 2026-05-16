@@ -1,11 +1,17 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 
 export interface $setField {
-  $setField: <T>(
+  $setField: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [
     input: StaticInput<{
       field: string;
       input: object;
-      value: T | '$$REMOVE';
+      value: unknown;
     }>
-  ) => object;
+  ];
+  return: object;
 }

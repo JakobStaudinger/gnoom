@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $allElementsTrue {
-  $allElementsTrue: (values: unknown[]) => boolean;
+  $allElementsTrue: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [values: unknown[]];
+  return: boolean;
 }

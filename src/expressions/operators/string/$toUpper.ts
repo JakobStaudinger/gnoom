@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $toUpper {
-  $toUpper: (input: string) => string;
+  $toUpper: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [input: string];
+  return: string;
 }

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $rand {
-  $rand: () => number;
+  $rand: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [];
+  return: number;
 }

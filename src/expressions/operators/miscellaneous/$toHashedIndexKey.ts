@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $toHashedIndexKey {
-  $toHashedIndexKey: (val: unknown) => number;
+  $toHashedIndexKey: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [val: unknown];
+  return: number;
 }

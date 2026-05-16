@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $substr {
-  $substr: (input: string, start: number, length: number) => string;
+  $substr: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [input: string, start: number, length: number];
+  return: string;
 }

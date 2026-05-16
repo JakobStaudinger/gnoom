@@ -1,5 +1,11 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { TypeIdentifier } from './types';
 
 export interface $type {
-  $type: <T>(value: T) => TypeIdentifier;
+  $type: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [value: unknown];
+  return: TypeIdentifier;
 }

@@ -1,5 +1,11 @@
 import { Timestamp } from 'mongodb';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $tsIncrement {
-  $tsIncrement: (timestamp: Timestamp) => number;
+  $tsIncrement: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [timestamp: Timestamp];
+  return: number;
 }

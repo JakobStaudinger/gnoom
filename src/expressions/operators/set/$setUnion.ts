@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $setUnion {
-  $setUnion: <T>(x: T[], y: T[], ...values: T[][]) => T[];
+  $setUnion: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: unknown[], y: unknown[], ...values: unknown[][]];
+  return: this['arguments'][number][number][];
 }

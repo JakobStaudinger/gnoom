@@ -1,5 +1,11 @@
+import { FunctionSignature } from '../../../types/evaluate';
 import { Primitive } from '../../../types/primitive';
 
 export interface $lt {
-  $lt: <T extends Primitive>(a: T, b: T) => boolean;
+  $lt: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [a: Primitive, b: Primitive];
+  return: boolean;
 }

@@ -1,5 +1,5 @@
 import { AggregateState } from './aggregate-state';
-import { ErrorIfAllOverloadsErrored, GnoomError } from './error';
+import { GnoomError } from './error';
 import { MongoParametersToTypeScriptSyntax } from './map-syntax';
 
 export interface FunctionSignature {
@@ -13,8 +13,12 @@ export type EvaluateFunctionLikeExpression<
   Map,
   Name extends string
 > = {
-  [K in keyof E & string]: ErrorIfAllOverloadsErrored<
-    EvaluateFunctionLikeExpressionHelper<State, E, K, Map, Name>
+  [K in keyof E & string]: EvaluateFunctionLikeExpressionHelper<
+    State,
+    E,
+    K,
+    Map,
+    Name
   >;
 }[keyof E & string];
 
@@ -28,30 +32,18 @@ type EvaluateFunctionLikeExpressionHelper<
   ? Map[K] extends infer Acc
     ? MongoParametersToTypeScriptSyntax<State, E[K]> extends infer Args
       ? Args extends unknown[]
-        ? Acc extends (...args: Args) => infer R
-          ? ((...args: ExtractRequired<Args>) => never) extends Acc
-            ? R
-            : GnoomError<{
-                message: `Too many arguments passed to ${ExpressionType} "${K}"`;
-                name: K;
-                signature: Acc;
-                arguments: Args;
-              }>
-          : Acc extends FunctionSignature
-            ? Args extends Acc['arguments']
-              ? (Acc & { arguments: Args })['return']
-              : GnoomError<{
-                  message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
-                  name: K;
-                  signature: (...args: Acc['arguments']) => Acc['return'];
-                  arguments: Args;
-                }>
+        ? Acc extends FunctionSignature
+          ? Args extends Acc['arguments']
+            ? (Acc & { arguments: Args })['return']
             : GnoomError<{
                 message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
                 name: K;
-                signature: Acc;
+                signature: (...args: Acc['arguments']) => Acc['return'];
                 arguments: Args;
               }>
+          : GnoomError<{
+              message: `Error in declaration of ${ExpressionType} "${K}". This is a bug in the libary, please report this issue.`;
+            }>
         : GnoomError<{
             message: `Invalid arguments passed to ${ExpressionType} "${K}"`;
             name: K;
@@ -61,10 +53,3 @@ type EvaluateFunctionLikeExpressionHelper<
       : never
     : never
   : GnoomError<{ message: `Unknown ${ExpressionType} "${K}"`; name: K }>;
-
-type ExtractRequired<
-  Arr extends readonly unknown[],
-  Acc extends unknown[] = []
-> = Arr extends readonly [infer _Head, ...infer Tail]
-  ? ExtractRequired<Tail, [...Acc, unknown]>
-  : Acc;

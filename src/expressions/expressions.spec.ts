@@ -218,7 +218,7 @@ describe('Expressions', () => {
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
       expectTypeOf<Result>().toExtend<
-        GnoomError<{ message: 'Too many arguments passed to operator "$rand"' }>
+        GnoomError<{ message: 'Invalid arguments passed to operator "$rand"' }>
       >();
     });
   });

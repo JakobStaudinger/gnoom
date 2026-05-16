@@ -1,13 +1,10 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $in {
-  $in: Overload<UnknownOverloaded, Signature>;
+  $in: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (needle: this['T'], haystack: this['T'][]) => boolean;
+interface Signature extends FunctionSignature {
+  arguments: [needle: unknown, haystack: unknown[]];
+  return: boolean;
 }

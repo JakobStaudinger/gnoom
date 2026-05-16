@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $size {
-  $size: <T>(array: T[]) => number;
+  $size: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [array: unknown[]];
+  return: number;
 }

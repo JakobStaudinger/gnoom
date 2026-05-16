@@ -1,18 +1,15 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $indexOfArray {
-  $indexOfArray: Overload<UnknownOverloaded, Signature>;
+  $indexOfArray: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (
-    haystack: this['T'][],
-    needle: this['T'],
+interface Signature extends FunctionSignature {
+  arguments: [
+    haystack: unknown[],
+    needle: unknown,
     start?: number,
     end?: number
-  ) => number;
+  ];
+  return: number;
 }

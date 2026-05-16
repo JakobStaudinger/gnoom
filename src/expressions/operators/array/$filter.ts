@@ -1,21 +1,18 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 
 export interface $filter {
-  $filter: Overload<UnknownOverloaded, Signature>;
+  $filter: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (input: Input<this['T']>) => this['T'][];
+interface Signature extends FunctionSignature {
+  arguments: [
+    input: StaticInput<{
+      input: unknown[];
+      as?: StaticInput<string>;
+      cond: boolean;
+      limit?: number;
+    }>
+  ];
+  return: this['arguments'][0]['input'][number][];
 }
-
-type Input<T> = StaticInput<{
-  input: T[];
-  as?: StaticInput<string>;
-  cond: boolean;
-  limit?: number;
-}>;

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $range {
-  $range: (start: number, end: number, step?: number) => number[];
+  $range: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [start: number, end: number, step?: number];
+  return: number[];
 }

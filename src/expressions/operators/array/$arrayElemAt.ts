@@ -1,13 +1,10 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $arrayElemAt {
-  $arrayElemAt: Overload<UnknownOverloaded, Signature>;
+  $arrayElemAt: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (arr: this['T'][], index: number) => this['T'];
+interface Signature extends FunctionSignature {
+  arguments: [array: unknown[], index: number];
+  return: this['arguments'][0][number];
 }

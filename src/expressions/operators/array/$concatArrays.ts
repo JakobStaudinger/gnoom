@@ -1,17 +1,10 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $concatArrays {
-  $concatArrays: Overload<UnknownOverloaded, Signature>;
+  $concatArrays: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (
-    array1: this['T'][],
-    array2: this['T'],
-    ...arrays: this['T'][][]
-  ) => this['T'][];
+interface Signature extends FunctionSignature {
+  arguments: [array1: unknown[], array2: unknown[], ...arrays: unknown[][]];
+  return: this['arguments'][number][number][];
 }

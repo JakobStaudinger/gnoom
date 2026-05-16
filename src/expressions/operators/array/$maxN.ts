@@ -1,13 +1,12 @@
-import { Overload, OverloadTransformation } from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 import { Primitive } from '../../../types/primitive';
 import { StaticInput } from '../../static-input';
 
 export interface $maxN {
-  $maxN: Overload<Primitive, Signature>;
+  $maxN: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (input: Input<this['T']>) => this['T'][];
+interface Signature extends FunctionSignature {
+  arguments: [input: StaticInput<{ input: Primitive[]; n: number }>];
+  return: this['arguments'][0]['input'][number][];
 }
-
-type Input<T> = StaticInput<{ input: T[]; n: number }>;

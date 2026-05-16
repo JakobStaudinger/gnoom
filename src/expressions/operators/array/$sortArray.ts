@@ -1,16 +1,14 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
+import { AnyObject } from '../../../types/object';
 import { StaticInput } from '../../static-input';
 
 export interface $sortArray {
-  $sortArray: Overload<UnknownOverloaded, Signature>;
+  $sortArray: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (input: Input<this['T']>) => this['T'][];
+interface Signature extends FunctionSignature {
+  arguments: [
+    input: StaticInput<{ input: unknown[]; sortBy: AnyObject | 1 | -1 }>
+  ];
+  return: this['arguments'][0]['input'][number][];
 }
-
-type Input<T> = StaticInput<{ input: T[]; sortBy: object | number }>;

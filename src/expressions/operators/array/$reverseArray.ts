@@ -1,13 +1,10 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 
 export interface $reverseArray {
-  $reverseArray: Overload<UnknownOverloaded, Signature>;
+  $reverseArray: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (array: this['T'][]) => this['T'][];
+interface Signature extends FunctionSignature {
+  arguments: [array: unknown[]];
+  return: this['arguments'][0][number][];
 }

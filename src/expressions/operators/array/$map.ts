@@ -1,16 +1,12 @@
-import {
-  Overload,
-  OverloadTransformation,
-  UnknownOverloaded
-} from '../../../types/overload';
+import { FunctionSignature } from '../../../types/evaluate';
 import { StaticInput } from '../../static-input';
 
 export interface $map {
-  $map: Overload<UnknownOverloaded, Signature>;
+  $map: Signature;
 }
 
-interface Signature extends OverloadTransformation {
-  output: (input: Input<unknown, this['T']>) => this['T'][];
+interface Signature extends FunctionSignature {
+  // TODO: support `as` alias in `in` expression
+  arguments: [StaticInput<{ input: unknown[]; as?: string; in: unknown }>];
+  return: this['arguments'][0]['in'][];
 }
-
-type Input<I, O> = StaticInput<{ input: I[]; as?: string; in: O }>;

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $round {
-  $round: (x: number) => number;
+  $round: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number | null];
+  return: this['arguments'][0];
 }

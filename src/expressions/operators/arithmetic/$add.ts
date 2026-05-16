@@ -1,5 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $add {
-  $add:
-    | ((x: number, y: number, ...others: number[]) => number)
-    | ((x: Date, y: number, ...others: number[]) => Date);
+  $add: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number | Date, y: number, ...others: number[]];
+  return: this['arguments'][0] extends number ? number : Date;
 }

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $pow {
-  $pow: (x: number, exponent: number) => number;
+  $pow: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number | null, exponent: number | null];
+  return: this['arguments'][0];
 }

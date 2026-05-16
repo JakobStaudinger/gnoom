@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $multiply {
-  $multiply: (x: number, y: number, ...others: number[]) => number;
+  $multiply: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number, y: number, ...others: number[]];
+  return: number;
 }

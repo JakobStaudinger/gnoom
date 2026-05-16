@@ -238,7 +238,7 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf<Result>().toEqualTypeOf<number>();
     });
 
     it('should add a Date and a number and result in a Date', () => {
@@ -268,7 +268,17 @@ describe('Expressions', () => {
 
       type Result = EvaluateAggregateExpression<Input, typeof _expression>;
 
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf<Result>().toEqualTypeOf<number>();
+    });
+
+    it('should subtract a number from another number and return a number', () => {
+      const _expression = {
+        $subtract: ['$number1', '$number2']
+      } as const;
+
+      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
+
+      expectTypeOf<Result>().toEqualTypeOf<number>();
     });
   });
 });

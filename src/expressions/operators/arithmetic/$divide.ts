@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $divide {
-  $divide: (dividend: number, divisor: number) => number;
+  $divide: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [dividend: number, divisor: number];
+  return: this['arguments'][0];
 }

@@ -1,3 +1,10 @@
+import { FunctionSignature } from '../../../types/evaluate';
+
 export interface $floor {
-  $floor: (x: number) => number;
+  $floor: Signature;
+}
+
+interface Signature extends FunctionSignature {
+  arguments: [x: number | null];
+  return: this['arguments'][0];
 }

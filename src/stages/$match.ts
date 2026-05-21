@@ -5,7 +5,7 @@ import { QueryPredicate } from '../query-predicates';
 import { DeepKeyof, DeepType } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { Primitive } from '../types/primitive';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $match<State extends AggregateState> {
   $match: <const S extends Specification<State>>(
@@ -27,7 +27,7 @@ type Specification<State extends AggregateState> = QueryPredicates<
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<State, MatchOutputHelper<State, S>>;
+> = AddStage<State, { T: MatchOutputHelper<State, S> }>;
 
 type MatchOutputHelper<
   State extends AggregateState,

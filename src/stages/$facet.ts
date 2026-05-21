@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
 
 export interface $facet<State extends AggregateState> {
@@ -16,13 +16,15 @@ type Specification<State extends AggregateState> = {
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
   {
-    -readonly [K in keyof S]: S[K] extends (
-      ...args: infer _Args
-    ) => AggregateLike<infer O>
-      ? O['T'][]
-      : never;
+    T: {
+      -readonly [K in keyof S]: S[K] extends (
+        ...args: infer _Args
+      ) => AggregateLike<infer O>
+        ? O['T'][]
+        : never;
+    };
   }
 >;

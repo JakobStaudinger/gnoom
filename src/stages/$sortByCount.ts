@@ -1,9 +1,9 @@
 import { Aggregate } from '../aggregate';
 import {
-  EvaluateAggregateExpression,
-  AggregateExpression
+  AggregateExpression,
+  EvaluateAggregateExpression
 } from '../expressions';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $sortByCount<State extends AggregateState> {
   $sortByCount: <const S extends Specification<State>>(
@@ -16,7 +16,9 @@ type Specification<State extends AggregateState> = AggregateExpression<State>;
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
-  { _id: EvaluateAggregateExpression<State, S>; count: number }
+  {
+    T: { _id: EvaluateAggregateExpression<State, S>; count: number };
+  }
 >;

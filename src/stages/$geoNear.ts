@@ -1,9 +1,9 @@
 import { Aggregate } from '../aggregate';
 import { QueryPredicate } from '../query-predicates';
 import {
+  AddStage,
   AggregateState,
-  MustBeFirstStage,
-  WithType
+  MustBeFirstStage
 } from '../types/aggregate-state';
 import { DeepKeyof, DeepType } from '../types/deep';
 import { Merge } from '../types/merge';
@@ -35,18 +35,20 @@ type Specification<State extends AggregateState> = {
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
-  Merge<
-    State['T'],
-    {
-      [K in S['distanceField']]: number;
-    } & ('includeLocs' extends keyof S
-      ? {
-          [K in S['includeLocs'] & string]: S['key'] extends string
-            ? DeepType<State, S['key']>
-            : unknown;
-        }
-      : unknown)
-  >
+  {
+    T: Merge<
+      State['T'],
+      {
+        [K in S['distanceField']]: number;
+      } & ('includeLocs' extends keyof S
+        ? {
+            [K in S['includeLocs'] & string]: S['key'] extends string
+              ? DeepType<State, S['key']>
+              : unknown;
+          }
+        : unknown)
+    >;
+  }
 >;

@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
 import { AnyObject } from '../types/object';
@@ -46,16 +46,20 @@ type Output<
   Other extends object,
   Variables extends AnyObject,
   S extends Specification<State, Other, Variables>
-> = WithType<
+> = AddStage<
   State,
-  Merge<
-    State['T'],
-    {
-      [K in S['as']]: 'pipeline' extends keyof S
-        ? S['pipeline'] extends (...args: infer _Args) => AggregateLike<infer O>
-          ? O['T'][]
-          : never
-        : Other[];
-    }
-  >
+  {
+    T: Merge<
+      State['T'],
+      {
+        [K in S['as']]: 'pipeline' extends keyof S
+          ? S['pipeline'] extends (
+              ...args: infer _Args
+            ) => AggregateLike<infer O>
+            ? O['T'][]
+            : never
+          : Other[];
+      }
+    >;
+  }
 >;

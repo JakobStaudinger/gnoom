@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
 import { WithoutFunctions } from '../types/without-functions';
 
@@ -25,12 +25,17 @@ type Output<
   State extends AggregateState,
   Other extends object,
   S extends Specification<Other>
-> = WithType<
+> = AddStage<
   State,
-  | State['T']
-  | ('pipeline' extends keyof S
-      ? S['pipeline'] extends (...args: infer _Args) => AggregateLike<infer O>
-        ? O['T']
-        : never
-      : Other)
+  {
+    T:
+      | State['T']
+      | ('pipeline' extends keyof S
+          ? S['pipeline'] extends (
+              ...args: infer _Args
+            ) => AggregateLike<infer O>
+            ? O['T']
+            : never
+          : Other);
+  }
 >;

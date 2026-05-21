@@ -1,5 +1,5 @@
 import { Aggregate } from '../aggregate';
-import { AggregateState, Finalize, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { AnyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
@@ -13,7 +13,7 @@ export interface $merge<State extends AggregateState> {
     specification: S & {
       let?: Variables;
     }
-  ) => Aggregate<Finalize<WithType<State, never>, '$merge'>>;
+  ) => Aggregate<Output<State>>;
 }
 
 type Specification<
@@ -36,3 +36,8 @@ type Specification<
         | PipelineCallback<Other, Variables>;
       whenNotMatched?: 'insert' | 'discard' | 'fail';
     };
+
+type Output<State extends AggregateState> = AddStage<
+  State,
+  { T: never; finalStage: '$merge' }
+>;

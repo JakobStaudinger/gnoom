@@ -2,6 +2,7 @@ import { expectTypeOf } from 'expect-type';
 import { ObjectId } from 'mongodb';
 import { aggregate } from '../aggregate';
 import { ExtractDocumentType } from '../testing/extract-document-type';
+import { GnoomError } from '../types/error';
 
 describe('$documents', () => {
   describe('Output', () => {
@@ -23,13 +24,17 @@ describe('$documents', () => {
       expectTypeOf<Result>().toExtend<{ x: number }>();
     });
 
-    it('should result in `never` when the input is not an array', () => {
+    it('should result in an error when the input is not an array', () => {
       const _result = aggregate<InputDocument>().$documents({
         hello: 'world'
       });
 
       type Result = ExtractDocumentType<typeof _result>;
-      expectTypeOf<Result>().toBeNever();
+      expectTypeOf<Result>().toEqualTypeOf<
+        GnoomError<{
+          message: 'Aggregate expression must resolve to an array of objects.';
+        }>
+      >();
     });
   });
 });

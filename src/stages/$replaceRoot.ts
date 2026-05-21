@@ -1,9 +1,9 @@
 import { Aggregate } from '../aggregate';
 import {
-  EvaluateAggregateExpression,
-  AggregateExpression
+  AggregateExpression,
+  EvaluateAggregateExpression
 } from '../expressions';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $replaceRoot<State extends AggregateState> {
   $replaceRoot: <const S extends Specification<State>>(specification: {
@@ -21,7 +21,9 @@ type Specification<State extends AggregateState> = {
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
-  { -readonly [K in keyof S]: EvaluateAggregateExpression<State, S[K]> }
+  {
+    T: { -readonly [K in keyof S]: EvaluateAggregateExpression<State, S[K]> };
+  }
 >;

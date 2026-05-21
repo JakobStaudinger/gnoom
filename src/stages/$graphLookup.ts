@@ -1,7 +1,7 @@
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
 import { QueryPredicate } from '../query-predicates';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
 import { WithoutFunctions } from '../types/without-functions';
@@ -29,16 +29,18 @@ type Output<
   State extends AggregateState,
   Other extends object,
   S extends Specification<State, Other>
-> = WithType<
+> = AddStage<
   State,
-  Merge<
-    State['T'],
-    {
-      [K in S['as']]: Other[];
-    } & ('depthField' extends keyof S
-      ? {
-          [K in S['depthField'] & string]: number;
-        }
-      : unknown)
-  >
+  {
+    T: Merge<
+      State['T'],
+      {
+        [K in S['as']]: Other[];
+      } & ('depthField' extends keyof S
+        ? {
+            [K in S['depthField'] & string]: number;
+          }
+        : unknown)
+    >;
+  }
 >;

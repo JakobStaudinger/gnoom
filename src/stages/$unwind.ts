@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { FieldPathExpression } from '../expressions/field-path.expression';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepType, FromDeepEntry } from '../types/deep';
 import { Merge } from '../types/merge';
 
@@ -21,7 +21,7 @@ type Specification<State extends AggregateState> =
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<State, UnwindOutputHelper<State, S>>;
+> = AddStage<State, { T: UnwindOutputHelper<State, S> }>;
 
 type UnwindOutputHelper<
   State extends AggregateState,

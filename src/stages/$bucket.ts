@@ -7,7 +7,7 @@ import {
   EvaluateAggregateExpression,
   AggregateExpression
 } from '../expressions';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $bucket<State extends AggregateState> {
   $bucket: <const S extends Specification<State>>(
@@ -27,14 +27,16 @@ interface Specification<State extends AggregateState> {
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
   {
-    _id: EvaluateAggregateExpression<State, S['groupBy']>;
-  } & {
-    -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
-      State,
-      S['output'][K]
-    >;
+    T: {
+      _id: EvaluateAggregateExpression<State, S['groupBy']>;
+    } & {
+      -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
+        State,
+        S['output'][K]
+      >;
+    };
   }
 >;

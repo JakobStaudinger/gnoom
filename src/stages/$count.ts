@@ -1,5 +1,5 @@
 import { Aggregate } from '../aggregate';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $count<State extends AggregateState> {
   $count: <const S extends Specification>(
@@ -9,7 +9,7 @@ export interface $count<State extends AggregateState> {
 
 type Specification = string;
 
-type Output<State extends AggregateState, S extends Specification> = WithType<
+type Output<State extends AggregateState, S extends Specification> = AddStage<
   State,
-  { [K in S]: number }
+  { T: { [K in S]: number } }
 >;

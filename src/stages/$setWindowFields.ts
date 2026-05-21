@@ -1,6 +1,6 @@
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { Merge } from '../types/merge';
 import {
   EvaluateWindowOperatorExpression,
@@ -23,15 +23,17 @@ interface Specification<State extends AggregateState> {
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
-  Merge<
-    State['T'],
-    {
-      -readonly [K in keyof S['output']]: EvaluateWindowOperatorExpression<
-        State,
-        S['output'][K]
-      >;
-    }
-  >
+  {
+    T: Merge<
+      State['T'],
+      {
+        -readonly [K in keyof S['output']]: EvaluateWindowOperatorExpression<
+          State,
+          S['output'][K]
+        >;
+      }
+    >;
+  }
 >;

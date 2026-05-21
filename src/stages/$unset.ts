@@ -1,5 +1,5 @@
 import { Aggregate } from '../aggregate';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $unset<State extends AggregateState> {
   $unset: <const S extends Specification<State>>(
@@ -14,4 +14,4 @@ type Specification<State extends AggregateState> =
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<State, Omit<State['T'], S extends (infer K)[] ? K : S>>;
+> = AddStage<State, { T: Omit<State['T'], S extends (infer K)[] ? K : S> }>;

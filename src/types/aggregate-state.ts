@@ -1,6 +1,7 @@
 import { Timestamp } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import { AnyObject, EmptyObject } from './object';
+import { GnoomError } from './error';
 
 export interface AggregateState {
   T: object;
@@ -24,20 +25,32 @@ export type UnlessFinalized<
 > = State['finalStage'] extends never
   ? T
   : (
-      error: `${State['finalStage']} must be the last stage in a pipeline.`
+      error: GnoomError<{
+        message: `${State['finalStage']} must be the last stage in a pipeline.`;
+      }>
     ) => Aggregate<State>;
 
 export type MustBeFirstStage<
   State extends AggregateState,
   T
 > = State['hasStage'] extends true
-  ? (error: 'Must be the first stage in a pipeline') => Aggregate<State>
+  ? (
+      error: GnoomError<{ message: 'Must be the first stage in a pipeline' }>
+    ) => Aggregate<State>
   : T;
 
-export type Finalize<State extends AggregateState, Stage extends string> = Omit<
-  State,
-  'finalStage'
-> & { finalStage: Stage };
+export type AddStage<
+  State extends AggregateState,
+  Changes extends Partial<AggregateState>
+> = {
+  [K in keyof State | keyof Changes]: K extends 'hasStage'
+    ? true
+    : K extends keyof Changes
+      ? Changes[K]
+      : K extends keyof State
+        ? State[K]
+        : never;
+};
 
 export type WithType<State extends AggregateState, T extends object> = Omit<
   State,

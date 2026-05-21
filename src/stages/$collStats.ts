@@ -1,8 +1,8 @@
 import { Aggregate } from '../aggregate';
 import {
+  AddStage,
   AggregateState,
-  MustBeFirstStage,
-  WithType
+  MustBeFirstStage
 } from '../types/aggregate-state';
 import { AnyObject, EmptyObject } from '../types/object';
 
@@ -22,17 +22,19 @@ interface Specification {
   queryExecStats?: EmptyObject;
 }
 
-type Output<State extends AggregateState, S extends Specification> = WithType<
+type Output<State extends AggregateState, S extends Specification> = AddStage<
   State,
   {
-    ns: string;
-    shard?: string;
-    host: string;
-    localTime: Date;
-  } & MaybeLatencyStats<S> &
-    MaybeStorageStats<S> &
-    MaybeCount<S> &
-    MaybeQueryExecStats<S>
+    T: {
+      ns: string;
+      shard?: string;
+      host: string;
+      localTime: Date;
+    } & MaybeLatencyStats<S> &
+      MaybeStorageStats<S> &
+      MaybeCount<S> &
+      MaybeQueryExecStats<S>;
+  }
 >;
 
 type Microseconds = number;

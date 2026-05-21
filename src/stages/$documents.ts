@@ -1,14 +1,14 @@
 import { Aggregate } from '../aggregate';
 import {
-  EvaluateAggregateExpression,
-  AggregateExpression
+  AggregateExpression,
+  EvaluateAggregateExpression
 } from '../expressions';
 import {
+  AddStage,
   AggregateState,
-  MustBeFirstStage,
-  WithType
+  MustBeFirstStage
 } from '../types/aggregate-state';
-import { EmptyObject } from '../types/object';
+import { GnoomError } from '../types/error';
 
 export interface $documents<State extends AggregateState> {
   $documents: MustBeFirstStage<
@@ -19,19 +19,18 @@ export interface $documents<State extends AggregateState> {
   >;
 }
 
-type Specification<State extends AggregateState> = AggregateExpression<
-  WithType<State, EmptyObject>
->;
+type Specification<State extends AggregateState> = AggregateExpression<State>;
 
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
-  EvaluateAggregateExpression<
-    WithType<State, EmptyObject>,
-    S
-  > extends (infer T extends object)[]
-    ? T
-    : never
+  {
+    T: EvaluateAggregateExpression<State, S> extends (infer T extends object)[]
+      ? T
+      : GnoomError<{
+          message: 'Aggregate expression must resolve to an array of objects.';
+        }>;
+  }
 >;

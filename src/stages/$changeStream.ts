@@ -1,12 +1,12 @@
 import { Timestamp, UUID } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import {
+  AddStage,
   AggregateState,
-  MustBeFirstStage,
-  WithType
+  MustBeFirstStage
 } from '../types/aggregate-state';
-import { AnyObject } from '../types/object';
 import { DeepKeyof } from '../types/deep';
+import { AnyObject } from '../types/object';
 
 export interface $changeStream<State extends AggregateState> {
   $changeStream: MustBeFirstStage<
@@ -59,23 +59,26 @@ type Specification = {
     }
 );
 
-type Output<State extends AggregateState, S extends Specification> = WithType<
+type Output<State extends AggregateState, S extends Specification> = AddStage<
   State,
-  | CreateEvent<S>
-  | CreateIndexesEvent<S>
-  | DeleteEvent
-  | DropEvent
-  | DropDatabaseEvent
-  | DropIndexesEvent<S>
-  | InsertEvent<State>
-  | InvalidateEvent
-  | ModifyEvent<S>
-  | RefineCollectionShardKeyEvent<S>
-  | RenameEvent<S>
-  | ReplaceEvent<State, S>
-  | ReshardCollectionEvent<S>
-  | ShardCollectionEvent<S>
-  | UpdateEvent<State, S>
+  {
+    T:
+      | CreateEvent<S>
+      | CreateIndexesEvent<S>
+      | DeleteEvent
+      | DropEvent
+      | DropDatabaseEvent
+      | DropIndexesEvent<S>
+      | InsertEvent<State>
+      | InvalidateEvent
+      | ModifyEvent<S>
+      | RefineCollectionShardKeyEvent<S>
+      | RenameEvent<S>
+      | ReplaceEvent<State, S>
+      | ReshardCollectionEvent<S>
+      | ShardCollectionEvent<S>
+      | UpdateEvent<State, S>;
+  }
 >;
 
 type IfExpandedEvents<

@@ -4,10 +4,10 @@ import {
 } from '../accumulators';
 import { Aggregate } from '../aggregate';
 import {
-  EvaluateAggregateExpression,
-  AggregateExpression
+  AggregateExpression,
+  EvaluateAggregateExpression
 } from '../expressions';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $group<State extends AggregateState> {
   $group: <const S extends Specification<State>>(
@@ -22,11 +22,16 @@ type Specification<State extends AggregateState> = {
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
   {
-    _id: EvaluateAggregateExpression<State, S['_id']>;
-  } & {
-    [K in Exclude<keyof S, '_id'>]: EvaluateAccumulatorExpression<State, S[K]>;
+    T: {
+      _id: EvaluateAggregateExpression<State, S['_id']>;
+    } & {
+      [K in Exclude<keyof S, '_id'>]: EvaluateAccumulatorExpression<
+        State,
+        S[K]
+      >;
+    };
   }
 >;

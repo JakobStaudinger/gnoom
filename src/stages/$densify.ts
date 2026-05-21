@@ -1,7 +1,8 @@
 import { Aggregate } from '../aggregate';
 import { TimeUnit } from '../expressions/operators/date/types';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof, DeepPartial, DeepType, FromDeepEntry } from '../types/deep';
+import { GnoomError } from '../types/error';
 import { Merge } from '../types/merge';
 
 export interface $densify<State extends AggregateState> {
@@ -36,11 +37,11 @@ type Output<
   State extends AggregateState,
   F extends DeepKeyof<State['T']>,
   P extends DeepKeyof<State['T']>
-> =
-  DeepType<State['T'], F> extends Date | number | undefined | null
-    ? WithType<
-        State,
-        Merge<
+> = AddStage<
+  State,
+  {
+    T: DeepType<State['T'], F> extends Date | number | undefined | null
+      ? Merge<
           DeepPartial<State['T']>,
           UnionToIntersection<
             F | P extends infer K
@@ -50,8 +51,13 @@ type Output<
               : never
           >
         >
-      >
-    : never;
+      : {
+          error: GnoomError<{
+            message: '$densify.field must be a Date or a number';
+          }>;
+        };
+  }
+>;
 
 type UnionToIntersection<U> = (
   U extends unknown ? (x: U) => void : never

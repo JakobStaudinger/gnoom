@@ -4,10 +4,10 @@ import {
 } from '../accumulators';
 import { Aggregate } from '../aggregate';
 import {
-  EvaluateAggregateExpression,
-  AggregateExpression
+  AggregateExpression,
+  EvaluateAggregateExpression
 } from '../expressions';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 
 export interface $bucketAuto<State extends AggregateState> {
   $bucketAuto: <const S extends Specification<State>>(
@@ -42,14 +42,16 @@ type BucketGranularity =
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<
+> = AddStage<
   State,
   {
-    _id: EvaluateAggregateExpression<State, S['groupBy']>;
-  } & {
-    -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
-      State,
-      S['output'][K]
-    >;
+    T: {
+      _id: EvaluateAggregateExpression<State, S['groupBy']>;
+    } & {
+      -readonly [K in keyof S['output']]: EvaluateAccumulatorExpression<
+        State,
+        S['output'][K]
+      >;
+    };
   }
 >;

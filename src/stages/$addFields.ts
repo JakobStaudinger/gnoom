@@ -3,7 +3,7 @@ import {
   AggregateExpression,
   EvaluateAggregateExpression
 } from '../expressions';
-import { AggregateState, WithType } from '../types/aggregate-state';
+import { AddStage, AggregateState } from '../types/aggregate-state';
 import { Merge } from '../types/merge';
 
 export interface $addFields<State extends AggregateState> {
@@ -24,7 +24,7 @@ type Specification<State extends AggregateState> = {
 type Output<
   State extends AggregateState,
   S extends Specification<State>
-> = WithType<State, Merge<State['T'], NewType<State, S>>>;
+> = AddStage<State, { T: Merge<State['T'], NewType<State, S>> }>;
 
 type NewType<State extends AggregateState, S extends Specification<State>> = {
   -readonly [K in keyof S]: EvaluateAggregateExpression<State, S[K]>;

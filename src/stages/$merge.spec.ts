@@ -1,14 +1,61 @@
 import { ObjectId } from 'mongodb';
 import { DatabaseInstance } from '../testing/database-instance';
 import { aggregate } from '../aggregate';
+import { GnoomError } from '../types/error';
 
 describe('$merge', () => {
   describe('Type', () => {
+    type Input = {
+      name: string;
+    };
+
     it('should disallow adding a stage after', () => {
-      aggregate()
-        .$merge()('test')
-        // @ts-expect-error $merge finalizes the aggregate
-        .$addFields({ myField: 'hi' });
+      const error: GnoomError<{
+        message: '$merge must be the last stage in a pipeline.';
+      }> = null!;
+
+      aggregate<Input>().$merge()('test').$addFields(error);
+    });
+
+    it('should allow using `$$new` in a `whenMatched` pipeline', () => {
+      aggregate<Input>().$merge<Input>()({
+        into: 'test',
+        whenMatched: (p) =>
+          p.$addFields({
+            updatedName: '$$new.name'
+          })
+      });
+    });
+
+    it('should allow accessing the variables from `let` in a `whenMatched` pipeline', () => {
+      aggregate<Input>().$merge<Input>()({
+        into: 'test',
+        let: {
+          myVariable: { $concat: ['Hi', '$name'] }
+        },
+        whenMatched: (p) =>
+          p.$addFields({
+            updatedName: '$$myVariable'
+          })
+      });
+    });
+
+    it('should disallow accessing `$$new` if `let` is used', () => {
+      const error: GnoomError<{ message: 'Key not found'; key: '$$new' }> =
+        null!;
+
+      aggregate<Input>().$merge<Input>()({
+        into: 'test',
+        let: {
+          myVariable: { $concat: ['Hi', '$name'] }
+        },
+        whenMatched: (p) =>
+          p
+            .$addFields({
+              updatedName: '$$new.name'
+            })
+            .toArray(error)
+      });
     });
   });
 

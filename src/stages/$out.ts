@@ -1,14 +1,19 @@
 import { Aggregate } from '../aggregate';
+import {
+  AggregateExpression,
+  EvaluateAggregateExpression
+} from '../expressions';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
-import { AnyObject } from '../types/object';
+import { EmptyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
 import { WithoutFunctions } from '../types/without-functions';
 
 export interface $out<State extends AggregateState> {
   $out: <Other extends object>() => <
-    const Variables extends AnyObject,
-    const S extends Specification<State, WithoutFunctions<Other>, Variables>
+    const S extends Specification<State, WithoutFunctions<Other>, Variables>,
+    const Variables extends Record<string, AggregateExpression<State>> =
+      EmptyObject
   >(
     specification: S & {
       let?: Variables;
@@ -19,7 +24,7 @@ export interface $out<State extends AggregateState> {
 type Specification<
   State extends AggregateState,
   Other extends object,
-  Variables extends AnyObject
+  Variables extends Record<string, AggregateExpression<State>>
 > =
   | string
   | {
@@ -33,7 +38,17 @@ type Specification<
         | 'replace'
         | 'keepExisting'
         | 'fail'
-        | PipelineCallback<Other, Variables>;
+        | PipelineCallback<
+            Other,
+            Variables extends EmptyObject
+              ? { new: State['T'] }
+              : {
+                  -readonly [K in keyof Variables]: EvaluateAggregateExpression<
+                    State,
+                    Variables[K]
+                  >;
+                }
+          >;
       whenNotMatched?: 'insert' | 'discard' | 'fail';
     };
 

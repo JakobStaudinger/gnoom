@@ -14,7 +14,6 @@ const pipeline = aggregate<Document>()
       $cond: [{ $eq: ['$archived', true] }, '$$REMOVE', '$payload']
     }
   })
-  .addToType<{ payload?: Record<string, unknown> }>()
   .toArray();
 
 console.log(JSON.stringify(pipeline, undefined, 2));

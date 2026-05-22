@@ -54,5 +54,5 @@ type Specification<
 
 type Output<State extends AggregateState> = AddStage<
   State,
-  { T: never; finalStage: '$out' }
+  { T: EmptyObject; finalStage: '$out' }
 >;

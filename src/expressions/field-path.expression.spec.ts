@@ -1,0 +1,34 @@
+import { expectTypeOf } from 'expect-type';
+import { evaluate } from '../testing/evaluate';
+import { InitialState } from '../types/aggregate-state';
+
+describe('Field path expressions', () => {
+  type Input = InitialState<{
+    n: number;
+    complex: 42 | true | 'hi';
+    nested: {
+      array: { value: number; name: string }[];
+    };
+    nullable: {
+      foo: string;
+    } | null;
+    optional?: {
+      bar: number;
+    };
+    arrayOfObjects: {
+      value: number;
+    }[];
+  }>;
+
+  it('should evaluate to the type of the property', () => {
+    const expression = evaluate<Input>()('$n');
+
+    expectTypeOf(expression).toBeNumber();
+  });
+
+  it('should retain the exact type of the property', () => {
+    const expression = evaluate<Input>()('$complex');
+
+    expectTypeOf(expression).toEqualTypeOf<42 | true | 'hi'>();
+  });
+});

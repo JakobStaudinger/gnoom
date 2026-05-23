@@ -1,7 +1,7 @@
 import { expectTypeOf } from 'expect-type';
 import { Timestamp } from 'mongodb';
+import { evaluate } from '../testing/evaluate';
 import { InitialState } from '../types/aggregate-state';
-import { EvaluateAggregateExpression } from './index';
 import { GnoomError } from '../types/error';
 
 describe('Expressions', () => {
@@ -16,55 +16,43 @@ describe('Expressions', () => {
     }>;
 
     it('should accept a constant expression', () => {
-      const _expression = { $abs: 42 } as const;
+      const expression = evaluate<Input>()({ $abs: 42 });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf(expression).toBeNumber();
     });
 
     it('should not accept a constant expression of a wrong type', () => {
-      const _expression = { $abs: true } as const;
+      const expression = evaluate<Input>()({ $abs: true });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toExtend<
+      expectTypeOf(expression).toExtend<
         GnoomError<{ message: 'Invalid arguments passed to operator "$abs"' }>
       >();
     });
 
     it('should accept a path that resolves to a number', () => {
-      const _expression = { $abs: '$n' } as const;
+      const expression = evaluate<Input>()({ $abs: '$n' });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf(expression).toBeNumber();
     });
 
     it('should not accept a path that resolves to a wrong type', () => {
-      const _expression = { $abs: '$s' } as const;
+      const expression = evaluate<Input>()({ $abs: '$s' });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toExtend<
+      expectTypeOf(expression).toExtend<
         GnoomError<{ message: 'Invalid arguments passed to operator "$abs"' }>
       >();
     });
 
     it('should accept a nested path that resolves to a number', () => {
-      const _expression = { $abs: '$nested.n' } as const;
+      const expression = evaluate<Input>()({ $abs: '$nested.n' });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf(expression).toBeNumber();
     });
 
     it('should accept nested expressions', () => {
-      const _expression = { $abs: { $add: [2, 3] } } as const;
+      const expression = evaluate<Input>()({ $abs: { $add: [2, 3] } });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf(expression).toBeNumber();
     });
   });
 
@@ -76,27 +64,18 @@ describe('Expressions', () => {
     }>;
 
     it('should allow literals', () => {
-      const _expression = {
-        $sigmoid: { input: 12 }
-      } as const;
+      const expression = evaluate<Input>()({ $sigmoid: { input: 12 } });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf(expression).toBeNumber();
     });
 
     it('should not allow expressions', () => {
       type SpecializedInput = InitialState<{
         input: { input: number };
       }>;
-      const _expression = { $sigmoid: '$input' } as const;
+      const expression = evaluate<SpecializedInput>()({ $sigmoid: '$input' });
 
-      type Result = EvaluateAggregateExpression<
-        SpecializedInput,
-        typeof _expression
-      >;
-
-      expectTypeOf<Result>().toExtend<
+      expectTypeOf(expression).toExtend<
         GnoomError<{
           message: 'Invalid arguments passed to operator "$sigmoid"';
         }>
@@ -104,30 +83,26 @@ describe('Expressions', () => {
     });
 
     it('should allow expressions for sub-fields', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $filter: {
           input: '$array',
           cond: true
         }
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toEqualTypeOf<number[]>();
+      expectTypeOf(expression).toEqualTypeOf<number[]>();
     });
 
     it('should disallow expressions for sub-fields also marked static', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $filter: {
           input: '$array',
           as: '$string',
           cond: true
         }
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toExtend<
+      expectTypeOf(expression).toExtend<
         GnoomError<{
           message: 'Invalid arguments passed to operator "$filter"';
         }>
@@ -135,16 +110,14 @@ describe('Expressions', () => {
     });
 
     it('should allow system variables', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         root: '$$ROOT',
         current: '$$CURRENT',
         now: '$$NOW',
         time: '$$CLUSTER_TIME'
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toEqualTypeOf<{
+      expectTypeOf(expression).toEqualTypeOf<{
         root: Input['T'];
         current: Input['T'];
         now: Date;
@@ -162,35 +135,29 @@ describe('Expressions', () => {
     }>;
 
     it('should accept arbitrarily many parameters', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $add: ['$number1', '$number2', '$number3', 42, 69, '$number1']
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf(expression).toBeNumber();
     });
 
     it('should require that all non-rest parameters are given', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $add: [1]
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toExtend<
+      expectTypeOf(expression).toExtend<
         GnoomError<{ message: 'Invalid arguments passed to operator "$add"' }>
       >();
     });
 
     it('should be type-safe', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $add: ['$number1', '$number2', '$string']
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toExtend<
+      expectTypeOf(expression).toExtend<
         GnoomError<{ message: 'Invalid arguments passed to operator "$add"' }>
       >();
     });
@@ -198,14 +165,9 @@ describe('Expressions', () => {
 
   describe('operators with no parameters', () => {
     it('should take an empty object as its value', () => {
-      const _expression = { $rand: {} } as const;
+      const expression = evaluate()({ $rand: {} });
 
-      type Result = EvaluateAggregateExpression<
-        InitialState<object>,
-        typeof _expression
-      >;
-
-      expectTypeOf<Result>().toBeNumber();
+      expectTypeOf(expression).toBeNumber();
     });
 
     it('should not accept paths to an empty object', () => {
@@ -213,11 +175,9 @@ describe('Expressions', () => {
         empty: Record<string, never>;
       }>;
 
-      const _expression = { $rand: '$empty' } as const;
+      const expression = evaluate<Input>()({ $rand: '$empty' });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toExtend<
+      expectTypeOf(expression).toExtend<
         GnoomError<{ message: 'Invalid arguments passed to operator "$rand"' }>
       >();
     });
@@ -232,53 +192,43 @@ describe('Expressions', () => {
     }>;
 
     it('should add two numbers and result in a number', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $add: ['$number1', '$number2']
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toEqualTypeOf<number>();
+      expectTypeOf(expression).toEqualTypeOf<number>();
     });
 
     it('should add a Date and a number and result in a Date', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $add: ['$date1', '$number2']
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toEqualTypeOf<Date>();
+      expectTypeOf(expression).toEqualTypeOf<Date>();
     });
 
     it('should subtract a number from a Date and return a Date', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $subtract: ['$date1', '$number1']
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toEqualTypeOf<Date>();
+      expectTypeOf(expression).toEqualTypeOf<Date>();
     });
 
     it('should subtract a Date from another Date and return a number', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $subtract: ['$date1', '$date2']
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toEqualTypeOf<number>();
+      expectTypeOf(expression).toEqualTypeOf<number>();
     });
 
     it('should subtract a number from another number and return a number', () => {
-      const _expression = {
+      const expression = evaluate<Input>()({
         $subtract: ['$number1', '$number2']
-      } as const;
+      });
 
-      type Result = EvaluateAggregateExpression<Input, typeof _expression>;
-
-      expectTypeOf<Result>().toEqualTypeOf<number>();
+      expectTypeOf(expression).toEqualTypeOf<number>();
     });
   });
 });

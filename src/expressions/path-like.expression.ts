@@ -25,7 +25,7 @@ type EvaluatePathLikeExpressionHelper<
   T extends object,
   Path extends string
 > = T extends (infer E extends object)[]
-  ? EvaluatePathLikeExpression<Prefix, E, Path>
+  ? EvaluatePathLikeExpression<Prefix, E, Path>[]
   : Path extends `${infer Head}.${infer Tail}`
     ? Head extends keyof T
       ? T[Head] extends (infer O extends object) | null | undefined

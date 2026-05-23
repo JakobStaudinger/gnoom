@@ -35,7 +35,7 @@ describe('Field path expressions', () => {
   it('should support nested property access', () => {
     const expression = evaluate<Input>()('$nested.array.value');
 
-    expectTypeOf(expression).toBeNumber();
+    expectTypeOf(expression).toEqualTypeOf<number[]>();
   });
 
   it('should support accessing properties of nullable nested objects', () => {

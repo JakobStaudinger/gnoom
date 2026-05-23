@@ -24,17 +24,16 @@ type EvaluatePathLikeExpressionHelper<
   Prefix extends string,
   T extends object,
   Path extends string
-> = Path extends `${infer Head}.${infer Tail}`
-  ? Head extends keyof T
-    ? T[Head] extends object
-      ? EvaluatePathLikeExpressionHelper<`${Prefix}${Head}.`, T[Head], Tail>
-      : GnoomError<{
-          message: `Cannot access property "${Tail}" of "${Prefix}${Head}"`;
-        }>
-    : GnoomError<{ message: 'Key not found'; key: `${Prefix}${Head}` }>
-  : Path extends keyof T
-    ? T[Path]
-    : GnoomError<{
-        message: 'Key not found';
-        key: `${Prefix}${Path}`;
-      }>;
+> = T extends (infer E extends object)[]
+  ? EvaluatePathLikeExpression<Prefix, E, Path>
+  : Path extends `${infer Head}.${infer Tail}`
+    ? Head extends keyof T
+      ? T[Head] extends object
+        ? EvaluatePathLikeExpressionHelper<`${Prefix}${Head}.`, T[Head], Tail>
+        : GnoomError<{
+            message: `Cannot access property "${Tail}" of "${Prefix}${Head}"`;
+          }>
+      : GnoomError<{ message: 'Key not found'; key: `${Prefix}${Head}` }>
+    : Path extends keyof T
+      ? T[Path]
+      : GnoomError<{ message: 'Key not found'; key: `${Prefix}${Path}` }>;

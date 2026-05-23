@@ -31,4 +31,10 @@ describe('Field path expressions', () => {
 
     expectTypeOf(expression).toEqualTypeOf<42 | true | 'hi'>();
   });
+
+  it('should support nested property access', () => {
+    const expression = evaluate<Input>()('$nested.array.value');
+
+    expectTypeOf(expression).toBeNumber();
+  });
 });

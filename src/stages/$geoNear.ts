@@ -26,7 +26,7 @@ type Specification<State extends AggregateState> = {
   minDistance?: number;
   near: {
     type: 'Point';
-    coordinates: [longitude: number, latitude: number];
+    coordinates: [longitude: number, latitude: number] | number[];
   };
   query?: QueryPredicate<State['T']>;
   spherical?: boolean;

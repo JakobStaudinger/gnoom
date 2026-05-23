@@ -1,6 +1,7 @@
 import { expectTypeOf } from 'expect-type';
 import { evaluate } from '../testing/evaluate';
 import { InitialState } from '../types/aggregate-state';
+import { GnoomError } from '../types/error';
 
 describe('Field path expressions', () => {
   type Input = InitialState<{
@@ -28,6 +29,12 @@ describe('Field path expressions', () => {
         };
       };
     };
+    matrix: { name: string; value: boolean }[][][];
+    complexNested: {
+      array: {
+        values: number[];
+      }[];
+    }[];
   }>;
 
   it('should evaluate to the type of the property', () => {
@@ -76,5 +83,35 @@ describe('Field path expressions', () => {
     const expression = evaluate<Input>()('$very.deeply');
 
     expectTypeOf(expression).toEqualTypeOf<{ nested: { value: number } }>();
+  });
+
+  it('should not allow nested property access of multi-dimensional arrays', () => {
+    const expression = evaluate<Input>()('$matrix.name');
+
+    expectTypeOf(expression).toExtend<
+      GnoomError<{
+        message: 'Cannot access property "name" of multi-dimensional array at "$matrix."';
+      }>
+    >();
+  });
+
+  it('should support complex nested array paths (top-level)', () => {
+    const expression = evaluate<Input>()('$complexNested');
+
+    expectTypeOf(expression).toEqualTypeOf<
+      { array: { values: number[] }[] }[]
+    >();
+  });
+
+  it('should support complex nested array paths (1 level deep)', () => {
+    const expression = evaluate<Input>()('$complexNested.array');
+
+    expectTypeOf(expression).toEqualTypeOf<{ values: number[] }[][]>();
+  });
+
+  it('should support complex nested array paths (full depth)', () => {
+    const expression = evaluate<Input>()('$complexNested.array.values');
+
+    expectTypeOf(expression).toEqualTypeOf<number[][][]>();
   });
 });

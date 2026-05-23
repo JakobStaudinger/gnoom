@@ -25,7 +25,11 @@ type EvaluatePathLikeExpressionHelper<
   T extends object,
   Path extends string
 > = T extends (infer E extends object)[]
-  ? EvaluatePathLikeExpression<Prefix, E, Path>[]
+  ? E extends unknown[]
+    ? GnoomError<{
+        message: `Cannot access property "${Path}" of multi-dimensional array at "${Prefix}"`;
+      }>
+    : EvaluatePathLikeExpression<Prefix, E, Path>[]
   : Path extends `${infer Head}.${infer Tail}`
     ? Head extends keyof T
       ? T[Head] extends (infer O extends object) | null | undefined

@@ -37,4 +37,16 @@ describe('Field path expressions', () => {
 
     expectTypeOf(expression).toBeNumber();
   });
+
+  it('should support accessing properties of nullable nested objects', () => {
+    const expression = evaluate<Input>()('$nullable.foo');
+
+    expectTypeOf(expression).toEqualTypeOf<string | null>();
+  });
+
+  it('should support accessing properties of optional nested objects', () => {
+    const expression = evaluate<Input>()('$optional.bar');
+
+    expectTypeOf(expression).toEqualTypeOf<number | undefined>();
+  });
 });

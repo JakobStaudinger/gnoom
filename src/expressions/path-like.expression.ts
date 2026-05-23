@@ -28,8 +28,10 @@ type EvaluatePathLikeExpressionHelper<
   ? EvaluatePathLikeExpression<Prefix, E, Path>
   : Path extends `${infer Head}.${infer Tail}`
     ? Head extends keyof T
-      ? T[Head] extends object
-        ? EvaluatePathLikeExpressionHelper<`${Prefix}${Head}.`, T[Head], Tail>
+      ? T[Head] extends (infer O extends object) | null | undefined
+        ?
+            | EvaluatePathLikeExpressionHelper<`${Prefix}${Head}.`, O, Tail>
+            | Extract<T[Head], null | undefined>
         : GnoomError<{
             message: `Cannot access property "${Tail}" of "${Prefix}${Head}"`;
           }>

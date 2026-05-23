@@ -6,8 +6,11 @@ describe('Field path expressions', () => {
   type Input = InitialState<{
     n: number;
     complex: 42 | true | 'hi';
+    arrayOfArrays: {
+      nestedArray: number[];
+    }[];
     nested: {
-      array: { value: number; name: string }[];
+      value: boolean;
     };
     nullable: {
       foo: string;
@@ -18,6 +21,13 @@ describe('Field path expressions', () => {
     arrayOfObjects: {
       value: number;
     }[];
+    very: {
+      deeply: {
+        nested: {
+          value: number;
+        };
+      };
+    };
   }>;
 
   it('should evaluate to the type of the property', () => {
@@ -33,9 +43,9 @@ describe('Field path expressions', () => {
   });
 
   it('should support nested property access', () => {
-    const expression = evaluate<Input>()('$nested.array.value');
+    const expression = evaluate<Input>()('$nested.value');
 
-    expectTypeOf(expression).toEqualTypeOf<number[]>();
+    expectTypeOf(expression).toEqualTypeOf<boolean>();
   });
 
   it('should support accessing properties of nullable nested objects', () => {
@@ -48,5 +58,23 @@ describe('Field path expressions', () => {
     const expression = evaluate<Input>()('$optional.bar');
 
     expectTypeOf(expression).toEqualTypeOf<number | undefined>();
+  });
+
+  it('should evaluate to the correct type for nested arrays', () => {
+    const expression = evaluate<Input>()('$arrayOfArrays.nestedArray');
+
+    expectTypeOf(expression).toEqualTypeOf<number[][]>();
+  });
+
+  it('should evaluate to the correct type for an array of objects', () => {
+    const expression = evaluate<Input>()('$arrayOfObjects.value');
+
+    expectTypeOf(expression).toEqualTypeOf<number[]>();
+  });
+
+  it('should support partial paths', () => {
+    const expression = evaluate<Input>()('$very.deeply');
+
+    expectTypeOf(expression).toEqualTypeOf<{ nested: { value: number } }>();
   });
 });

@@ -1,25 +1,30 @@
 import { AnyObject } from './object';
 import { Primitive } from './primitive';
 
-export type DeepKeyof<T> = T extends (infer E)[]
+export type DeepKeyof<T> = T extends (infer E)[] | null | undefined
   ? DeepKeyof<E>
-  : T extends Primitive
+  : T extends Primitive | null | undefined
     ? never
     : {
-        [K in keyof T & string]: T[K] extends Primitive
+        [K in keyof NonNullable<T> & string]: NonNullable<T>[K] extends
+          | Primitive
+          | null
+          | undefined
           ? K
-          : T[K] extends object | unknown[]
-            ? K | `${K}.${DeepKeyof<T[K]>}`
+          : NonNullable<T>[K] extends object | unknown[] | null | undefined
+            ? K | `${K}.${DeepKeyof<NonNullable<T>[K]>}`
             : K;
-      }[keyof T & string];
+      }[keyof NonNullable<T> & string];
 
-export type DeepType<T, K> = T extends (infer E)[]
-  ? DeepType<E, K>[]
-  : K extends keyof T
-    ? T[K]
-    : K extends `${infer Head extends keyof T & string}.${infer Tail}`
-      ? Tail extends DeepKeyof<T[Head]>
-        ? DeepType<T[Head], Tail>
+export type DeepType<T, K> = T extends (infer E)[] | null | undefined
+  ? DeepType<E, K> extends never
+    ? never
+    : DeepType<E, K>[] | Extract<T, null | undefined>
+  : K extends keyof NonNullable<T>
+    ? NonNullable<T>[K] | Extract<T, null | undefined>
+    : K extends `${infer Head extends keyof NonNullable<T> & string}.${infer Tail}`
+      ? Tail extends DeepKeyof<NonNullable<T>[Head]>
+        ? DeepType<NonNullable<T>[Head] | Extract<T, null | undefined>, Tail>
         : never
       : never;
 

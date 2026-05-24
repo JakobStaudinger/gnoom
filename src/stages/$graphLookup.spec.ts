@@ -7,7 +7,7 @@ describe('$graphLookup', () => {
   describe('Output', () => {
     type Account = {
       _id: ObjectId;
-      name: string;
+      name: string | null;
       followers: ObjectId[];
     };
 
@@ -34,6 +34,19 @@ describe('$graphLookup', () => {
       });
       type Result = ExtractDocumentType<typeof _result>;
       expectTypeOf<'degreesOfSeparation'>().toExtend<keyof Result>();
+    });
+
+    it('should do type-narrowing when restrictSearchWithMatch is used', () => {
+      const _result = aggregate<Account>().$graphLookup<Account>()({
+        from: 'accounts',
+        startWith: '$_id',
+        connectFromField: '_id',
+        connectToField: 'followers',
+        as: 'followerChain',
+        restrictSearchWithMatch: { name: { $ne: null } }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result['followerChain']>().toExtend<{ name: string }[]>();
     });
   });
 });

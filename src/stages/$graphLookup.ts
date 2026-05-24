@@ -1,7 +1,11 @@
 import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
-import { QueryPredicate } from '../query-predicates';
-import { AddStage, AggregateState } from '../types/aggregate-state';
+import { EvaluateQueryPredicate, QueryPredicate } from '../query-predicates';
+import {
+  AddStage,
+  AggregateState,
+  InitialState
+} from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
 import { WithoutFunctions } from '../types/without-functions';
@@ -22,7 +26,7 @@ interface Specification<State extends AggregateState, Other extends object> {
   as: string;
   maxDepth?: number;
   depthField?: string;
-  restrictSearchWithMatch?: QueryPredicate<Other>;
+  restrictSearchWithMatch?: QueryPredicate<InitialState<Other>>;
 }
 
 type Output<
@@ -35,7 +39,14 @@ type Output<
     T: Merge<
       State['T'],
       {
-        [K in S['as']]: Other[];
+        [K in S['as']]: S['restrictSearchWithMatch'] extends QueryPredicate<
+          InitialState<Other>
+        >
+          ? EvaluateQueryPredicate<
+              InitialState<Other>,
+              S['restrictSearchWithMatch']
+            >[]
+          : Other[];
       } & ('depthField' extends keyof S
         ? {
             [K in S['depthField'] & string]: number;

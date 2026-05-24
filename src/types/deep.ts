@@ -1,16 +1,17 @@
-import { ObjectId, Timestamp, UUID } from 'mongodb';
 import { AnyObject } from './object';
 import { Primitive } from './primitive';
 
 export type DeepKeyof<T> = T extends (infer E)[]
   ? DeepKeyof<E>
-  : {
-      [K in keyof T & string]: T[K] extends ObjectId | Date | Timestamp | UUID
-        ? K
-        : T[K] extends object | unknown[]
-          ? K | `${K}.${DeepKeyof<T[K]>}`
-          : K;
-    }[keyof T & string];
+  : T extends object
+    ? {
+        [K in keyof T & string]: T[K] extends Primitive
+          ? K
+          : T[K] extends object | unknown[]
+            ? K | `${K}.${DeepKeyof<T[K]>}`
+            : K;
+      }[keyof T & string]
+    : never;
 
 export type DeepType<T, K> = T extends (infer E)[]
   ? DeepType<E, K>[]

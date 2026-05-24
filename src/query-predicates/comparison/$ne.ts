@@ -1,3 +1,3 @@
 export interface $ne<T> {
-  $ne?: T;
+  $ne: T;
 }

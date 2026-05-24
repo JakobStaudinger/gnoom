@@ -1,5 +1,5 @@
-import { QueryPredicate } from '../index';
+import { QueryOperator } from '..';
 
 export interface $elemMatch<T> {
-  $elemMatch?: T extends (infer E)[] ? QueryPredicate<E> : never;
+  $elemMatch: T extends (infer E)[] ? QueryOperator<E> : never;
 }

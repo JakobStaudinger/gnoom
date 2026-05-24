@@ -145,7 +145,7 @@ describe('$match', () => {
 
     it.skip('should do type narrowing on deep keys', () => {
       const _result = aggregate<InputDocumentType>().$match({
-        nested: { number: { $type: 'number' } },
+        'nested.number': { $type: 'number' },
         'nested.string': { $type: 'string' },
         'nested.rabbit.hole.without.rabbits.age': { $type: 'number' }
       });

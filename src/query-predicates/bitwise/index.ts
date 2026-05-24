@@ -3,5 +3,5 @@ import { $bitsAllSet } from './$bitsAllSet';
 import { $bitsAnyClear } from './$bitsAnyClear';
 import { $bitsAnySet } from './$bitsAnySet';
 
-export interface BitwiseQueryPredicate
+export interface BitwiseOperators
   extends $bitsAllClear, $bitsAllSet, $bitsAnyClear, $bitsAnySet {}

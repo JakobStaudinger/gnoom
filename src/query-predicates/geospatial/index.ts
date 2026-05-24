@@ -3,5 +3,5 @@ import { $geoWithin } from './$geoWithin';
 import { $near } from './$near';
 import { $nearSphere } from './$nearSphere';
 
-export interface GeospatialQueryPredicate
+export interface GeospatialOperators
   extends $geoIntersects, $geoWithin, $near, $nearSphere {}

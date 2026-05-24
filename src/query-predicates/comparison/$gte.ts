@@ -1,3 +1,3 @@
 export interface $gte<T> {
-  $gte?: T;
+  $gte: T;
 }

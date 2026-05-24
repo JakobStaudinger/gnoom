@@ -1,3 +1,3 @@
 export interface $geoIntersects {
-  $geoIntersects?: unknown;
+  $geoIntersects: unknown;
 }

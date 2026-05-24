@@ -1,3 +1,3 @@
 export interface $geoWithin {
-  $geoWithin?: unknown;
+  $geoWithin: unknown;
 }

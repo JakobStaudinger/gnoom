@@ -1,3 +1,3 @@
 export interface $eq<T> {
-  $eq?: T;
+  $eq: T;
 }

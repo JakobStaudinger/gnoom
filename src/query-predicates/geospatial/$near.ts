@@ -1,3 +1,3 @@
 export interface $near {
-  $near?: unknown;
+  $near: unknown;
 }

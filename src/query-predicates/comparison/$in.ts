@@ -1,3 +1,3 @@
 export interface $in<T> {
-  $in?: T[];
+  $in: T[];
 }

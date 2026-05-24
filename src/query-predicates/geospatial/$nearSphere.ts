@@ -1,3 +1,3 @@
 export interface $nearSphere {
-  $nearSphere?: unknown;
+  $nearSphere: unknown;
 }

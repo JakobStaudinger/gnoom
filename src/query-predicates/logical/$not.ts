@@ -1,5 +1,5 @@
-import { QueryPredicate } from '../index';
+import { QueryOperator } from '../index';
 
 export interface $not<T> {
-  $not?: Exclude<QueryPredicate<T>, T>;
+  $not: Exclude<QueryOperator<T>, T>;
 }

@@ -1,3 +1,3 @@
 export interface $exists {
-  $exists?: boolean;
+  $exists: boolean;
 }

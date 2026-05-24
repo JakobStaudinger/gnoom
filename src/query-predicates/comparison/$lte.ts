@@ -1,3 +1,3 @@
 export interface $lte<T> {
-  $lte?: T;
+  $lte: T;
 }

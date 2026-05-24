@@ -3,15 +3,15 @@ import { Primitive } from './primitive';
 
 export type DeepKeyof<T> = T extends (infer E)[]
   ? DeepKeyof<E>
-  : T extends object
-    ? {
+  : T extends Primitive
+    ? never
+    : {
         [K in keyof T & string]: T[K] extends Primitive
           ? K
           : T[K] extends object | unknown[]
             ? K | `${K}.${DeepKeyof<T[K]>}`
             : K;
-      }[keyof T & string]
-    : never;
+      }[keyof T & string];
 
 export type DeepType<T, K> = T extends (infer E)[]
   ? DeepType<E, K>[]

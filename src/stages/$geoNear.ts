@@ -1,5 +1,5 @@
 import { Aggregate } from '../aggregate';
-import { QueryPredicate } from '../query-predicates';
+import { EvaluateQueryPredicate, QueryPredicate } from '../query-predicates';
 import {
   AddStage,
   AggregateState,
@@ -28,7 +28,7 @@ type Specification<State extends AggregateState> = {
     type: 'Point';
     coordinates: [longitude: number, latitude: number] | number[];
   };
-  query?: QueryPredicate<State['T']>;
+  query?: QueryPredicate<State>;
   spherical?: boolean;
 };
 
@@ -39,7 +39,9 @@ type Output<
   State,
   {
     T: Merge<
-      State['T'],
+      S['query'] extends QueryPredicate<State>
+        ? EvaluateQueryPredicate<State, S['query']>
+        : State['T'],
       {
         [K in S['distanceField']]: number;
       } & ('includeLocs' extends keyof S

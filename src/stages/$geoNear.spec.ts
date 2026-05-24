@@ -49,5 +49,20 @@ describe('$geoNear', () => {
 
       aggregate<InputDocument>().$match({}).$geoNear(error);
     });
+
+    it('should do type narrowing when using query', () => {
+      const _result = aggregate<InputDocument>().$geoNear({
+        near: {
+          type: 'Point',
+          coordinates: [16.3725, 48.2088]
+        },
+        distanceField: 'distanceToTarget',
+        includeLocs: 'matchedLocation',
+        query: { b: { $ne: false } }
+      });
+
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result>().toExtend<{ b: true }>();
+    });
   });
 });

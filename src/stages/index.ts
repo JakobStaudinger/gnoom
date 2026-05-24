@@ -27,6 +27,7 @@ import { $sortByCount } from './$sortByCount';
 import { $unionWith } from './$unionWith';
 import { $unset } from './$unset';
 import { $unwind } from './$unwind';
+import { $vectorSearch } from './$vectorSearch';
 
 export type AllStages<State extends AggregateState> = {
   [S in keyof AllStagesMap<State>]: UnlessFinalized<
@@ -64,4 +65,5 @@ interface AllStagesMap<State extends AggregateState>
     $sortByCount<State>,
     $unionWith<State>,
     $unset<State>,
-    $unwind<State> {}
+    $unwind<State>,
+    $vectorSearch<State> {}

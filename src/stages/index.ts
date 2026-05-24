@@ -9,6 +9,7 @@ import { $count } from './$count';
 import { $densify } from './$densify';
 import { $documents } from './$documents';
 import { $facet } from './$facet';
+import { $fill } from './$fill';
 import { $geoNear } from './$geoNear';
 import { $graphLookup } from './$graphLookup';
 import { $group } from './$group';
@@ -48,6 +49,7 @@ interface AllStagesMap<State extends AggregateState>
     $densify<State>,
     $documents<State>,
     $facet<State>,
+    $fill<State>,
     $geoNear<State>,
     $graphLookup<State>,
     $group<State>,

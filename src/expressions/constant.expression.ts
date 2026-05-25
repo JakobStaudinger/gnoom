@@ -36,4 +36,10 @@ export type EvaluateConstant<
         message: 'Unexpected syntax in constant expression';
         details: keyof S & `$${string}`;
       }>
-  : S;
+  : S extends readonly unknown[]
+    ? {
+        -readonly [K in keyof S]: K extends number | `${number}`
+          ? EvaluateAggregateExpression<State, S[K], IncludeStatic>
+          : S[K];
+      }
+    : S;

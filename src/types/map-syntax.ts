@@ -4,6 +4,7 @@ import {
 } from '../expressions/index';
 import { StaticInput } from '../expressions/static-input';
 import { AggregateState } from './aggregate-state';
+import { GnoomError } from './error';
 import { FunctionSignature } from './evaluate';
 import { EmptyObject } from './object';
 import { ArrayOfLength, Tail } from './recursion';
@@ -14,17 +15,15 @@ export type TypeScriptToMongoSyntax<
   MaxDepth extends unknown[] = ArrayOfLength<3>
 > = {
   [K in keyof Operators]: Operators[K] extends infer Op
-    ? Op extends unknown
-      ? Op extends (...params: infer Params) => infer _R
-        ? TypeScriptParametersToMongoSyntax<State, Params, MaxDepth>
-        : Op extends FunctionSignature
-          ? TypeScriptParametersToMongoSyntax<State, Op['arguments'], MaxDepth>
-          : never
-      : never
+    ? Op extends FunctionSignature
+      ? TypeScriptParametersToMongoSyntax<State, Op['arguments'], MaxDepth>
+      : GnoomError<{
+          message: `Error in declaration of "${K & string}". This is a bug in the libary, please report this issue.`;
+        }>
     : never;
 };
 
-export type TypeScriptParametersToMongoSyntax<
+type TypeScriptParametersToMongoSyntax<
   State extends AggregateState,
   Params,
   MaxDepth extends unknown[] = ArrayOfLength<3>
@@ -45,19 +44,23 @@ type TypeScriptParameterToMongoSyntax<
   Param,
   MaxDepth extends unknown[]
 > = Param extends infer P
-  ? P extends unknown
-    ? P extends StaticInput<infer R>
-      ? R extends object
+  ? P extends StaticInput<infer R>
+    ? R extends readonly unknown[]
+      ? {
+          readonly [K in keyof R]: K extends number | `${number}`
+            ? TypeScriptParameterToMongoSyntax<State, R[K], MaxDepth>
+            : R[K];
+        }
+      : R extends object
         ? {
-            readonly [K in keyof R]: NonNullable<R[K]> extends StaticInput<
-              infer I
-            >
-              ? I
-              : AggregateExpression<State, Tail<MaxDepth>>;
+            readonly [K in keyof R]: TypeScriptParameterToMongoSyntax<
+              State,
+              R[K],
+              MaxDepth
+            >;
           }
         : R
-      : AggregateExpression<State, Tail<MaxDepth>>
-    : never
+    : AggregateExpression<State, Tail<MaxDepth>>
   : never;
 
 export type MongoParametersToTypeScriptSyntax<

@@ -8,7 +8,7 @@ export interface $switch {
 interface Signature extends FunctionSignature {
   arguments: [
     input: StaticInput<{
-      branches: { case: boolean; then: unknown }[];
+      branches: StaticInput<StaticInput<{ case: boolean; then: unknown }>[]>;
       default?: unknown;
     }>
   ];

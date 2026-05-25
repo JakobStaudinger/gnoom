@@ -40,6 +40,7 @@ interface AggregateBase<State extends AggregateState> {
   modifyType<Fn extends (obj: State['T']) => object>(
     callback?: Fn
   ): Aggregate<WithType<State, ReturnType<Fn>>>;
+  inspectError: (...errors: AssertNoErrorState<State>) => this;
 }
 
 export interface Aggregate<State extends AggregateState>
@@ -86,6 +87,9 @@ function constructAggregate<State extends AggregateState>(
       modifyType<Fn extends (obj: State['T']) => object>(
         this: Aggregate<WithType<State, ReturnType<Fn>>>
       ) {
+        return this;
+      },
+      inspectError() {
         return this;
       }
     } satisfies AggregateBase<State> as unknown as Aggregate<State>,

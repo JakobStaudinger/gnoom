@@ -1,7 +1,7 @@
 import { FunctionSignature } from '../../../types/evaluate';
 import { NonCollapsingString } from '../../../types/non-collapsing';
 import { RegExpOption, RegExpResult } from '../../../types/regexp';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $regexFind {
   $regexFind: Signature;
@@ -9,7 +9,7 @@ export interface $regexFind {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: string;
       regex: string | RegExp;
       options?: RegExpOption | NonCollapsingString;

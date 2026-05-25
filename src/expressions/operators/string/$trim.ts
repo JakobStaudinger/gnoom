@@ -1,11 +1,11 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $trim {
   $trim: Signature;
 }
 
 interface Signature extends FunctionSignature {
-  arguments: [input: StaticInput<{ input: string; chars?: string }>];
+  arguments: [input: Const<{ input: string; chars?: string }>];
   return: string;
 }

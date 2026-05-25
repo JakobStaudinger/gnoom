@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 import {
   BinaryFormat,
   ByteOrder,
@@ -14,7 +14,7 @@ export interface $convert {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: unknown;
       to:
         | ConvertibleTypeIdentifier

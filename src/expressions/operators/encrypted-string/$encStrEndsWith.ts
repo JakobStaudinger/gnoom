@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $encStrEndsWith {
   $encStrEndsWith: Signature;
@@ -7,7 +7,7 @@ export interface $encStrEndsWith {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: unknown;
       suffix: string;
     }>

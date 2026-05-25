@@ -1,11 +1,11 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $hour {
   $hour: Signature;
 }
 
 interface Signature extends FunctionSignature {
-  arguments: [date: Date | StaticInput<{ date: Date; timezone?: string }>];
+  arguments: [date: Date | Const<{ date: Date; timezone?: string }>];
   return: number;
 }

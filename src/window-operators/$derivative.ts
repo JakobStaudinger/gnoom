@@ -1,4 +1,4 @@
-import { StaticInput } from '../expressions/static-input';
+import { Const } from '../expressions/const';
 import { FunctionSignature } from '../types/evaluate';
 import { WindowTimeUnit } from './types';
 
@@ -7,8 +7,6 @@ export interface $derivative {
 }
 
 interface Signature extends FunctionSignature {
-  arguments: [
-    input: StaticInput<{ input: number; unit?: StaticInput<WindowTimeUnit> }>
-  ];
+  arguments: [input: Const<{ input: number; unit?: Const<WindowTimeUnit> }>];
   return: this['arguments'][0]['input'];
 }

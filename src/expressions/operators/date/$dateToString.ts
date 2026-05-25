@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $dateToString {
   $dateToString: Signature;
@@ -7,7 +7,7 @@ export interface $dateToString {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       date: Date | null;
       format?: string;
       timezone?: string;

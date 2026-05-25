@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $unsetField {
   $unsetField: Signature;
@@ -7,7 +7,7 @@ export interface $unsetField {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       field: string;
       input: object;
     }>

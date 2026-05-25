@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $replaceOne {
   $replaceOne: Signature;
@@ -7,7 +7,7 @@ export interface $replaceOne {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: string;
       find: string;
       replacement: string;

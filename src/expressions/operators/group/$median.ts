@@ -1,6 +1,6 @@
 import { FunctionSignature } from '../../../types/evaluate';
 import { Primitive } from '../../../types/primitive';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $median {
   $median: Signature;
@@ -8,9 +8,9 @@ export interface $median {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: Primitive[];
-      method: StaticInput<'approximate'>;
+      method: Const<'approximate'>;
     }>
   ];
   return: this['arguments'][0]['input'][number];

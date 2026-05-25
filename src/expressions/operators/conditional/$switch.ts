@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $switch {
   $switch: Signature;
@@ -7,8 +7,8 @@ export interface $switch {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
-      branches: StaticInput<StaticInput<{ case: boolean; then: unknown }>[]>;
+    input: Const<{
+      branches: Const<Const<{ case: boolean; then: unknown }>[]>;
       default?: unknown;
     }>
   ];

@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $filter {
   $filter: Signature;
@@ -7,9 +7,9 @@ export interface $filter {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: unknown[];
-      as?: StaticInput<string>;
+      as?: Const<string>;
       cond: boolean;
       limit?: number;
     }>

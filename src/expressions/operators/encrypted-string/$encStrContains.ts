@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $encStrContains {
   $encStrContains: Signature;
@@ -7,7 +7,7 @@ export interface $encStrContains {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: unknown;
       substring: string;
     }>

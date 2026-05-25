@@ -1,4 +1,4 @@
-import { StaticInput } from '../expressions/static-input';
+import { Const } from '../expressions/const';
 import { FunctionSignature } from '../types/evaluate';
 
 export interface $percentile {
@@ -7,10 +7,10 @@ export interface $percentile {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       input: number;
       p: number[];
-      method: StaticInput<'approximate'>;
+      method: Const<'approximate'>;
     }>
   ];
   return: this['arguments'][0]['input'][];

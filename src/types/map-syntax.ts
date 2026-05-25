@@ -2,7 +2,7 @@ import {
   AggregateExpression,
   EvaluateAggregateExpression
 } from '../expressions/index';
-import { StaticInput } from '../expressions/static-input';
+import { Const } from '../expressions/const';
 import { AggregateState } from './aggregate-state';
 import { GnoomError } from './error';
 import { FunctionSignature } from './evaluate';
@@ -44,7 +44,7 @@ type TypeScriptParameterToMongoSyntax<
   Param,
   MaxDepth extends unknown[]
 > = Param extends infer P
-  ? P extends StaticInput<infer R>
+  ? P extends Const<infer R>
     ? R extends readonly unknown[]
       ? {
           readonly [K in keyof R]: K extends number | `${number}`

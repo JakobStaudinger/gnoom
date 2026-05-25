@@ -1,4 +1,4 @@
-import { StaticInput } from '../expressions/static-input';
+import { Const } from '../expressions/const';
 import { FunctionSignature } from '../types/evaluate';
 
 export interface $expMovingAvg {
@@ -7,9 +7,9 @@ export interface $expMovingAvg {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<
-      | { input: number; N: StaticInput<number> }
-      | { input: number; alpha: StaticInput<number> }
+    input: Const<
+      | { input: number; N: Const<number> }
+      | { input: number; alpha: Const<number> }
     >
   ];
   return: number;

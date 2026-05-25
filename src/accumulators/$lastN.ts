@@ -1,4 +1,4 @@
-import { StaticInput } from '../expressions/static-input';
+import { Const } from '../expressions/const';
 import { FunctionSignature } from '../types/evaluate';
 
 export interface $lastN {
@@ -6,6 +6,6 @@ export interface $lastN {
 }
 
 interface Signature extends FunctionSignature {
-  arguments: [value: StaticInput<{ input: unknown; n: number }>];
+  arguments: [value: Const<{ input: unknown; n: number }>];
   return: this['arguments'][0]['input'][];
 }

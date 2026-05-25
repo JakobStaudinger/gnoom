@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 import { DateParts } from './types';
 
 export interface $dateToParts {
@@ -8,7 +8,7 @@ export interface $dateToParts {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       date: Date;
       timezone?: string;
       // TODO: maybe implement ISO 8601 version

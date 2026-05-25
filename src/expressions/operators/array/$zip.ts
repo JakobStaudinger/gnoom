@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $zip {
   $zip: Signature;
@@ -7,7 +7,7 @@ export interface $zip {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       inputs: unknown[][];
       useLongestLength?: boolean;
       defaults?: unknown[];

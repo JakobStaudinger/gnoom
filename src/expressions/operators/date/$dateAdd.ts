@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 import { TimeUnit } from './types';
 
 export interface $dateAdd {
@@ -8,7 +8,7 @@ export interface $dateAdd {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       startDate: Date;
       unit: TimeUnit;
       amount: number;

@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $map {
   $map: Signature;
@@ -7,6 +7,6 @@ export interface $map {
 
 interface Signature extends FunctionSignature {
   // TODO: support `as` alias in `in` expression
-  arguments: [StaticInput<{ input: unknown[]; as?: string; in: unknown }>];
+  arguments: [Const<{ input: unknown[]; as?: string; in: unknown }>];
   return: this['arguments'][0]['in'][];
 }

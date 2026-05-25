@@ -1,12 +1,12 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $sigmoid {
   $sigmoid: Signature;
 }
 
 interface Signature extends FunctionSignature {
-  arguments: [input: StaticInput<{ input: number | null; onNull?: unknown }>];
+  arguments: [input: Const<{ input: number | null; onNull?: unknown }>];
   return:
     | NonNullable<this['arguments'][0]['input']>
     | (null extends this['arguments'][0]['input']

@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $reduce {
   $reduce: Signature;
@@ -8,7 +8,7 @@ export interface $reduce {
 interface Signature extends FunctionSignature {
   // TODO: implement correctly with aliases etc.
   arguments: [
-    input: StaticInput<{ input: unknown[]; initialValue: unknown; in: unknown }>
+    input: Const<{ input: unknown[]; initialValue: unknown; in: unknown }>
   ];
   return: this['arguments'][0]['in'];
 }

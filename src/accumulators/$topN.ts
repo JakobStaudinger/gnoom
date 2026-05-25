@@ -1,4 +1,4 @@
-import { StaticInput } from '../expressions/static-input';
+import { Const } from '../expressions/const';
 import { SortSpecification } from '../stages/$sort';
 import { AggregateState } from '../types/aggregate-state';
 import { FunctionSignature } from '../types/evaluate';
@@ -9,9 +9,9 @@ export interface $topN<State extends AggregateState> {
 
 interface Signature<State extends AggregateState> extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       n: number;
-      sortBy: StaticInput<SortSpecification<State>>;
+      sortBy: Const<SortSpecification<State>>;
       output: unknown;
     }>
   ];

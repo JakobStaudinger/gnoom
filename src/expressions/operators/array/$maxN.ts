@@ -1,12 +1,12 @@
 import { FunctionSignature } from '../../../types/evaluate';
 import { Primitive } from '../../../types/primitive';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $maxN {
   $maxN: Signature;
 }
 
 interface Signature extends FunctionSignature {
-  arguments: [input: StaticInput<{ input: Primitive[]; n: number }>];
+  arguments: [input: Const<{ input: Primitive[]; n: number }>];
   return: this['arguments'][0]['input'][number][];
 }

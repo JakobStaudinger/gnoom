@@ -1,11 +1,11 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { StaticInput } from '../../static-input';
+import { Const } from '../../const';
 
 export interface $minN {
   $minN: Signature;
 }
 
 interface Signature extends FunctionSignature {
-  arguments: [input: StaticInput<{ input: unknown[]; n: number }>];
+  arguments: [input: Const<{ input: unknown[]; n: number }>];
   return: this['arguments'][0]['input'][number][];
 }

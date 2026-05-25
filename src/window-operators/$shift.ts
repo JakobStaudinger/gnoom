@@ -1,4 +1,4 @@
-import { StaticInput } from '../expressions/static-input';
+import { Const } from '../expressions/const';
 import { FunctionSignature } from '../types/evaluate';
 
 export interface $shift {
@@ -7,9 +7,9 @@ export interface $shift {
 
 interface Signature extends FunctionSignature {
   arguments: [
-    input: StaticInput<{
+    input: Const<{
       output: unknown;
-      by: StaticInput<number>;
+      by: Const<number>;
       default?: unknown;
     }>
   ];

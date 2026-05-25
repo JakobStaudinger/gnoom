@@ -6,7 +6,7 @@ import {
   FieldPathExpression
 } from './field-path.expression';
 import { EvaluateOperator, OperatorExpressions } from './operators';
-import { StaticInput } from './static-input';
+import { Const } from './const';
 import {
   EvaluateVariableExpression,
   VariableExpression
@@ -32,7 +32,7 @@ export type EvaluateAggregateExpression<
     : HasReservedKey<Expression> extends true
       ? EvaluateOperator<State, Expression>
       : IncludeStatic extends true
-        ? StaticInput<EvaluateConstant<State, Expression, IncludeStatic>>
+        ? Const<EvaluateConstant<State, Expression, IncludeStatic>>
         : EvaluateConstant<State, Expression, IncludeStatic>;
 
 type HasReservedKey<T> = keyof T & `$${string}` extends never ? false : true;

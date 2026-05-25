@@ -19,6 +19,7 @@ import { $match } from './$match';
 import { $merge } from './$merge';
 import { $out } from './$out';
 import { $project } from './$project';
+import { $redact } from './$redact';
 import { $replaceRoot } from './$replaceRoot';
 import { $sample } from './$sample';
 import { $setWindowFields } from './$setWindowFields';
@@ -59,6 +60,7 @@ interface AllStagesMap<State extends AggregateState>
     $merge<State>,
     $out<State>,
     $project<State>,
+    $redact<State>,
     $replaceRoot<State>,
     $sample<State>,
     $setWindowFields<State>,

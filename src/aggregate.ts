@@ -98,20 +98,17 @@ function constructAggregate<State extends AggregateState>(
         if (typeof property === 'string' && property.startsWith('$')) {
           const stageName = property as keyof AllStages<State>;
 
-          const fn = (spec: unknown) =>
-            constructAggregate([...stages, { [stageName]: processSpec(spec) }]);
-          // extra function call needed to be able to pass the type of the joined collection
-          const specialStages = [
-            '$lookup',
-            '$graphLookup',
-            '$unionWith',
-            '$merge',
-            '$out'
-          ];
+          const fn = (spec?: unknown) => {
+            if (spec != null) {
+              return constructAggregate([
+                ...stages,
+                { [stageName]: processSpec(spec) }
+              ]);
+            }
 
-          if (specialStages.includes(stageName)) {
-            return () => fn;
-          }
+            // extra function call needed to be able to partially specify type parameters (e.g. in $lookup)
+            return fn;
+          };
 
           return fn;
         }

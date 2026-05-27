@@ -4,6 +4,7 @@ import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof, DeepPartial, DeepType, FromDeepEntry } from '../types/deep';
 import { GnoomError } from '../types/error';
 import { Merge } from '../types/merge';
+import { UnionToIntersection } from '../types/union-to-intersection';
 
 export interface $densify<State extends AggregateState> {
   $densify: <
@@ -58,9 +59,3 @@ type Output<
         };
   }
 >;
-
-type UnionToIntersection<U> = (
-  U extends unknown ? (x: U) => void : never
-) extends (x: infer I) => void
-  ? I
-  : never;

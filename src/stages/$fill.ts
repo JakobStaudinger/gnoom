@@ -2,6 +2,7 @@ import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof, DeepType, FromDeepEntry } from '../types/deep';
+import { UnionToIntersection } from '../types/union-to-intersection';
 import { SortSpecification } from './$sort';
 
 export interface $fill<State extends AggregateState> {
@@ -49,9 +50,3 @@ type Output<
       >;
   }
 >;
-
-type UnionToIntersection<U> = (
-  U extends unknown ? (x: U) => void : never
-) extends (x: infer I) => void
-  ? I
-  : never;

@@ -1,8 +1,9 @@
 import { Aggregate } from '../aggregate';
 import { AddStage, AggregateState } from '../types/aggregate-state';
+import { Simplify } from '../types/simplify';
 
 export interface $sample<State extends AggregateState> {
-  $sample: (input: { size: number }) => Aggregate<Output<State>>;
+  $sample: (input: { size: number }) => Aggregate<Simplify<Output<State>>>;
 }
 
 type Output<State extends AggregateState> = AddStage<State, object>;

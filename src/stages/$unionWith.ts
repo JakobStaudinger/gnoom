@@ -2,6 +2,7 @@ import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
+import { Simplify } from '../types/simplify';
 import { WithoutFunctions } from '../types/without-functions';
 
 export interface $unionWith<State extends AggregateState> {
@@ -9,7 +10,7 @@ export interface $unionWith<State extends AggregateState> {
     const S extends Specification<WithoutFunctions<Other>>
   >(
     specification: S
-  ) => Aggregate<Output<State, WithoutFunctions<Other>, S>>;
+  ) => Aggregate<Simplify<Output<State, WithoutFunctions<Other>, S>>>;
 }
 
 type Specification<Other extends object> =

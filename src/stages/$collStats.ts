@@ -5,13 +5,14 @@ import {
   MustBeFirstStage
 } from '../types/aggregate-state';
 import { AnyObject, EmptyObject } from '../types/object';
+import { Simplify } from '../types/simplify';
 
 export interface $collStats<State extends AggregateState> {
   $collStats: MustBeFirstStage<
     State,
     <const S extends Specification>(
       specification: S
-    ) => Aggregate<Output<State, S>>
+    ) => Aggregate<Simplify<Output<State, S>>>
   >;
 }
 

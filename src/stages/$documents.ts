@@ -9,13 +9,14 @@ import {
   MustBeFirstStage
 } from '../types/aggregate-state';
 import { GnoomError } from '../types/error';
+import { Simplify } from '../types/simplify';
 
 export interface $documents<State extends AggregateState> {
   $documents: MustBeFirstStage<
     State,
     <const S extends Specification<State>>(
       specification: S
-    ) => Aggregate<Output<State, S>>
+    ) => Aggregate<Simplify<Output<State, S>>>
   >;
 }
 

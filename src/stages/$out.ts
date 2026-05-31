@@ -7,6 +7,7 @@ import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { EmptyObject } from '../types/object';
 import { PipelineCallback } from '../types/pipeline';
+import { Simplify } from '../types/simplify';
 import { WithoutFunctions } from '../types/without-functions';
 
 export interface $out<State extends AggregateState> {
@@ -18,7 +19,7 @@ export interface $out<State extends AggregateState> {
     specification: S & {
       let?: Variables;
     }
-  ) => Aggregate<Output<State>>;
+  ) => Aggregate<Simplify<Output<State>>>;
 }
 
 type Specification<

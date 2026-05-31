@@ -5,11 +5,12 @@ import {
 } from '../expressions';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { GnoomError } from '../types/error';
+import { Simplify } from '../types/simplify';
 
 export interface $redact<State extends AggregateState> {
   $redact: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<Output<State, S>>;
+  ) => Aggregate<Simplify<Output<State, S>>>;
 }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */

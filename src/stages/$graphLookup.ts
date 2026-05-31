@@ -8,6 +8,7 @@ import {
 } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { Merge } from '../types/merge';
+import { Simplify } from '../types/simplify';
 import { WithoutFunctions } from '../types/without-functions';
 
 export interface $graphLookup<State extends AggregateState> {
@@ -15,7 +16,7 @@ export interface $graphLookup<State extends AggregateState> {
     const S extends Specification<State, WithoutFunctions<Other>>
   >(
     specification: S
-  ) => Aggregate<Output<State, WithoutFunctions<Other>, S>>;
+  ) => Aggregate<Simplify<Output<State, WithoutFunctions<Other>, S>>>;
 }
 
 interface Specification<State extends AggregateState, Other extends object> {

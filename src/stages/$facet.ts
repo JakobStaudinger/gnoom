@@ -2,11 +2,12 @@ import { Aggregate } from '../aggregate';
 import { AggregateLike } from '../types/aggregate-like';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { PipelineCallback } from '../types/pipeline';
+import { Simplify } from '../types/simplify';
 
 export interface $facet<State extends AggregateState> {
   $facet: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<Output<State, S>>;
+  ) => Aggregate<Simplify<Output<State, S>>>;
 }
 
 type Specification<State extends AggregateState> = {

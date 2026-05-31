@@ -7,13 +7,14 @@ import {
 } from '../types/aggregate-state';
 import { DeepKeyof, DeepType } from '../types/deep';
 import { Merge } from '../types/merge';
+import { Simplify } from '../types/simplify';
 
 export interface $geoNear<State extends AggregateState> {
   $geoNear: MustBeFirstStage<
     State,
     <const S extends Specification<State>>(
       specification: S
-    ) => Aggregate<Output<State, S>>
+    ) => Aggregate<Simplify<Output<State, S>>>
   >;
 }
 

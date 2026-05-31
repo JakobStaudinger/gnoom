@@ -3,11 +3,12 @@ import { FieldPathExpression } from '../expressions/field-path.expression';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepType, FromDeepEntry } from '../types/deep';
 import { Merge } from '../types/merge';
+import { Simplify } from '../types/simplify';
 
 export interface $unwind<State extends AggregateState> {
   $unwind: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<Output<State, S>>;
+  ) => Aggregate<Simplify<Output<State, S>>>;
 }
 
 type Specification<State extends AggregateState> =

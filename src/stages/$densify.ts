@@ -4,6 +4,7 @@ import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof, DeepPartial, DeepType, FromDeepEntry } from '../types/deep';
 import { GnoomError } from '../types/error';
 import { Merge } from '../types/merge';
+import { Simplify } from '../types/simplify';
 import { UnionToIntersection } from '../types/union-to-intersection';
 
 export interface $densify<State extends AggregateState> {
@@ -16,7 +17,7 @@ export interface $densify<State extends AggregateState> {
       field: F;
       partitionByFields?: P[];
     }
-  ) => Aggregate<Output<State, F, P>>;
+  ) => Aggregate<Simplify<Output<State, F, P>>>;
 }
 
 interface Specification<

@@ -7,13 +7,14 @@ import {
 } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
 import { AnyObject } from '../types/object';
+import { Simplify } from '../types/simplify';
 
 export interface $changeStream<State extends AggregateState> {
   $changeStream: MustBeFirstStage<
     State,
     <const S extends Specification>(
       specification: S
-    ) => Aggregate<Output<State, S>>
+    ) => Aggregate<Simplify<Output<State, S>>>
   >;
 }
 

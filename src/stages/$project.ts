@@ -4,11 +4,12 @@ import {
   EvaluateAggregateExpression
 } from '../expressions';
 import { AddStage, AggregateState } from '../types/aggregate-state';
+import { Simplify } from '../types/simplify';
 
 export interface $project<State extends AggregateState> {
   $project: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<Output<State, S>>;
+  ) => Aggregate<Simplify<Output<State, S>>>;
 }
 
 type Specification<State extends AggregateState> = {

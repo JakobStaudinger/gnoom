@@ -1,11 +1,12 @@
 import { Aggregate } from '../aggregate';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { EmptyObject } from '../types/object';
+import { Simplify } from '../types/simplify';
 
 export interface $changeStreamSplitLargeEvent<State extends AggregateState> {
   $changeStreamSplitLargeEvent: (
     specification: EmptyObject
-  ) => Aggregate<Output<State>>;
+  ) => Aggregate<Simplify<Output<State>>>;
 }
 
 type Output<State extends AggregateState> = AddStage<

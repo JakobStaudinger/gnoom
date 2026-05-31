@@ -1,10 +1,11 @@
 import { Aggregate } from '../aggregate';
 import { AddStage, AggregateState } from '../types/aggregate-state';
+import { Simplify } from '../types/simplify';
 
 export interface $count<State extends AggregateState> {
   $count: <const S extends Specification>(
     specification: S
-  ) => Aggregate<Output<State, S>>;
+  ) => Aggregate<Simplify<Output<State, S>>>;
 }
 
 type Specification = string;

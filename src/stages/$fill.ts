@@ -2,13 +2,14 @@ import { Aggregate } from '../aggregate';
 import { AggregateExpression } from '../expressions';
 import { AddStage, AggregateState } from '../types/aggregate-state';
 import { DeepKeyof, DeepType, FromDeepEntry } from '../types/deep';
+import { Simplify } from '../types/simplify';
 import { UnionToIntersection } from '../types/union-to-intersection';
 import { SortSpecification } from './$sort';
 
 export interface $fill<State extends AggregateState> {
   $fill: <const S extends Specification<State>>(
     specification: S
-  ) => Aggregate<Output<State, S>>;
+  ) => Aggregate<Simplify<Output<State, S>>>;
 }
 
 type Specification<State extends AggregateState> = (

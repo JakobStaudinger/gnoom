@@ -2,6 +2,7 @@ import { Timestamp } from 'mongodb';
 import { Aggregate } from '../aggregate';
 import { AnyObject, EmptyObject } from './object';
 import { GnoomError } from './error';
+import { Simplify } from './simplify';
 
 export interface AggregateState {
   T: object;
@@ -46,7 +47,7 @@ export type AddStage<
   [K in keyof State | keyof Changes]: K extends 'hasStage'
     ? true
     : K extends keyof Changes
-      ? Changes[K]
+      ? Simplify<Changes[K]>
       : K extends keyof State
         ? State[K]
         : never;
@@ -59,7 +60,6 @@ export type WithType<State extends AggregateState, T extends object> = Omit<
 
 export interface InitialState<T> {
   T: T;
-  error: never;
   hasStage: false;
   allowedStages: string;
   finalStage: never;
@@ -74,7 +74,6 @@ export interface NestedPipelineState<
   Variables extends AnyObject
 > {
   T: T;
-  error: never;
   hasStage: false;
   allowedStages: AllowedStages;
   finalStage: never;

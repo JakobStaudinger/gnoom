@@ -6,13 +6,14 @@ import {
   MustBeFirstStage
 } from '../types/aggregate-state';
 import { DeepKeyof } from '../types/deep';
+import { Simplify } from '../types/simplify';
 
 export interface $vectorSearch<State extends AggregateState> {
   $vectorSearch: MustBeFirstStage<
     State,
     <const S extends Specification<State>>(
       specification: S
-    ) => Aggregate<Output<State, S>>
+    ) => Aggregate<Simplify<Output<State, S>>>
   >;
 }
 

@@ -3,12 +3,14 @@ import { AllStages } from './stages';
 import {
   AggregateState,
   InitialState,
+  SystemVariables,
   WithType
 } from './types/aggregate-state';
 import { AssertNoErrorState } from './types/error';
 import { Merge } from './types/merge';
 import { PipelineCallback } from './types/pipeline';
 import { WithoutFunctions } from './types/without-functions';
+import { Simplify } from './types/simplify';
 
 declare const OUTPUT_TYPE: unique symbol;
 
@@ -25,6 +27,7 @@ interface ExecuteFunction<State extends AggregateState> {
 }
 
 interface AggregateBase<State extends AggregateState> {
+  with<R>(callback: (p: this) => R): Aggregate<CombineStates<R>>;
   toArray: (...errors: AssertNoErrorState<State>) => AggregatePipeline<State>;
   execute: (
     fnOrClient: ExecuteFunction<State> | { aggregate: ExecuteFunction<State> },
@@ -51,6 +54,11 @@ function constructAggregate<State extends AggregateState>(
 ): Aggregate<State> {
   return new Proxy(
     {
+      with<R>(callback: (p: Aggregate<State>) => R) {
+        return callback(this as Aggregate<State>) as Aggregate<
+          CombineStates<R>
+        >;
+      },
       toArray() {
         return stages as AggregatePipeline<State>;
       },
@@ -142,3 +150,35 @@ function processSpec(spec: unknown) {
 function isObject(spec: unknown): spec is Record<string, unknown> {
   return typeof spec === 'object' && spec != null;
 }
+
+type CombineStates<R> = [StateOf<R>] extends [never]
+  ? never
+  : {
+      T: Simplify<CombineTypes<StateOf<R>['T']>>;
+      hasStage: CombineHasStage<StateOf<R>>;
+      finalStage: CombineFinalStages<StateOf<R>>;
+      allowedStages: CombineAllowedStages<StateOf<R>>;
+      systemVariables: SystemVariables<Simplify<CombineTypes<StateOf<R>['T']>>>;
+    };
+
+type StateOf<T> = T extends Aggregate<infer State> ? State : never;
+
+type CombineTypes<T> = {
+  [K in CommonKeys<T>]: ValueOf<T, K>;
+} & {
+  [K in Exclude<AllKeys<T>, CommonKeys<T>>]?: ValueOf<T, K>;
+};
+
+type CommonKeys<T> = {
+  [K in AllKeys<T>]: [T] extends [{ [P in K]: unknown }] ? K : never;
+}[AllKeys<T>];
+type AllKeys<T> = T extends unknown ? keyof T : never;
+type ValueOf<T, K extends PropertyKey> = T extends unknown
+  ? K extends keyof T
+    ? T[K]
+    : never
+  : never;
+
+type CombineHasStage<T> = [T] extends [{ hasStage: false }] ? false : true;
+type CombineFinalStages<T> = T extends { finalStage: infer F } ? F : never;
+type CombineAllowedStages<T> = T extends { allowedStages: infer S } ? S : never;

@@ -12,7 +12,7 @@ export interface AggregateState {
   finalStage: string;
 }
 
-interface SystemVariables<T> {
+export interface SystemVariables<T> {
   NOW: Date;
   CLUSTER_TIME: Timestamp;
   ROOT: T;

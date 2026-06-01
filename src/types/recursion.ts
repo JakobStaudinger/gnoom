@@ -10,3 +10,6 @@ export type Tail<Arr extends unknown[]> = Arr extends [
 ]
   ? Tail
   : [];
+
+export type Decrement<T extends number> =
+  ArrayOfLength<T> extends [...infer Arr, unknown] ? Arr['length'] : never;

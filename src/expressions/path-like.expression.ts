@@ -7,9 +7,13 @@ export type PathLikeExpression<
 > = `${Prefix}${PathLikeExpressionHelper<T>}`;
 
 type PathLikeExpressionHelper<T extends object> = {
-  [K in keyof T & string]: T[K] extends Primitive
+  [K in keyof T & string]: T[K] extends Primitive | null | undefined
     ? K
-    : T[K] extends (infer E extends object)[] | (infer E extends object)
+    : T[K] extends
+          | (infer E extends object)[]
+          | (infer E extends object)
+          | null
+          | undefined
       ? K | `${K}.${PathLikeExpressionHelper<E>}`
       : K;
 }[keyof T & string];
@@ -24,12 +28,15 @@ type EvaluatePathLikeExpressionHelper<
   Prefix extends string,
   T extends object,
   Path extends string
-> = T extends (infer E extends object)[]
+> = T extends (infer E extends object)[] | null | undefined
   ? E extends unknown[]
     ? GnoomError<{
         message: `Cannot access property "${Path}" of multi-dimensional array at "${Prefix}"`;
       }>
-    : EvaluatePathLikeExpression<Prefix, E, Path>[]
+    : (
+        | EvaluatePathLikeExpression<Prefix, E, Path>
+        | Extract<T, null | undefined>
+      )[]
   : Path extends `${infer Head}.${infer Tail}`
     ? Head extends keyof T
       ? T[Head] extends (infer O extends object) | null | undefined

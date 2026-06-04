@@ -31,7 +31,7 @@ describe('$match', () => {
       const _result = aggregate<InputDocumentType>().$match({
         text: { $ne: null },
         digit: { $nin: [42] },
-        array: { $elemMatch: 123 }
+        array: { $elemMatch: { $eq: 123 } }
       });
       type Result = ExtractDocumentType<typeof _result>['mixed'];
       expectTypeOf<Result>().toEqualTypeOf<InputDocumentType['mixed']>();

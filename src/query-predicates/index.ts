@@ -9,6 +9,7 @@ import { DataTypeOperators } from './data-type';
 import { GeospatialOperators } from './geospatial';
 import { LogicalOperators } from './logical';
 import { MiscellaneousOperators } from './miscellaneous';
+import { Primitive } from '../types/primitive';
 
 export type QueryPredicate<State extends AggregateState> = {
   [K in DeepKeyof<State['T']>]?: QueryOperator<DeepType<State['T'], K>>;
@@ -18,6 +19,16 @@ export type QueryPredicate<State extends AggregateState> = {
   $or?: QueryPredicate<State>[];
   $nor?: QueryPredicate<State>[];
 };
+
+export type NestedQueryPredicate<T> = T extends Primitive | null | undefined
+  ? Exclude<QueryOperator<T>, Value<T>>
+  : {
+      [K in DeepKeyof<T>]?: QueryOperator<DeepType<T, K>>;
+    } & {
+      $and?: NestedQueryPredicate<T>[];
+      $or?: NestedQueryPredicate<T>[];
+      $nor?: NestedQueryPredicate<T>[];
+    };
 
 export type QueryOperator<T> = Value<T> | Partial<QueryOperators<T>>;
 

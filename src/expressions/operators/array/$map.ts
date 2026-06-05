@@ -7,6 +7,6 @@ export interface $map {
 
 interface Signature extends FunctionSignature {
   // TODO: support `as` alias in `in` expression
-  arguments: [Const<{ input: unknown[]; as?: string; in: unknown }>];
+  arguments: [input: Const<{ input: unknown[]; as?: string; in: unknown }>];
   return: this['arguments'][0]['in'][];
 }

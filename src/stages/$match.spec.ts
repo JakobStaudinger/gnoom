@@ -160,5 +160,20 @@ describe('$match', () => {
       // expectTypeOf<ResultS>().toBeString();
       // expectTypeOf<ResultSuperNested>().toBeNumber();
     });
+
+    it('should allow index syntax for array properties', () => {
+      const _result = aggregate<InputDocumentType>().$match({
+        'array.0': { $exists: true }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result>().toEqualTypeOf<InputDocumentType>();
+    });
+
+    it('should disallow non-existing properties', () => {
+      aggregate<InputDocumentType>().$match({
+        // @ts-expect-error nonExistent does not exist in the input type.
+        'nonExistent.0': { $exists: true }
+      });
+    });
   });
 });

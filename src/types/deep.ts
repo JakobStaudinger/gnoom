@@ -1,20 +1,26 @@
 import { AnyObject } from './object';
 import { Primitive } from './primitive';
 
-export type DeepKeyof<T> = T extends (infer E)[] | null | undefined
-  ? DeepKeyof<E>
-  : T extends Primitive | null | undefined
-    ? never
-    : {
-        [K in keyof NonNullable<T> & string]: NonNullable<T>[K] extends
-          | Primitive
-          | null
-          | undefined
-          ? K
-          : NonNullable<T>[K] extends object | unknown[] | null | undefined
-            ? K | `${K}.${DeepKeyof<NonNullable<T>[K]>}`
-            : K;
-      }[keyof NonNullable<T> & string];
+export type DeepKeyof<T extends object> = {
+  [K in keyof NonNullable<T> & string]: DeepKeyofHelper<NonNullable<T>[K], K>;
+}[keyof NonNullable<T> & string];
+
+type DeepKeyofHelper<T, K extends string> = T extends
+  | Primitive
+  | null
+  | undefined
+  ? K
+  : T extends (infer E)[] | null | undefined
+    ? E extends object
+      ?
+          | K
+          | `${K}.${number}`
+          | `${K}.${DeepKeyof<E>}`
+          | `${K}.${number}.${DeepKeyof<E>}`
+      : K | `${K}.${number}`
+    : T extends object | null | undefined
+      ? K | `${K}.${DeepKeyof<NonNullable<T>>}`
+      : K;
 
 export type DeepType<T, K> = T extends (infer E)[] | null | undefined
   ? DeepType<E, K> extends never
@@ -23,8 +29,10 @@ export type DeepType<T, K> = T extends (infer E)[] | null | undefined
   : K extends keyof NonNullable<T>
     ? NonNullable<T>[K] | Extract<T, null | undefined>
     : K extends `${infer Head extends keyof NonNullable<T> & string}.${infer Tail}`
-      ? Tail extends DeepKeyof<NonNullable<T>[Head]>
-        ? DeepType<NonNullable<T>[Head] | Extract<T, null | undefined>, Tail>
+      ? NonNullable<T>[Head] extends object
+        ? Tail extends DeepKeyof<NonNullable<T>[Head]>
+          ? DeepType<NonNullable<T>[Head] | Extract<T, null | undefined>, Tail>
+          : never
         : never
       : never;
 

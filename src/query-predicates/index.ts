@@ -22,13 +22,15 @@ export type QueryPredicate<State extends AggregateState> = {
 
 export type NestedQueryPredicate<T> = T extends Primitive | null | undefined
   ? Exclude<QueryOperator<T>, Value<T>>
-  : {
-      [K in DeepKeyof<T>]?: QueryOperator<DeepType<T, K>>;
-    } & {
-      $and?: NestedQueryPredicate<T>[];
-      $or?: NestedQueryPredicate<T>[];
-      $nor?: NestedQueryPredicate<T>[];
-    };
+  : T extends object
+    ? {
+        [K in DeepKeyof<T>]?: QueryOperator<DeepType<T, K>>;
+      } & {
+        $and?: NestedQueryPredicate<T>[];
+        $or?: NestedQueryPredicate<T>[];
+        $nor?: NestedQueryPredicate<T>[];
+      }
+    : never;
 
 export type QueryOperator<T> = Value<T> | Partial<QueryOperators<T>>;
 

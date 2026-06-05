@@ -28,7 +28,7 @@ describe('$elemMatch', () => {
 
     it("should not work if the types don't match the operators", () => {
       expectQueryPredicate<InitialState<Input>>()({
-        array: { $elemMatch: { $in: ['hello', 'world'] } }
+        numbers: { $elemMatch: { $in: ['hello', 'world'] } }
       }).toBeInvalid();
     });
   });
@@ -57,7 +57,7 @@ describe('$elemMatch', () => {
     it('should allow nested query predicates on nullable arrays', () => {
       expectQueryPredicate<InitialState<Input>>()({
         nullable: { $elemMatch: { date: { $gt: new Date('2026-01-01') } } }
-      });
+      }).toBeValid();
     });
   });
 });

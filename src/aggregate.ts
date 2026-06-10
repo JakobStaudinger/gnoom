@@ -9,8 +9,8 @@ import {
 import { AssertNoErrorState } from './types/error';
 import { Merge } from './types/merge';
 import { PipelineCallback } from './types/pipeline';
-import { WithoutFunctions } from './types/without-functions';
 import { Simplify } from './types/simplify';
+import { WithoutFunctions } from './types/without-functions';
 
 declare const OUTPUT_TYPE: unique symbol;
 
@@ -134,12 +134,14 @@ export function aggregate<T extends object>(): Aggregate<
 }
 
 function processSpec(spec: unknown) {
-  if (isObject(spec)) {
+  if (isPlainObject(spec)) {
     for (const prop of Object.keys(spec) as (keyof typeof spec)[]) {
       if (typeof spec[prop] === 'function') {
         const fn = spec[prop] as PipelineCallback<object>;
         const result = fn(aggregate());
         spec[prop] = Array.isArray(result) ? result : result.toArray();
+      } else {
+        spec[prop] = processSpec(spec[prop]);
       }
     }
   }
@@ -147,8 +149,13 @@ function processSpec(spec: unknown) {
   return spec;
 }
 
-function isObject(spec: unknown): spec is Record<string, unknown> {
-  return typeof spec === 'object' && spec != null;
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (value == null || typeof value !== 'object') {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  return prototype == null || prototype === Object.prototype;
 }
 
 type CombineStates<R> = [StateOf<R>] extends [never]

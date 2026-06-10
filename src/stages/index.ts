@@ -19,6 +19,7 @@ import { $match } from './$match';
 import { $merge } from './$merge';
 import { $out } from './$out';
 import { $project } from './$project';
+import { $rankFusion } from './$rankFusion';
 import { $redact } from './$redact';
 import { $replaceRoot } from './$replaceRoot';
 import { $sample } from './$sample';
@@ -60,6 +61,7 @@ interface AllStagesMap<State extends AggregateState>
     $merge<State>,
     $out<State>,
     $project<State>,
+    $rankFusion<State>,
     $redact<State>,
     $replaceRoot<State>,
     $sample<State>,

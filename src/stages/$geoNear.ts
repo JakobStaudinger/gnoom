@@ -19,7 +19,7 @@ export interface $geoNear<State extends AggregateState> {
 }
 
 type Specification<State extends AggregateState> = {
-  distanceField: string;
+  distanceField?: string;
   distanceMultiplier?: number;
   includeLocs?: string;
   key?: DeepKeyof<State['T']>;
@@ -43,15 +43,16 @@ type Output<
       S['query'] extends QueryPredicate<State>
         ? EvaluateQueryPredicate<State, S['query']>
         : State['T'],
-      {
-        [K in S['distanceField']]: number;
-      } & ('includeLocs' extends keyof S
-        ? {
-            [K in S['includeLocs'] & string]: S['key'] extends string
-              ? DeepType<State, S['key']>
-              : unknown;
-          }
-        : unknown)
+      (S['distanceField'] extends string
+        ? { [K in S['distanceField']]: number }
+        : unknown) &
+        ('includeLocs' extends keyof S
+          ? {
+              [K in S['includeLocs'] & string]: S['key'] extends string
+                ? DeepType<State, S['key']>
+                : unknown;
+            }
+          : unknown)
     >;
   }
 >;

@@ -23,6 +23,7 @@ import { $rankFusion } from './$rankFusion';
 import { $redact } from './$redact';
 import { $replaceRoot } from './$replaceRoot';
 import { $sample } from './$sample';
+import { $search } from './$search';
 import { $setWindowFields } from './$setWindowFields';
 import { $skip } from './$skip';
 import { $sort } from './$sort';
@@ -65,6 +66,7 @@ interface AllStagesMap<State extends AggregateState>
     $redact<State>,
     $replaceRoot<State>,
     $sample<State>,
+    $search<State>,
     $setWindowFields<State>,
     $skip<State>,
     $sort<State>,

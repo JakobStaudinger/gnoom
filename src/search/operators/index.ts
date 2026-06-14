@@ -1,7 +1,6 @@
 import { AggregateState } from '../../types/aggregate-state';
 import { autocomplete } from './autocomplete';
+import { compound } from './compound';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface SearchOperators<
-  State extends AggregateState
-> extends autocomplete<State> {}
+export interface SearchOperators<State extends AggregateState>
+  extends autocomplete<State>, compound<State> {}

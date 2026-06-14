@@ -1,5 +1,6 @@
 import { AggregateState } from '../../types/aggregate-state';
 import { DeepKeyof } from '../../types/deep';
+import { ScoreAdjustment } from '../score/score';
 
 export interface autocomplete<State extends AggregateState> {
   autocomplete: {
@@ -11,25 +12,6 @@ export interface autocomplete<State extends AggregateState> {
       prefixLength?: number;
       maxExpansions?: number;
     };
-    score?:
-      | {
-          boost:
-            | {
-                value: string;
-              }
-            | {
-                path: DeepKeyof<State['T']>;
-                undefined?: number;
-              };
-        }
-      | {
-          constant: {
-            value: string;
-          };
-        }
-      | {
-          // TODO: implement expressions
-          function: unknown;
-        };
+    score?: ScoreAdjustment<State>;
   };
 }

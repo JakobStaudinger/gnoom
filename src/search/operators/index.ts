@@ -12,6 +12,7 @@ import { InOperator } from './in';
 import { KnnBetaOperator } from './knnBeta';
 import { MoreLikeThisOperator } from './moreLikeThis';
 import { NearOperator } from './near';
+import { PhraseOperator } from './phrase';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -27,4 +28,5 @@ export interface SearchOperators<State extends AggregateState>
     InOperator<State>,
     KnnBetaOperator<State>,
     MoreLikeThisOperator<State>,
-    NearOperator<State> {}
+    NearOperator<State>,
+    PhraseOperator<State> {}

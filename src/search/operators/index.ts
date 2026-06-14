@@ -14,6 +14,7 @@ import { MoreLikeThisOperator } from './moreLikeThis';
 import { NearOperator } from './near';
 import { PhraseOperator } from './phrase';
 import { QueryStringOperator } from './queryString';
+import { RangeOperator } from './range';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -31,4 +32,5 @@ export interface SearchOperators<State extends AggregateState>
     MoreLikeThisOperator<State>,
     NearOperator<State>,
     PhraseOperator<State>,
-    QueryStringOperator<State> {}
+    QueryStringOperator<State>,
+    RangeOperator<State> {}

@@ -6,6 +6,7 @@ import { equals } from './equals';
 import { exists } from './exists';
 import { geoShape } from './geoShape';
 import { geoWithin } from './geoWithin';
+import { hasAncestor } from './hasAncestor';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -15,4 +16,5 @@ export interface SearchOperators<State extends AggregateState>
     equals<State>,
     exists<State>,
     geoShape<State>,
-    geoWithin<State> {}
+    geoWithin<State>,
+    hasAncestor<State> {}

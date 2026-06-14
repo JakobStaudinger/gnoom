@@ -18,6 +18,7 @@ import { RangeOperator } from './range';
 import { RegexOperator } from './regex';
 import { TextOperator } from './text';
 import { VectorSearchOperator } from './vectorSearch';
+import { WildcardOperator } from './wildcard';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -39,4 +40,5 @@ export interface SearchOperators<State extends AggregateState>
     RangeOperator<State>,
     RegexOperator<State>,
     TextOperator<State>,
-    VectorSearchOperator<State> {}
+    VectorSearchOperator<State>,
+    WildcardOperator<State> {}

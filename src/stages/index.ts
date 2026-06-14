@@ -32,6 +32,7 @@ import { $rankFusion } from './$rankFusion';
 import { $redact } from './$redact';
 import { $replaceRoot } from './$replaceRoot';
 import { $sample } from './$sample';
+import { $score } from './$score';
 import { $search } from './$search';
 import { $searchMeta } from './$searchMeta';
 import { $setWindowFields } from './$setWindowFields';
@@ -86,6 +87,7 @@ interface AllStagesMap<State extends AggregateState>
     $redact<State>,
     $replaceRoot<State>,
     $sample<State>,
+    $score<State>,
     $search<State>,
     $searchMeta<State>,
     $setWindowFields<State>,

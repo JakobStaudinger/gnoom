@@ -17,6 +17,7 @@ import { QueryStringOperator } from './queryString';
 import { RangeOperator } from './range';
 import { RegexOperator } from './regex';
 import { TextOperator } from './text';
+import { VectorSearchOperator } from './vectorSearch';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -37,4 +38,5 @@ export interface SearchOperators<State extends AggregateState>
     QueryStringOperator<State>,
     RangeOperator<State>,
     RegexOperator<State>,
-    TextOperator<State> {}
+    TextOperator<State>,
+    VectorSearchOperator<State> {}

@@ -24,6 +24,7 @@ import { $lookup } from './$lookup';
 import { $match } from './$match';
 import { $merge } from './$merge';
 import { $out } from './$out';
+import { $planCacheStats } from './$planCacheStats';
 import { $project } from './$project';
 import { $rankFusion } from './$rankFusion';
 import { $redact } from './$redact';
@@ -74,6 +75,7 @@ interface AllStagesMap<State extends AggregateState>
     $match<State>,
     $merge<State>,
     $out<State>,
+    $planCacheStats<State>,
     $project<State>,
     $rankFusion<State>,
     $redact<State>,

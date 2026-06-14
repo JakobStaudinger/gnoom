@@ -35,6 +35,7 @@ import { $sample } from './$sample';
 import { $search } from './$search';
 import { $searchMeta } from './$searchMeta';
 import { $setWindowFields } from './$setWindowFields';
+import { $shardedDataDistribution } from './$shardedDataDistribution';
 import { $skip } from './$skip';
 import { $sort } from './$sort';
 import { $sortByCount } from './$sortByCount';
@@ -88,6 +89,7 @@ interface AllStagesMap<State extends AggregateState>
     $search<State>,
     $searchMeta<State>,
     $setWindowFields<State>,
+    $shardedDataDistribution<State>,
     $skip<State>,
     $sort<State>,
     $sortByCount<State>,

@@ -9,6 +9,6 @@ export interface compound<State extends AggregateState> {
     should?: Partial<SearchOperators<State>>[];
     filter?: Partial<SearchOperators<State>>[];
     score?: ScoreAdjustment<State>;
-    doesNotAffect?: string[];
+    doesNotAffect?: string | string[];
   };
 }

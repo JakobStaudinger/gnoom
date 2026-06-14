@@ -10,6 +10,7 @@ import { HasAncestorOperator } from './hasAncestor';
 import { HasRootOperator } from './hasRoot';
 import { InOperator } from './in';
 import { KnnBetaOperator } from './knnBeta';
+import { MoreLikeThisOperator } from './moreLikeThis';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -23,4 +24,5 @@ export interface SearchOperators<State extends AggregateState>
     HasAncestorOperator<State>,
     HasRootOperator<State>,
     InOperator<State>,
-    KnnBetaOperator<State> {}
+    KnnBetaOperator<State>,
+    MoreLikeThisOperator<State> {}

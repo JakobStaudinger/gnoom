@@ -19,6 +19,7 @@ import { $listClusterCatalog } from './$listClusterCatalog';
 import { $listLocalSessions } from './$listLocalSessions';
 import { $listSampledQueries } from './$listSampledQueries';
 import { $listSearchIndexes } from './$listSearchIndexes';
+import { $listSessions } from './$listSessions';
 import { $lookup } from './$lookup';
 import { $match } from './$match';
 import { $merge } from './$merge';
@@ -68,6 +69,7 @@ interface AllStagesMap<State extends AggregateState>
     $listLocalSessions<State>,
     $listSampledQueries<State>,
     $listSearchIndexes<State>,
+    $listSessions<State>,
     $lookup<State>,
     $match<State>,
     $merge<State>,

@@ -4,10 +4,10 @@ import { ScoreAdjustment } from '../score/score';
 
 export interface compound<State extends AggregateState> {
   compound: {
-    must?: SearchOperators<State>[];
-    mustNot?: SearchOperators<State>[];
-    should?: SearchOperators<State>[];
-    filter?: SearchOperators<State>[];
+    must?: Partial<SearchOperators<State>>[];
+    mustNot?: Partial<SearchOperators<State>>[];
+    should?: Partial<SearchOperators<State>>[];
+    filter?: Partial<SearchOperators<State>>[];
     score?: ScoreAdjustment<State>;
     doesNotAffect?: string[];
   };

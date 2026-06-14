@@ -10,7 +10,7 @@ import { ScoreAdjustment } from '../score/score';
 
 export interface geoShape<State extends AggregateState> {
   geoShape: {
-    path: DeepKeyof<State['T']> | DeepKeyof<State['T']>;
+    path: DeepKeyof<State['T']> | DeepKeyof<State['T']>[];
     geometry: GeoPolygon | GeoMultiPolygon | GeoLineString | GeoPoint;
     relation: 'contains' | 'disjoint' | 'intersects' | 'within';
     score?: ScoreAdjustment<State>;

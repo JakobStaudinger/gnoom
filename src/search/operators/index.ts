@@ -5,6 +5,7 @@ import { embeddedDocument } from './embeddedDocument';
 import { equals } from './equals';
 import { exists } from './exists';
 import { geoShape } from './geoShape';
+import { geoWithin } from './geoWithin';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -13,4 +14,5 @@ export interface SearchOperators<State extends AggregateState>
     embeddedDocument<State>,
     equals<State>,
     exists<State>,
-    geoShape<State> {}
+    geoShape<State>,
+    geoWithin<State> {}

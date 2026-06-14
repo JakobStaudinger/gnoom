@@ -13,6 +13,7 @@ import { $fill } from './$fill';
 import { $geoNear } from './$geoNear';
 import { $graphLookup } from './$graphLookup';
 import { $group } from './$group';
+import { $indexStats } from './$indexStats';
 import { $limit } from './$limit';
 import { $lookup } from './$lookup';
 import { $match } from './$match';
@@ -57,6 +58,7 @@ interface AllStagesMap<State extends AggregateState>
     $geoNear<State>,
     $graphLookup<State>,
     $group<State>,
+    $indexStats<State>,
     $limit<State>,
     $lookup<State>,
     $match<State>,

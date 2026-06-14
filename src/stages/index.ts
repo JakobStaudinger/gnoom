@@ -24,6 +24,7 @@ import { $redact } from './$redact';
 import { $replaceRoot } from './$replaceRoot';
 import { $sample } from './$sample';
 import { $search } from './$search';
+import { $searchMeta } from './$searchMeta';
 import { $setWindowFields } from './$setWindowFields';
 import { $skip } from './$skip';
 import { $sort } from './$sort';
@@ -67,6 +68,7 @@ interface AllStagesMap<State extends AggregateState>
     $replaceRoot<State>,
     $sample<State>,
     $search<State>,
+    $searchMeta<State>,
     $setWindowFields<State>,
     $skip<State>,
     $sort<State>,

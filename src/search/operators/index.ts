@@ -16,6 +16,7 @@ import { PhraseOperator } from './phrase';
 import { QueryStringOperator } from './queryString';
 import { RangeOperator } from './range';
 import { RegexOperator } from './regex';
+import { SpanOperator } from './span';
 import { TextOperator } from './text';
 import { VectorSearchOperator } from './vectorSearch';
 import { WildcardOperator } from './wildcard';
@@ -39,6 +40,7 @@ export interface SearchOperators<State extends AggregateState>
     QueryStringOperator<State>,
     RangeOperator<State>,
     RegexOperator<State>,
+    SpanOperator<State>,
     TextOperator<State>,
     VectorSearchOperator<State>,
     WildcardOperator<State> {}

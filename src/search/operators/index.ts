@@ -1,22 +1,24 @@
 import { AggregateState } from '../../types/aggregate-state';
-import { autocomplete } from './autocomplete';
-import { compound } from './compound';
-import { embeddedDocument } from './embeddedDocument';
-import { equals } from './equals';
-import { exists } from './exists';
-import { geoShape } from './geoShape';
-import { geoWithin } from './geoWithin';
-import { hasAncestor } from './hasAncestor';
-import { hasRoot } from './hasRoot';
+import { AutocompleteOperator } from './autocomplete';
+import { CompoundOperator } from './compound';
+import { EmbeddedDocumentOperator } from './embeddedDocument';
+import { EqualsOperator } from './equals';
+import { ExistsOperator } from './exists';
+import { GeoShapeOperator } from './geoShape';
+import { GeoWithinOperator } from './geoWithin';
+import { HasAncestorOperator } from './hasAncestor';
+import { HasRootOperator } from './hasRoot';
+import { InOperator } from './in';
 
 export interface SearchOperators<State extends AggregateState>
   extends
-    autocomplete<State>,
-    compound<State>,
-    embeddedDocument<State>,
-    equals<State>,
-    exists<State>,
-    geoShape<State>,
-    geoWithin<State>,
-    hasAncestor<State>,
-    hasRoot<State> {}
+    AutocompleteOperator<State>,
+    CompoundOperator<State>,
+    EmbeddedDocumentOperator<State>,
+    EqualsOperator<State>,
+    ExistsOperator<State>,
+    GeoShapeOperator<State>,
+    GeoWithinOperator<State>,
+    HasAncestorOperator<State>,
+    HasRootOperator<State>,
+    InOperator<State> {}

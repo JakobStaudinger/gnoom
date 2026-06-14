@@ -2,7 +2,7 @@ import { AggregateState } from '../../types/aggregate-state';
 import { DeepKeyof } from '../../types/deep';
 import { ScoreAdjustment } from '../score/score';
 
-export interface autocomplete<State extends AggregateState> {
+export interface AutocompleteOperator<State extends AggregateState> {
   autocomplete: {
     query: string | string[];
     path: DeepKeyof<State['T']>;

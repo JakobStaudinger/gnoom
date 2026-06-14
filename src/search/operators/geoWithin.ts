@@ -3,7 +3,7 @@ import { DeepKeyof } from '../../types/deep';
 import { GeoMultiPolygon, GeoPoint, GeoPolygon } from '../../types/geojson';
 import { ScoreAdjustment } from '../score/score';
 
-export interface geoWithin<State extends AggregateState> {
+export interface GeoWithinOperator<State extends AggregateState> {
   geoWithin: {
     path: DeepKeyof<State['T']> | DeepKeyof<State['T']>[];
     box?: {

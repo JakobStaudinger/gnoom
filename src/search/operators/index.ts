@@ -16,6 +16,7 @@ import { PhraseOperator } from './phrase';
 import { QueryStringOperator } from './queryString';
 import { RangeOperator } from './range';
 import { RegexOperator } from './regex';
+import { TextOperator } from './text';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -35,4 +36,5 @@ export interface SearchOperators<State extends AggregateState>
     PhraseOperator<State>,
     QueryStringOperator<State>,
     RangeOperator<State>,
-    RegexOperator<State> {}
+    RegexOperator<State>,
+    TextOperator<State> {}

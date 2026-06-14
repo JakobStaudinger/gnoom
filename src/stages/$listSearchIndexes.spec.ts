@@ -1,0 +1,30 @@
+import { expectTypeOf } from 'expect-type';
+import { aggregate } from '../aggregate';
+import { ExtractDocumentType } from '../testing/extract-document-type';
+import { GnoomError } from '../types/error';
+
+describe('$listSearchIndexes', () => {
+  interface Input {
+    text: string;
+  }
+
+  it('should change the output document', () => {
+    const _result = aggregate<Input>().$listSearchIndexes({});
+
+    type Result = ExtractDocumentType<typeof _result>;
+    expectTypeOf<Result>().toExtend<{
+      id: string;
+      name: string;
+      status: string;
+      queryable: boolean;
+    }>();
+  });
+
+  it('should have to be the first stage in the pipeline', () => {
+    const error: GnoomError<{
+      message: 'Must be the first stage in a pipeline';
+    }> = null!;
+
+    aggregate<Input>().$addFields({}).$listSearchIndexes(error);
+  });
+});

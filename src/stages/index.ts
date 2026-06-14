@@ -16,6 +16,7 @@ import { $group } from './$group';
 import { $indexStats } from './$indexStats';
 import { $limit } from './$limit';
 import { $listClusterCatalog } from './$listClusterCatalog';
+import { $listLocalSessions } from './$listLocalSessions';
 import { $lookup } from './$lookup';
 import { $match } from './$match';
 import { $merge } from './$merge';
@@ -62,6 +63,7 @@ interface AllStagesMap<State extends AggregateState>
     $indexStats<State>,
     $limit<State>,
     $listClusterCatalog<State>,
+    $listLocalSessions<State>,
     $lookup<State>,
     $match<State>,
     $merge<State>,

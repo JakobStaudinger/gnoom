@@ -6,6 +6,7 @@ import {
   MustBeFirstStage
 } from '../types/aggregate-state';
 import { DeepKeyof, DeepType } from '../types/deep';
+import { GeoPoint } from '../types/geojson';
 import { Merge } from '../types/merge';
 import { Simplify } from '../types/simplify';
 
@@ -25,10 +26,7 @@ type Specification<State extends AggregateState> = {
   key?: DeepKeyof<State['T']>;
   maxDistance?: number;
   minDistance?: number;
-  near: {
-    type: 'Point';
-    coordinates: [longitude: number, latitude: number] | number[];
-  };
+  near: GeoPoint;
   query?: QueryPredicate<State>;
   spherical?: boolean;
 };

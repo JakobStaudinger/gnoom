@@ -15,6 +15,7 @@ import { $graphLookup } from './$graphLookup';
 import { $group } from './$group';
 import { $indexStats } from './$indexStats';
 import { $limit } from './$limit';
+import { $listClusterCatalog } from './$listClusterCatalog';
 import { $lookup } from './$lookup';
 import { $match } from './$match';
 import { $merge } from './$merge';
@@ -60,6 +61,7 @@ interface AllStagesMap<State extends AggregateState>
     $group<State>,
     $indexStats<State>,
     $limit<State>,
+    $listClusterCatalog<State>,
     $lookup<State>,
     $match<State>,
     $merge<State>,

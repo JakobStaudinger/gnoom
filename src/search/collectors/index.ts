@@ -1,7 +1,7 @@
 import { AggregateState } from '../../types/aggregate-state';
-import { facet } from './facet';
+import { FacetCollector } from './facet';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SearchCollectors<
   State extends AggregateState
-> extends facet<State> {}
+> extends FacetCollector<State> {}

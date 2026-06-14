@@ -9,6 +9,7 @@ import { GeoWithinOperator } from './geoWithin';
 import { HasAncestorOperator } from './hasAncestor';
 import { HasRootOperator } from './hasRoot';
 import { InOperator } from './in';
+import { KnnBetaOperator } from './knnBeta';
 
 export interface SearchOperators<State extends AggregateState>
   extends
@@ -21,4 +22,5 @@ export interface SearchOperators<State extends AggregateState>
     GeoWithinOperator<State>,
     HasAncestorOperator<State>,
     HasRootOperator<State>,
-    InOperator<State> {}
+    InOperator<State>,
+    KnnBetaOperator<State> {}

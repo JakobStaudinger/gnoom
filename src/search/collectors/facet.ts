@@ -2,7 +2,7 @@ import { AggregateState } from '../../types/aggregate-state';
 import { DeepKeyof } from '../../types/deep';
 import { SearchOperators } from '../operators';
 
-export interface facet<State extends AggregateState> {
+export interface FacetCollector<State extends AggregateState> {
   facet: {
     facets: Record<
       string,

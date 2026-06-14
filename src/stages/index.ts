@@ -26,6 +26,7 @@ import { $merge } from './$merge';
 import { $out } from './$out';
 import { $planCacheStats } from './$planCacheStats';
 import { $project } from './$project';
+import { $querySettings } from './$querySettings';
 import { $rankFusion } from './$rankFusion';
 import { $redact } from './$redact';
 import { $replaceRoot } from './$replaceRoot';
@@ -77,6 +78,7 @@ interface AllStagesMap<State extends AggregateState>
     $out<State>,
     $planCacheStats<State>,
     $project<State>,
+    $querySettings<State>,
     $rankFusion<State>,
     $redact<State>,
     $replaceRoot<State>,

@@ -4,6 +4,9 @@ import {
   EvaluateAggregateExpression
 } from '../expressions';
 import { AddStage, AggregateState } from '../types/aggregate-state';
+import { GnoomError } from '../types/error';
+import { AnyObject } from '../types/object';
+import { Primitive } from '../types/primitive';
 import { Simplify } from '../types/simplify';
 
 export interface $replaceRoot<State extends AggregateState> {
@@ -15,9 +18,7 @@ export interface $replaceRoot<State extends AggregateState> {
   ) => Aggregate<Simplify<Output<State, S>>>;
 }
 
-type Specification<State extends AggregateState> = {
-  [K in string]: AggregateExpression<State>;
-};
+type Specification<State extends AggregateState> = AggregateExpression<State>;
 
 type Output<
   State extends AggregateState,
@@ -25,8 +26,19 @@ type Output<
 > = AddStage<
   State,
   {
-    T: {
-      -readonly [K in keyof S]: EvaluateAggregateExpression<State, S[K]>;
-    };
+    T: EvaluateAggregateExpression<State, S> extends infer Eval
+      ? IsObject<Eval> extends true
+        ? Eval
+        : GnoomError<{
+            message: '$replaceRoot requires an expression that evaluates to an object';
+            actual: Eval;
+          }>
+      : never;
   }
 >;
+
+type IsObject<T> = T extends Primitive
+  ? false
+  : T extends AnyObject
+    ? true
+    : false;

@@ -2,10 +2,12 @@ import { $arrayElemAt } from './$arrayElemAt';
 import { $arrayToObject } from './$arrayToObject';
 import { $concatArrays } from './$concatArrays';
 import { $filter } from './$filter';
+import { $first } from './$first';
 import { $firstN } from './$firstN';
 import { $in } from './$in';
 import { $indexOfArray } from './$indexOfArray';
 import { $isArray } from './$isArray';
+import { $last } from './$last';
 import { $lastN } from './$lastN';
 import { $map } from './$map';
 import { $maxN } from './$maxN';
@@ -24,10 +26,12 @@ export interface ArrayOperators
     $arrayToObject,
     $concatArrays,
     $filter,
+    $first,
     $firstN,
     $in,
     $indexOfArray,
     $isArray,
+    $last,
     $lastN,
     $map,
     $maxN,

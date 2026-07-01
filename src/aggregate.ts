@@ -26,6 +26,12 @@ interface ExecuteFunction<State extends AggregateState> {
   ): Promise<State['T'][]> | AggregationCursor<State['T']>;
 }
 
+interface StreamFunction<State extends AggregateState> {
+  (
+    pipeline: AggregatePipeline<State>
+  ): AggregationCursor<State['T']> | AsyncIterable<State['T']>;
+}
+
 interface AggregateBase<State extends AggregateState> {
   with<R>(callback: (p: this) => R): Aggregate<CombineStates<R>>;
   toArray: (...errors: AssertNoErrorState<State>) => AggregatePipeline<State>;
@@ -33,6 +39,16 @@ interface AggregateBase<State extends AggregateState> {
     fnOrClient: ExecuteFunction<State> | { aggregate: ExecuteFunction<State> },
     ...errors: AssertNoErrorState<State>
   ) => Promise<State['T'][]>;
+  stream: (
+    fnOrClient:
+      | StreamFunction<State>
+      | {
+          aggregate: (pipeline: AggregatePipeline<State>) => {
+            stream: () => AsyncIterable<State['T']>;
+          };
+        },
+    ...errors: AssertNoErrorState<State>
+  ) => AsyncIterable<State['T']>;
   custom(stage: unknown): Aggregate<State>;
   addToType<A extends object>(
     value?: A
@@ -77,6 +93,20 @@ function constructAggregate<State extends AggregateState>(
 
         if ('toArray' in result) {
           return result.toArray();
+        }
+
+        return result;
+      },
+      stream(fnOrClient, ...args) {
+        const fn =
+          typeof fnOrClient === 'function'
+            ? fnOrClient
+            : fnOrClient.aggregate.bind(fnOrClient);
+
+        const result = fn(this.toArray(...args));
+
+        if ('stream' in result) {
+          return result.stream();
         }
 
         return result;

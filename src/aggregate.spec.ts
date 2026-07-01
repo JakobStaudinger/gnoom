@@ -4,6 +4,8 @@ import {
   ExtractDocumentType,
   ExtractState
 } from './testing/extract-document-type';
+import { DatabaseInstance } from './testing/database-instance';
+import { ObjectId } from 'mongodb';
 
 describe('AggregateBuilder', () => {
   it('should produce an array as output', () => {
@@ -140,6 +142,136 @@ describe('AggregateBuilder', () => {
       type Result = ExtractState<typeof _output>;
 
       expectTypeOf<Result['finalStage']>().toEqualTypeOf<'$out' | '$merge'>();
+    });
+  });
+
+  describe('execute', () => {
+    interface TestDocument {
+      _id: ObjectId;
+      name: string;
+    }
+
+    let database: DatabaseInstance;
+
+    beforeEach(async () => {
+      database = await DatabaseInstance.new();
+    });
+
+    afterEach(async () => {
+      await database.close();
+    });
+
+    it('should work when provided with a custom function', async () => {
+      await database.insertData({
+        test: [
+          { _id: new ObjectId(), name: 'one' },
+          { _id: new ObjectId(), name: 'two' },
+          { _id: new ObjectId(), name: 'three' }
+        ]
+      });
+
+      const result = await aggregate<TestDocument>().execute((pipeline) =>
+        database.collection('test').aggregate<TestDocument>(pipeline).toArray()
+      );
+      expectTypeOf(result).toEqualTypeOf<TestDocument[]>();
+      expect(result).toHaveLength(3);
+      expect(result).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: 'one' }),
+          expect.objectContaining({ name: 'two' }),
+          expect.objectContaining({ name: 'three' })
+        ])
+      );
+    });
+
+    it('should work when provided with a collection', async () => {
+      await database.insertData({
+        test: [
+          { _id: new ObjectId(), name: 'one' },
+          { _id: new ObjectId(), name: 'two' },
+          { _id: new ObjectId(), name: 'three' }
+        ]
+      });
+
+      const result = await aggregate<TestDocument>().execute(
+        database.collection('test')
+      );
+      expectTypeOf(result).toEqualTypeOf<TestDocument[]>();
+      expect(result).toHaveLength(3);
+      expect(result).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: 'one' }),
+          expect.objectContaining({ name: 'two' }),
+          expect.objectContaining({ name: 'three' })
+        ])
+      );
+    });
+  });
+
+  describe('stream', () => {
+    interface TestDocument {
+      _id: ObjectId;
+      name: string;
+    }
+
+    let database: DatabaseInstance;
+
+    beforeEach(async () => {
+      database = await DatabaseInstance.new();
+    });
+
+    afterEach(async () => {
+      await database.close();
+    });
+
+    it('should work when provided with a custom function', async () => {
+      const database = await DatabaseInstance.new();
+      await database.insertData({
+        test: [
+          { _id: new ObjectId(), name: 'one' },
+          { _id: new ObjectId(), name: 'two' },
+          { _id: new ObjectId(), name: 'three' }
+        ]
+      });
+
+      const stream = aggregate<TestDocument>().stream((pipeline) =>
+        database.collection('test').aggregate(pipeline).stream()
+      );
+      const result = await Array.fromAsync(stream);
+      expectTypeOf(result).toEqualTypeOf<TestDocument[]>();
+      expect(result).toHaveLength(3);
+      expect(result).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: 'one' }),
+          expect.objectContaining({ name: 'two' }),
+          expect.objectContaining({ name: 'three' })
+        ])
+      );
+    });
+
+    it('should work when provided with a collection', async () => {
+      const database = await DatabaseInstance.new();
+      await database.insertData({
+        test: [
+          { _id: new ObjectId(), name: 'one' },
+          { _id: new ObjectId(), name: 'two' },
+          { _id: new ObjectId(), name: 'three' }
+        ]
+      });
+
+      const stream = aggregate<TestDocument>().stream(
+        database.collection('test')
+      );
+      const result = await Array.fromAsync(stream);
+      expectTypeOf(result).toEqualTypeOf<TestDocument[]>();
+      expect(result).toHaveLength(3);
+      expect(result).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: 'one' }),
+          expect.objectContaining({ name: 'two' }),
+          expect.objectContaining({ name: 'three' })
+        ])
+      );
     });
   });
 });

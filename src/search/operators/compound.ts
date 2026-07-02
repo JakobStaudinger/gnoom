@@ -10,5 +10,6 @@ export interface CompoundOperator<State extends AggregateState> {
     filter?: Partial<SearchOperators<State>>[];
     score?: ScoreAdjustment<State>;
     doesNotAffect?: string | string[];
+    minimumShouldMatch?: number;
   };
 }

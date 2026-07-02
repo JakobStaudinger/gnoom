@@ -8,7 +8,7 @@ export type ScoreAdjustment<
   | {
       boost:
         | {
-            value: string;
+            value: number;
           }
         | {
             path: DeepKeyof<State['T']>;
@@ -17,7 +17,7 @@ export type ScoreAdjustment<
     }
   | {
       constant: {
-        value: string;
+        value: number;
       };
     }
   | {

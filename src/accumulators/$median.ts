@@ -1,5 +1,6 @@
 import { Const } from '../expressions/const';
 import { FunctionSignature } from '../types/evaluate';
+import { Widen } from '../types/widen';
 
 export interface $median {
   $median: Signature;
@@ -7,5 +8,5 @@ export interface $median {
 
 interface Signature extends FunctionSignature {
   arguments: [input: Const<{ input: number; method: Const<'approximate'> }>];
-  return: this['arguments'][0]['input'];
+  return: Widen<this['arguments'][0]['input']>;
 }

@@ -2,22 +2,29 @@ import { expectTypeOf } from 'expect-type';
 import { InitialState } from '../types/aggregate-state';
 import { evaluateAccumulator } from './testing/evaluate-accumulator';
 
-describe('$sum', () => {
+describe('$max', () => {
   interface Input {
     number: number;
   }
 
   it('should evaluate to a number when passing in a property', () => {
     const result = evaluateAccumulator<InitialState<Input>>()({
-      $sum: '$number'
+      $max: '$number'
     });
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   it('should evaluate to a number when passing in a constant', () => {
     const result = evaluateAccumulator<InitialState<Input>>()({
-      $sum: 1
+      $max: 1
     });
     expectTypeOf(result).toEqualTypeOf<number>();
+  });
+
+  it('should work with strings', () => {
+    const result = evaluateAccumulator<InitialState<Input>>()({
+      $max: 'hi'
+    });
+    expectTypeOf(result).toEqualTypeOf<string>();
   });
 });

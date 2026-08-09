@@ -1,5 +1,6 @@
 import { FunctionSignature } from '../types/evaluate';
 import { Primitive } from '../types/primitive';
+import { Widen } from '../types/widen';
 
 export interface $max {
   $max: Signature;
@@ -7,5 +8,5 @@ export interface $max {
 
 interface Signature extends FunctionSignature {
   arguments: [value: Primitive];
-  return: this['arguments'][0];
+  return: Widen<this['arguments'][0]>;
 }

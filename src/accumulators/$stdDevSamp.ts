@@ -1,4 +1,5 @@
 import { FunctionSignature } from '../types/evaluate';
+import { Widen } from '../types/widen';
 
 export interface $stdDevSamp {
   $stdDevSamp: Signature;
@@ -6,5 +7,5 @@ export interface $stdDevSamp {
 
 interface Signature extends FunctionSignature {
   arguments: [value: number];
-  return: this['arguments'][0];
+  return: Widen<this['arguments'][0]>;
 }

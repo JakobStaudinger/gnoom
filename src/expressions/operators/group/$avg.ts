@@ -1,5 +1,6 @@
 import { FunctionSignature } from '../../../types/evaluate';
 import { Primitive } from '../../../types/primitive';
+import { Widen } from '../../../types/widen';
 
 export interface $avg {
   $avg: Signature;
@@ -10,6 +11,6 @@ interface Signature extends FunctionSignature {
     | [values: Primitive[]]
     | [x: Primitive, y: Primitive, ...values: Primitive[]];
   return: this['arguments'][0] extends (infer T)[]
-    ? T
-    : this['arguments'][number];
+    ? Widen<T>
+    : Widen<this['arguments'][number]>;
 }

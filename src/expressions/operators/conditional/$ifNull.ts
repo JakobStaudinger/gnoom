@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { Decrement } from '../../../types/recursion';
+import { Last } from '../../../types/recursion';
 
 export interface $ifNull {
   $ifNull: Signature;
@@ -13,5 +13,3 @@ interface Signature extends FunctionSignature {
 type ReturnType<Args extends unknown[]> =
   | NonNullable<Args[number]>
   | Extract<Last<Args>, null | undefined>;
-
-type Last<T extends unknown[]> = T[Decrement<T['length']>];

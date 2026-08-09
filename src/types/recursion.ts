@@ -11,5 +11,7 @@ export type Tail<Arr extends unknown[]> = Arr extends [
   ? Tail
   : [];
 
-export type Decrement<T extends number> =
+type Decrement<T extends number> =
   ArrayOfLength<T> extends [...infer Arr, unknown] ? Arr['length'] : never;
+
+export type Last<Arr extends unknown[]> = Arr[Decrement<Arr['length']>];

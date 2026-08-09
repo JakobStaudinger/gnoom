@@ -1,5 +1,5 @@
 import { FunctionSignature } from '../../../types/evaluate';
-import { Decrement } from '../../../types/recursion';
+import { Last } from '../../../types/recursion';
 
 export interface $last {
   $last: Signature;
@@ -7,5 +7,5 @@ export interface $last {
 
 interface Signature extends FunctionSignature {
   arguments: [input: unknown[]];
-  return: this['arguments'][0][Decrement<this['arguments'][0]['length']>];
+  return: Last<this['arguments'][0]>;
 }

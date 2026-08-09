@@ -73,6 +73,6 @@ describe('$out', () => {
       expect(result).toHaveLength(0);
 
       await database.close();
-    }, 20000);
+    });
   });
 });

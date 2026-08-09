@@ -28,12 +28,14 @@ export class DatabaseInstance {
   public async insertData(data: { [collection: string]: AnyObject[] }) {
     await Promise.all(
       Object.entries(data).map(([collection, documents]) =>
-        this.collection(collection).insertMany(documents.flat(Infinity))
+        this.collection(collection).insertMany(documents.flat(Infinity), {
+          ignoreUndefined: true
+        })
       )
     );
   }
 
-  public collection(name: string) {
-    return this.db.collection(name);
+  public collection<T extends AnyObject>(name: string) {
+    return this.db.collection<T>(name);
   }
 }

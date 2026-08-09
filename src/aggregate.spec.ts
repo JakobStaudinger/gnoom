@@ -225,7 +225,6 @@ describe('AggregateBuilder', () => {
     });
 
     it('should work when provided with a custom function', async () => {
-      const database = await DatabaseInstance.new();
       await database.insertData({
         test: [
           { _id: new ObjectId(), name: 'one' },
@@ -250,7 +249,6 @@ describe('AggregateBuilder', () => {
     });
 
     it('should work when provided with a collection', async () => {
-      const database = await DatabaseInstance.new();
       await database.insertData({
         test: [
           { _id: new ObjectId(), name: 'one' },

@@ -32,7 +32,9 @@ export type NestedQueryPredicate<T> = T extends Primitive | null | undefined
       }
     : never;
 
-export type QueryOperator<T> = Value<T> | Partial<QueryOperators<T>>;
+export type QueryOperator<T> =
+  | Value<WidenNull<T>>
+  | Partial<QueryOperators<WidenNull<T>>>;
 
 interface QueryOperators<T>
   extends
@@ -49,12 +51,21 @@ type Value<T> = T | (T extends (infer E)[] ? QueryOperator<E> : never);
 export type EvaluateQueryPredicate<
   State extends AggregateState,
   P extends QueryPredicate<State>
-> = {
-  [K in keyof State['T']]: K extends keyof P
-    ? Narrow<State['T'][K], P[K]>
-    : State['T'][K];
-} & NarrowOr<State, P> &
-  NarrowAnd<State, P>;
+> = NarrowProperties<State['T'], P> & NarrowOr<State, P> & NarrowAnd<State, P>;
+
+type NarrowProperties<T, P> = {
+  [K in keyof T as K extends keyof P
+    ? undefined extends Narrow<T[K], P[K]>
+      ? K
+      : never
+    : K]: K extends keyof P ? Narrow<T[K], P[K]> : T[K];
+} & {
+  [K in keyof T as K extends keyof P
+    ? undefined extends Narrow<T[K], P[K]>
+      ? never
+      : K
+    : never]-?: K extends keyof P ? Narrow<T[K], P[K]> : T[K];
+};
 
 type Narrow<T, S> = unknown extends NarrowHelper<T, S> ? T : NarrowHelper<T, S>;
 
@@ -67,11 +78,15 @@ type NarrowHelper<T, S> = NarrowLiteral<T, S> &
   NarrowNot<T, S>;
 
 type NarrowLiteral<T, S> = S extends T ? S : unknown;
-type NarrowEq<_T, S> = S extends { $eq: infer V } ? V : unknown;
-type NarrowNe<T, S> = S extends { $ne: infer V } ? Exclude<T, V> : unknown;
-type NarrowIn<_T, S> = S extends { $in: (infer V)[] } ? V : unknown;
+type NarrowEq<T, S> = S extends { $eq: infer V } ? T & WidenNull<V> : unknown;
+type NarrowNe<T, S> = S extends { $ne: infer V }
+  ? Exclude<T, WidenNull<V>>
+  : unknown;
+type NarrowIn<T, S> = S extends { $in: (infer V)[] }
+  ? T & WidenNull<V>
+  : unknown;
 type NarrowNin<T, S> = S extends { $nin: (infer V)[] }
-  ? Exclude<T, V>
+  ? Exclude<T, WidenNull<V>>
   : unknown;
 type NarrowType<_T, S> = S extends { $type: infer Type }
   ? TypeMap[Type & keyof TypeMap]
@@ -79,6 +94,12 @@ type NarrowType<_T, S> = S extends { $type: infer Type }
 type NarrowNot<T, S> = S extends { $not: infer Predicate }
   ? NarrowHelper<T, Negate<Predicate>>
   : unknown;
+
+type WidenNull<T> = null extends T
+  ? T | null | undefined
+  : undefined extends T
+    ? T | null | undefined
+    : T;
 
 type TypeMap = {
   number: number;

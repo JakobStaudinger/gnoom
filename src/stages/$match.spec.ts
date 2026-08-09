@@ -1,5 +1,7 @@
 import { expectTypeOf } from 'expect-type';
+import { ObjectId } from 'mongodb';
 import { aggregate } from '../aggregate';
+import { DatabaseInstance } from '../testing/database-instance';
 import { ExtractDocumentType } from '../testing/extract-document-type';
 
 describe('$match', () => {
@@ -175,5 +177,163 @@ describe('$match', () => {
         'nonExistent.0': { $exists: true }
       });
     });
+
+    it('should exclude undefined from the type when using $ne: null', async () => {
+      type Test = {
+        _id: ObjectId;
+        value: number | null | undefined;
+      };
+
+      const _result = aggregate<Test>().$match({
+        value: { $ne: null }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result['value']>().toEqualTypeOf<number>();
+    });
+
+    it('should make optional keys required when using $ne: null', () => {
+      type Test = {
+        _id: ObjectId;
+        optional?: boolean;
+      };
+
+      const _result = aggregate<Test>().$match({
+        optional: { $ne: null }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result>().toEqualTypeOf<{
+        _id: ObjectId;
+        optional: boolean;
+      }>();
+    });
+
+    it('should make optional keys required when using $ne: undefined', () => {
+      type Test = {
+        _id: ObjectId;
+        optional?: boolean;
+      };
+
+      const _result = aggregate<Test>().$match({
+        optional: { $ne: undefined }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result>().toEqualTypeOf<{
+        _id: ObjectId;
+        optional: boolean;
+      }>();
+    });
+
+    it('should keep optional keys optional when using $ne with a value', () => {
+      type Test = {
+        _id: ObjectId;
+        optional?: boolean;
+      };
+
+      const _result = aggregate<Test>().$match({
+        optional: { $ne: true }
+      });
+      type Result = ExtractDocumentType<typeof _result>;
+      expectTypeOf<Result>().toEqualTypeOf<{
+        _id: ObjectId;
+        optional?: false;
+      }>();
+    });
+
+    it('should exclude undefined from the results when using $ne: null', async () => {
+      type Test = {
+        _id: ObjectId;
+        value: number | null | undefined;
+      };
+
+      const testDocuments = [
+        { _id: new ObjectId(), value: 2 },
+        { _id: new ObjectId(), value: null },
+        { _id: new ObjectId(), value: undefined }
+      ] as const satisfies Test[];
+
+      const database = await DatabaseInstance.new();
+      await database.insertData({
+        test: testDocuments
+      });
+
+      const documentsInDb = await database
+        .collection<Test>('test')
+        .find({})
+        .toArray();
+      for (const originalDocument of testDocuments) {
+        const documentInDb = documentsInDb.find((d) =>
+          d._id.equals(originalDocument._id)
+        )!;
+        expect(documentInDb.value).toBe(originalDocument.value);
+      }
+
+      const result = await aggregate<Test>()
+        .$match({ value: { $ne: null } })
+        .execute(database.collection('test'));
+
+      expect(result).toHaveLength(1);
+      expect(result[0]!._id).toEqual(testDocuments[0]._id);
+
+      await database.close();
+    });
+  });
+
+  it('should allow checking for null if the type is nullable', async () => {
+    type Test = {
+      _id: ObjectId;
+      nullable: number | null | undefined;
+      optional?: boolean;
+      maybe: string | undefined;
+    };
+
+    const _result = aggregate<Test>()
+      .$match({ nullable: { $ne: null } })
+      .$match({ optional: { $ne: null } })
+      .$match({ maybe: { $ne: null } });
+    type Result = ExtractDocumentType<typeof _result>;
+    expectTypeOf<Result>().toEqualTypeOf<{
+      _id: ObjectId;
+      nullable: number;
+      optional: boolean;
+      maybe: string;
+    }>();
+  });
+
+  it('should exclude null from the results when using $ne: undefined', async () => {
+    type Test = {
+      _id: ObjectId;
+      value: number | null | undefined;
+    };
+
+    const testDocuments = [
+      { _id: new ObjectId(), value: 2 },
+      { _id: new ObjectId(), value: null },
+      { _id: new ObjectId(), value: undefined }
+    ] as const satisfies Test[];
+
+    const database = await DatabaseInstance.new();
+    await database.insertData({
+      test: testDocuments
+    });
+
+    const documentsInDb = await database
+      .collection<Test>('test')
+      .find({})
+      .toArray();
+    for (const originalDocument of testDocuments) {
+      const documentInDb = documentsInDb.find((d) =>
+        d._id.equals(originalDocument._id)
+      )!;
+      expect(documentInDb.value).toBe(originalDocument.value);
+    }
+
+    const result = await aggregate<Test>()
+      .$match({ value: { $ne: undefined } })
+      .execute(database.collection('test'));
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!._id).toEqual(testDocuments[0]._id);
+
+    await database.close();
   });
 });

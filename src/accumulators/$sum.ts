@@ -6,5 +6,5 @@ export interface $sum {
 
 interface Signature extends FunctionSignature {
   arguments: [value: number];
-  return: this['arguments'][0];
+  return: number;
 }

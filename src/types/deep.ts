@@ -1,9 +1,19 @@
 import { AnyObject } from './object';
 import { Primitive } from './primitive';
 
-export type DeepKeyof<T extends object> = {
-  [K in keyof NonNullable<T> & string]: DeepKeyofHelper<NonNullable<T>[K], K>;
-}[keyof NonNullable<T> & string];
+export type DeepKeyof<T extends object> = T extends
+  | (infer E)[]
+  | null
+  | undefined
+  ? E extends object
+    ? DeepKeyof<E>
+    : never
+  : {
+      [K in keyof NonNullable<T> & string]: DeepKeyofHelper<
+        NonNullable<T>[K],
+        K
+      >;
+    }[keyof NonNullable<T> & string];
 
 type DeepKeyofHelper<T, K extends string> = T extends
   | Primitive

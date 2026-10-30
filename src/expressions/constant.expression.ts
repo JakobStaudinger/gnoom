@@ -1,7 +1,7 @@
 import { AggregateState } from '../types/aggregate-state';
-import { GnoomError } from '../types/error';
 import { NonCollapsingUnknown } from '../types/non-collapsing';
 import { AnyObject } from '../types/object';
+import { Primitive } from '../types/primitive';
 import { ArrayOfLength, Tail } from '../types/recursion';
 import {
   AggregateExpression,
@@ -23,8 +23,9 @@ export type EvaluateConstant<
   State extends AggregateState,
   S,
   IncludeStatic
-> = S extends AnyObject
-  ? keyof S & `$${string}` extends never
+> = S extends Primitive
+  ? S
+  : S extends AnyObject
     ? {
         -readonly [K in keyof S]: EvaluateAggregateExpression<
           State,
@@ -32,14 +33,10 @@ export type EvaluateConstant<
           IncludeStatic
         >;
       }
-    : GnoomError<{
-        message: 'Unexpected syntax in constant expression';
-        details: keyof S & `$${string}`;
-      }>
-  : S extends readonly unknown[]
-    ? {
-        -readonly [K in keyof S]: K extends number | `${number}`
-          ? EvaluateAggregateExpression<State, S[K], IncludeStatic>
-          : S[K];
-      }
-    : S;
+    : S extends readonly unknown[]
+      ? {
+          -readonly [K in keyof S]: K extends number | `${number}`
+            ? EvaluateAggregateExpression<State, S[K], IncludeStatic>
+            : S[K];
+        }
+      : S;

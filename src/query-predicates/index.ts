@@ -128,10 +128,6 @@ type NegateMap = {
   $nin: '$in';
   $eq: '$ne';
   $ne: '$eq';
-  $lt: '$gte';
-  $gt: '$lte';
-  $lte: '$gt';
-  $gte: '$lt';
 };
 
 type NarrowOr<State extends AggregateState, P> = P extends { $or: infer Spec }

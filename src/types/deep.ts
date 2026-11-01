@@ -39,8 +39,8 @@ export type DeepType<T, K> = T extends (infer E)[] | null | undefined
   : K extends keyof NonNullable<T>
     ? NonNullable<T>[K] | Extract<T, null | undefined>
     : K extends `${infer Head extends keyof NonNullable<T> & string}.${infer Tail}`
-      ? NonNullable<T>[Head] extends object
-        ? Tail extends DeepKeyof<NonNullable<T>[Head]>
+      ? NonNullable<T>[Head] extends object | null | undefined
+        ? Tail extends DeepKeyof<NonNullable<NonNullable<T>[Head]>>
           ? DeepType<NonNullable<T>[Head] | Extract<T, null | undefined>, Tail>
           : never
         : never
